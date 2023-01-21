@@ -2,7 +2,11 @@ package com.example.mp08_firebase;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +47,8 @@ public class SignInFragment extends Fragment {
     private SignInButton googleSignInButton;
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private EditText emailEditText, passwordEditText;
+    private Typeface originalTypeface;
+    private ImageButton showPasswordButton;
     private ImageButton emailSignInButton;
     private LinearLayout signInForm;
     private ProgressBar signInProgressBar;
@@ -63,9 +69,48 @@ public class SignInFragment extends Fragment {
             }
         });
         emailEditText = view.findViewById(R.id.emailEditText);
-        passwordEditText = view.findViewById(R.id.passwordEditText);
         emailSignInButton = view.findViewById(R.id.emailSignInButton);
         signInProgressBar = view.findViewById(R.id.signInProgressBar);
+
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        showPasswordButton = view.findViewById(R.id.showPasswordButton);
+        originalTypeface = passwordEditText.getTypeface();
+
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (passwordEditText.getText().toString().isEmpty()) {
+                    passwordEditText.setTypeface(originalTypeface);
+                    showPasswordButton.setVisibility(View.GONE);
+                } else {
+                    showPasswordButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+        if(passwordEditText.getText().toString().isEmpty()){
+            passwordEditText.setTypeface(originalTypeface);
+            showPasswordButton.setVisibility(View.GONE);
+        }
+        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showPasswordButton.setImageResource(R.drawable.ocultar_icon);
+                } else {
+                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    showPasswordButton.setImageResource(R.drawable.ocultar_no_icon);
+                }
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 

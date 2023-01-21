@@ -45,6 +45,9 @@ public class ProfileFragment extends Fragment {
             emailTextView.setText(user.getEmail());
 
             Glide.with(requireView()).load(user.getPhotoUrl()).into(photoImageView);
+            if(photoImageView == null){
+                Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
+            }
         }
     }
 }

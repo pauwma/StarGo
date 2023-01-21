@@ -84,16 +84,30 @@
         android:id="@+id/passwordEditText"
         android:layout_width="348dp"
         android:layout_height="50dp"
-        android:background="@drawable/custom_edit_text"
         android:layout_marginTop="14dp"
-        android:ems="10"
-        android:hint="Contraseña"
+        android:background="@drawable/custom_edit_text"
         android:drawableStart="@drawable/candado_icon"
         android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
         android:paddingStart="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/phoneEditText"
+        android:importantForAutofill="no" />
+
+    <ImageButton
+        android:id="@+id/showPasswordButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:paddingRight="6dp"
+        android:src="@drawable/ocultar_no_icon"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintRight_toRightOf="@id/passwordEditText"
+        app:layout_constraintTop_toTopOf="@+id/passwordEditText" />
 
     <ImageButton
         android:id="@+id/registerButton"
@@ -111,6 +125,7 @@
         android:background="@drawable/custom_button_inicio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"/>
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

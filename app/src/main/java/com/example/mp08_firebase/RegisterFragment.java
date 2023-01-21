@@ -1,7 +1,11 @@
 package com.example.mp08_firebase;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +31,9 @@ public class RegisterFragment extends Fragment {
     NavController navController;   // <-----------------
     private EditText emailEditText, passwordEditText;
     private ImageButton registerButton;
+    private ImageButton showPasswordButton;
     private FirebaseAuth mAuth;
+    private Typeface originalTypeface;
 
 
     @Override
@@ -48,8 +54,47 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        mAuth = FirebaseAuth.getInstance();
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        showPasswordButton = view.findViewById(R.id.showPasswordButton);
+        originalTypeface = passwordEditText.getTypeface();
 
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (passwordEditText.getText().toString().isEmpty()) {
+                    passwordEditText.setTypeface(originalTypeface);
+                    showPasswordButton.setVisibility(View.GONE);
+                } else {
+                    showPasswordButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+        if(passwordEditText.getText().toString().isEmpty()){
+            passwordEditText.setTypeface(originalTypeface);
+            showPasswordButton.setVisibility(View.GONE);
+        }
+        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showPasswordButton.setImageResource(R.drawable.ocultar_icon);
+                } else {
+                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    showPasswordButton.setImageResource(R.drawable.ocultar_no_icon);
+                }
+            }
+        });
+
+        mAuth = FirebaseAuth.getInstance();
 
     }
 
