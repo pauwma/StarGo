@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,7 @@ public class RegisterFragment extends Fragment {
 
     NavController navController;   // <-----------------
     private EditText emailEditText, passwordEditText;
-    private Button registerButton;
+    private ImageButton registerButton;
     private FirebaseAuth mAuth;
 
 
