@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -42,7 +43,7 @@ public class SignInFragment extends Fragment {
     private SignInButton googleSignInButton;
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private EditText emailEditText, passwordEditText;
-    private Button emailSignInButton;
+    private ImageButton emailSignInButton;
     private LinearLayout signInForm;
     private ProgressBar signInProgressBar;
     private FirebaseAuth mAuth;
@@ -64,7 +65,6 @@ public class SignInFragment extends Fragment {
         emailEditText = view.findViewById(R.id.emailEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
         emailSignInButton = view.findViewById(R.id.emailSignInButton);
-        signInForm = view.findViewById(R.id.signInForm);
         signInProgressBar = view.findViewById(R.id.signInProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
@@ -113,7 +113,6 @@ public class SignInFragment extends Fragment {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         if(acct == null) return;
         signInProgressBar.setVisibility(View.VISIBLE);
-        signInForm.setVisibility(View.GONE);
         mAuth.signInWithCredential(GoogleAuthProvider.getCredential(acct.getIdToken(
                 ), null))
                 .addOnCompleteListener(requireActivity(), new
@@ -141,7 +140,6 @@ public class SignInFragment extends Fragment {
     }
 
     private void accederConEmail() {
-        signInForm.setVisibility(View.GONE);
         signInProgressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
