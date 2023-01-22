@@ -96,13 +96,7 @@ public class HomeFragment extends Fragment {
                 holder.timeTextView.setText(formattedDate);
             }
 
-            /*
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm - dd MMM");
-            String formattedDate = dateFormat.format(post.date);
-            holder.timeTextView.setText(formattedDate);
-             */
-
-            // Gestion de likes
+            // ? Gestion de likes
             final String postKey = getSnapshots().getSnapshot(position).getId();
             final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             if(post.likes.containsKey(uid))
@@ -117,7 +111,7 @@ public class HomeFragment extends Fragment {
                                 FieldValue.delete() : true);
             });
 
-            // Miniatura de media
+            // ? Miniatura de media
             if (post.mediaUrl != null) {
                 holder.mediaImageView.setVisibility(View.VISIBLE);
                 if ("audio".equals(post.mediaType)) {
