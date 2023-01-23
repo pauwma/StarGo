@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
                 name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
                 email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
             }
-
           */
             }
         });
