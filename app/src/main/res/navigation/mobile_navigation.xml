@@ -39,4 +39,9 @@
         android:name="com.example.mp08_firebase.MediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.mp08_firebase.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

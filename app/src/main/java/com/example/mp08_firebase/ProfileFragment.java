@@ -79,6 +79,14 @@ public class ProfileFragment extends Fragment {
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
 
+
+        // ? Botón settings
+        view.findViewById(R.id.settingsRueda).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.settingsFragment);
+            }
+        });
     }
 
     class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
