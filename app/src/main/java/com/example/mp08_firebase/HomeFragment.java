@@ -80,7 +80,6 @@ public class HomeFragment extends Fragment {
             Glide.with(getContext()).load(post.authorPhotoUrl).circleCrop().into(holder.authorPhotoImageView);
             holder.authorTextView.setText(post.author);
             holder.contentTextView.setText(post.content);
-
             Calendar now = Calendar.getInstance();
             Calendar postDate = Calendar.getInstance();
             postDate.setTime(post.date);
