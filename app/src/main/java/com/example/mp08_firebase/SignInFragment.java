@@ -50,8 +50,6 @@ public class SignInFragment extends Fragment {
     private Typeface originalTypeface;
     private ImageButton showPasswordButton;
     private ImageButton emailSignInButton;
-    private LinearLayout signInForm;
-    private ProgressBar signInProgressBar;
     private FirebaseAuth mAuth;
 
 
@@ -68,9 +66,17 @@ public class SignInFragment extends Fragment {
                 navController.navigate(R.id.registerFragment);
             }
         });
+
+        //? Contraseña olvidada
+        view.findViewById(R.id.contraTextView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.recuperacionFragment);
+            }
+        });
+
         emailEditText = view.findViewById(R.id.emailEditText);
         emailSignInButton = view.findViewById(R.id.emailSignInButton);
-        signInProgressBar = view.findViewById(R.id.signInProgressBar);
 
         passwordEditText = view.findViewById(R.id.passwordEditText);
         showPasswordButton = view.findViewById(R.id.showPasswordButton);
@@ -157,7 +163,6 @@ public class SignInFragment extends Fragment {
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         if(acct == null) return;
-        signInProgressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithCredential(GoogleAuthProvider.getCredential(acct.getIdToken(
                 ), null))
                 .addOnCompleteListener(requireActivity(), new
@@ -170,8 +175,6 @@ public class SignInFragment extends Fragment {
                                 } else {
                                     Log.e("ABCD", "signInWithCredential:failure",
                                             task.getException());
-                                    signInProgressBar.setVisibility(View.GONE);
-                                    signInForm.setVisibility(View.VISIBLE);
                                 }
                             }
                         });
@@ -185,7 +188,6 @@ public class SignInFragment extends Fragment {
     }
 
     private void accederConEmail() {
-        signInProgressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
                 .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
@@ -196,8 +198,6 @@ public class SignInFragment extends Fragment {
                         } else {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
                         }
-                        signInForm.setVisibility(View.VISIBLE);
-                        signInProgressBar.setVisibility(View.GONE);
                     }
                 });
     }

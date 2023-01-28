@@ -44,4 +44,9 @@
         android:name="com.example.mp08_firebase.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/recuperacionFragment"
+        android:name="com.example.mp08_firebase.RecuperacionFragment"
+        android:label="fragment_recuperacion"
+        tools:layout="@layout/fragment_recuperacion" />
 </navigation>
