@@ -112,6 +112,7 @@ public class HomeFragment extends Fragment {
 
             // ? Miniatura de media
             if (post.mediaUrl != null) {
+                holder.contentTextView.setText(post.content);
                 holder.mediaImageView.setVisibility(View.VISIBLE);
                 if ("audio".equals(post.mediaType)) {
                     Glide.with(requireView()).load(R.drawable.ic_baseline_audio_file_24).centerCrop().into(holder.mediaImageView);
@@ -122,8 +123,11 @@ public class HomeFragment extends Fragment {
                     appViewModel.postSeleccionado.setValue(post);
                     navController.navigate(R.id.mediaFragment);
                 });
+                holder.contentTextView.setPadding(0,0,0,6);
             } else {
                 holder.mediaImageView.setVisibility(View.GONE);
+                holder.contentTextView.setPadding(0,0,0,32);
+
             }
         }
 
