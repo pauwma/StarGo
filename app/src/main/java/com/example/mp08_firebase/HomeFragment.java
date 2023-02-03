@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
             if (diffHours < 24) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
                 String formattedDate = dateFormat.format(post.date);
-                holder.timeTextView.setText(formattedDate + " Hrs");
+                holder.timeTextView.setText(formattedDate + " h");
             } else {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
                 String formattedDate = dateFormat.format(post.date);

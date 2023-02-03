@@ -121,6 +121,19 @@
             app:layout_constraintRight_toLeftOf="@id/numLikesTextView"
             app:srcCompat="@drawable/favorite_full" />
 
+        <ImageView
+            android:id="@+id/deleteImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="14dp"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/numLikesTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/delete_icon" />
+
         <TextView
             android:id="@+id/numLikesTextView"
             android:layout_width="wrap_content"

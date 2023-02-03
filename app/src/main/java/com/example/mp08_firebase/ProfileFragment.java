@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.transition.Hold;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,7 +36,7 @@ import java.util.Calendar;
 public class ProfileFragment extends Fragment {
 
     NavController navController;   // <-----------------
-    ImageView photoImageView;
+    ImageView photoImageView, deleteImageView;
     TextView displayNameTextView, emailTextView;
     String uid;
     public AppViewModel appViewModel;
@@ -98,7 +104,7 @@ public class ProfileFragment extends Fragment {
         @NonNull
         @Override
         public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_post, parent, false));
+            return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_post_profile, parent, false));
         }
 
         @Override
@@ -114,7 +120,7 @@ public class ProfileFragment extends Fragment {
             if (diffHours < 24) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
                 String formattedDate = dateFormat.format(post.date);
-                holder.timeTextView.setText(formattedDate + " Hrs");
+                holder.timeTextView.setText(formattedDate + " h");
             } else {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
                 String formattedDate = dateFormat.format(post.date);
@@ -151,10 +157,31 @@ public class ProfileFragment extends Fragment {
             } else {
                 holder.mediaImageView.setVisibility(View.GONE);
             }
+
+            deleteImageView = holder.deleteImageView;
+            deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseFirestore.getInstance().collection("posts").document(postKey).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getContext(), "Post eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), "Error al eliminar el post", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            });
+
         }
 
         class PostViewHolder extends RecyclerView.ViewHolder {
-            ImageView authorPhotoImageView, likeImageView, mediaImageView;
+            ImageView authorPhotoImageView, likeImageView, mediaImageView, deleteImageView;
             TextView authorTextView, contentTextView, numLikesTextView, timeTextView;
             PostViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -162,6 +189,7 @@ public class ProfileFragment extends Fragment {
                         itemView.findViewById(R.id.photoImageView);
                 likeImageView = itemView.findViewById(R.id.likeImageView);
                 mediaImageView = itemView.findViewById(R.id.mediaImage);
+                deleteImageView = itemView.findViewById(R.id.deleteImageView);
                 authorTextView = itemView.findViewById(R.id.authorTextView);
                 contentTextView = itemView.findViewById(R.id.contentTextView);
                 numLikesTextView = itemView.findViewById(R.id.numLikesTextView);
@@ -169,6 +197,4 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-
-
 }

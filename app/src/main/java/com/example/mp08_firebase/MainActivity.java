@@ -35,13 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarMain.toolbar);
 
-        /*binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        }); */
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -63,17 +56,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-         /*   if(user != null){
-                if(user.getPhotoUrl() != null)
-                Glide.with(MainActivity.this)
-                        .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString())
-                        .circleCrop()
-                        .into(photo);
-                if(user.getDisplayName() != )
-                name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            }
-          */
+
             }
         });
     }
