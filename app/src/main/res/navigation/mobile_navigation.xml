@@ -54,4 +54,9 @@
         android:name="com.example.mp08_firebase.BuscadorFragment"
         android:label="fragment_buscador"
         tools:layout="@layout/fragment_buscador" />
+    <fragment
+        android:id="@+id/viajeFragment"
+        android:name="com.example.mp08_firebase.ViajeFragment"
+        android:label="fragment_viaje"
+        tools:layout="@layout/fragment_viaje" />
 </navigation>
