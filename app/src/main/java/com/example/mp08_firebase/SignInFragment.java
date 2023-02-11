@@ -52,8 +52,6 @@ public class SignInFragment extends Fragment {
     private ImageButton emailSignInButton;
     private FirebaseAuth mAuth;
 
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

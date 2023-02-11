@@ -12,13 +12,13 @@
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/like_borde.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/like_border.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/rounded_borders.xml" value="0.337" />
-        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/activity_main.xml" value="0.38697916666666665" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_home.xml" value="0.22" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_media.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_new_post.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_recuperacion.xml" value="0.22" />
-        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_register.xml" value="0.33" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_register.xml" value="0.5" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_settings.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_sign_in.xml" value="0.33" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_sign_out.xml" value="0.38697916666666665" />
@@ -31,12 +31,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_buscador.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.35625" />
-        <entry key="app/src/main/res/layout/fragment_media.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_new_post.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_recuperacion.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.35625" />
-        <entry key="app/src/main/res/layout/fragment_viaje.xml" value="0.3411458333333333" />
         <entry key="app/src/main/res/layout/viewholder_post.xml" value="0.5933649289099526" />
         <entry key="app/src/main/res/layout/viewholder_post_profile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/viewholder_post_text.xml" value="1.5" />

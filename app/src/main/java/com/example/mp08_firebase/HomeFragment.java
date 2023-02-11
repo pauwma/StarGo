@@ -32,6 +32,9 @@ public class HomeFragment extends Fragment {
     NavController navController;   // <-----------------
     public AppViewModel appViewModel;
 
+    public HomeFragment() {
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
