@@ -75,4 +75,9 @@
         android:name="com.example.mp08_firebase.ViajeFragment"
         android:label="fragment_viaje"
         tools:layout="@layout/fragment_viaje" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.mp08_firebase.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
 </navigation>
