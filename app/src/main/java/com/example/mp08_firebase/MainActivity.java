@@ -15,12 +15,18 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     NavController navController;
     private BottomNavigationView bottomNavigationView;
+
+    // Lista con los ID de los fragmentos que no deben mostrar el BottomNavigationView
+    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                if (destination.getId() == R.id.signInFragment) {
+                // verifica si el ID del fragmento actual está en la lista de fragmentos sin BottomNavigationView
+                if (fragmentsWithoutBottomNav.contains(destination.getId())) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
