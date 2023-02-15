@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        navController = Navigation.findNavController(this, R.id.frameLayout);
 
+        navController = Navigation.findNavController(this, R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         // Configura el NavController
