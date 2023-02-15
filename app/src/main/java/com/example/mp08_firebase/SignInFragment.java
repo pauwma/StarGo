@@ -35,6 +35,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -181,7 +182,7 @@ public class SignInFragment extends Fragment {
 
     private void actualizarUI(FirebaseUser currentUser) {
         if(currentUser != null){
-            navController.navigate(R.id.mainFragment);
+            navController.navigate(R.id.homeFragment);
         }
     }
 
@@ -203,10 +204,10 @@ public class SignInFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sign_in, container, false);
+
     }
 
 }

@@ -9,11 +9,11 @@
         android:icon="@drawable/add_icon"
         android:title="Search" />
     <item
-        android:id="@+id/notifications"
+        android:id="@+id/settings"
         android:icon="@drawable/candado_icon"
-        android:title="Search" />
+        android:title="Settings" />
     <item
         android:id="@+id/profile"
         android:icon="@drawable/mail_icon"
-        android:title="Search" />
+        android:title="Profile" />
 </menu>
