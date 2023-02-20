@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     // Lista con los ID de los fragmentos que no deben mostrar el BottomNavigationView
-    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment);
+    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         navController.navigate(R.id.profileFragment);
                         break;
                     case R.id.settings:
-                        navController.navigate(R.id.settingsFragment);
+                        navController.navigate(R.id.viajeFragment);
                         break;
                 }
                 return true;

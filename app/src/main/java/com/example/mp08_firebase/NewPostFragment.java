@@ -1,6 +1,7 @@
 package com.example.mp08_firebase;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,13 +50,20 @@ public class NewPostFragment extends Fragment {
     public AppViewModel appViewModel;
     Uri mediaUri;
     String mediaTipo;
+    private EditText editText;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_post, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_new_post, container, false);
+        EditText editText = (EditText) rootView.findViewById(R.id.postContentEditText);
+        editText.requestFocus();
+        // Mostrar el teclado virtual
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
+        return rootView;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -61,8 +71,10 @@ public class NewPostFragment extends Fragment {
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         publishButton = view.findViewById(R.id.publishButton);
-        postConentEditText = view.findViewById(R.id.postContentEditText);
+        editText = view.findViewById(R.id.postContentEditText);
         navController = Navigation.findNavController(view);  // <-----------------
+
+
 
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
