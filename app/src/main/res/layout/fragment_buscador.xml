@@ -46,21 +46,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador1"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador2"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
             </LinearLayout>
 
@@ -69,21 +69,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador3"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador4"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
             </LinearLayout>
 
@@ -92,21 +92,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador5"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador6"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
             </LinearLayout>
 
@@ -115,23 +115,47 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador7"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/rounded_borders"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
                     android:src="@drawable/img_buscador8"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="fitCenter"/>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_marginHorizontal="5dp"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
+                    android:src="@drawable/img_buscador5"
+                    android:scaleType="fitCenter"/>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_marginHorizontal="5dp"
+                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
+                    android:src="@drawable/img_buscador1"
+                    android:scaleType="fitCenter"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
