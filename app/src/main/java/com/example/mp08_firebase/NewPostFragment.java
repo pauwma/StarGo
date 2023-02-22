@@ -71,7 +71,7 @@ public class NewPostFragment extends Fragment {
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         publishButton = view.findViewById(R.id.publishButton);
-        editText = view.findViewById(R.id.postContentEditText);
+        postConentEditText = view.findViewById(R.id.postContentEditText);
         navController = Navigation.findNavController(view);  // <-----------------
 
 

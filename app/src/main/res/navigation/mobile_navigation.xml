@@ -80,4 +80,9 @@
         android:name="com.example.mp08_firebase.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/usersProfileFragment"
+        android:name="com.example.mp08_firebase.usersProfileFragment"
+        android:label="fragment_users_profile"
+        tools:layout="@layout/fragment_users_profile" />
 </navigation>
