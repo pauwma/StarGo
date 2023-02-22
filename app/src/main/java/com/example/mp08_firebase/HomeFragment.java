@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -133,23 +134,29 @@ public class HomeFragment extends Fragment {
                 holder.contentTextView.setPadding(0,0,0,32);
 
             }
+
+            // ? Perfil del usuario
+            holder.userInfo.setOnClickListener(view -> {
+                appViewModel.postSeleccionado.setValue(post);
+                navController.navigate(R.id.usersProfileFragment);
+            });
         }
 
         class PostViewHolder extends RecyclerView.ViewHolder {
             ImageView authorPhotoImageView, likeImageView, mediaImageView;
             TextView authorTextView, contentTextView, numLikesTextView, timeTextView;
+            ConstraintLayout userInfo;
             PostViewHolder(@NonNull View itemView) {
                 super(itemView);
-                authorPhotoImageView =
-                        itemView.findViewById(R.id.photoImageView);
+                authorPhotoImageView = itemView.findViewById(R.id.photoImageView);
                 likeImageView = itemView.findViewById(R.id.likeImageView);
                 mediaImageView = itemView.findViewById(R.id.mediaImage);
                 authorTextView = itemView.findViewById(R.id.authorTextView);
                 contentTextView = itemView.findViewById(R.id.contentTextView);
                 numLikesTextView = itemView.findViewById(R.id.numLikesTextView);
                 timeTextView = itemView.findViewById(R.id.timeTextView);
+                userInfo = itemView.findViewById(R.id.userInfoPost);
             }
         }
     }
-
 }

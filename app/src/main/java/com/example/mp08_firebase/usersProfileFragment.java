@@ -1,64 +1,188 @@
 package com.example.mp08_firebase;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link usersProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.bumptech.glide.Glide;
+import com.firebase.ui.auth.data.model.User;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class usersProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public usersProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment usersProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static usersProfileFragment newInstance(String param1, String param2) {
-        usersProfileFragment fragment = new usersProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    NavController navController;
+    ImageView photoImageView;
+    TextView displayNameTextView, emailTextView;
+    String uid;
+    public AppViewModel appViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_users_profile, container, false);
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        photoImageView = view.findViewById(R.id.photoImageView);
+        displayNameTextView = view.findViewById(R.id.displayNameTextView);
+        emailTextView = view.findViewById(R.id.emailTextView);
+        navController = Navigation.findNavController(view);
+
+        appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
+        {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            if(user != null){
+                displayNameTextView.setText(user.getDisplayName());
+                emailTextView.setText(user.getEmail());
+                uid = user.getUid();
+                Glide.with(requireView()).load(user.getPhotoUrl()).into(photoImageView);
+            }
+
+            if(user.getPhotoUrl() == null){
+                // TODO Poner nombre de usuario si no tiene
+                // String[] userMailSplit = user.getDisplayName().split("@");
+                // displayNameTextView.setText(userMailSplit[0]);
+                Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
+            }
+
+            // ? Lista de posts
+            RecyclerView profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+
+            Query query = FirebaseFirestore.getInstance().collection("posts").whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
+
+            FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
+                    .setQuery(query, Post.class)
+                    .setLifecycleOwner(this)
+                    .build();
+
+            profilePostRecyclerView.setAdapter(new PostsAdapter(options));
+
+            appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        });
+    }
+
+    class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
+        public PostsAdapter(@NonNull FirestoreRecyclerOptions<Post> options) {super(options);}
+
+        @NonNull
+        @Override
+        public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_post, parent, false));
+        }
+
+        @Override
+        protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull final Post post) {
+            Glide.with(getContext()).load(post.authorPhotoUrl).circleCrop().into(holder.authorPhotoImageView);
+            holder.authorTextView.setText(post.author);
+            holder.contentTextView.setText(post.content);
+            Calendar now = Calendar.getInstance();
+            Calendar postDate = Calendar.getInstance();
+            postDate.setTime(post.date);
+            long diff = now.getTimeInMillis() - postDate.getTimeInMillis();
+            long diffHours = diff / (60 * 60 * 1000);
+            if (diffHours < 24) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                String formattedDate = dateFormat.format(post.date);
+                holder.timeTextView.setText(formattedDate + " h");
+            } else {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
+                String formattedDate = dateFormat.format(post.date);
+                holder.timeTextView.setText(formattedDate);
+            }
+
+            // ? Gestion de likes
+            final String postKey = getSnapshots().getSnapshot(position).getId();
+            final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            if(post.likes.containsKey(uid))
+                holder.likeImageView.setImageResource(R.drawable.favorite_full);
+            else
+                holder.likeImageView.setImageResource(R.drawable.like_borde);
+            holder.numLikesTextView.setText(String.valueOf(post.likes.size()));
+            holder.likeImageView.setOnClickListener(view -> {
+                FirebaseFirestore.getInstance().collection("posts")
+                        .document(postKey)
+                        .update("likes."+uid, post.likes.containsKey(uid) ?
+                                FieldValue.delete() : true);
+            });
+
+            // ? Miniatura de media
+            if (post.mediaUrl != null) {
+                holder.contentTextView.setText(post.content);
+                holder.mediaImageView.setVisibility(View.VISIBLE);
+                if ("audio".equals(post.mediaType)) {
+                    Glide.with(requireView()).load(R.drawable.ic_baseline_audio_file_24).centerCrop().into(holder.mediaImageView);
+                } else {
+                    Glide.with(requireView()).load(post.mediaUrl).centerCrop().into(holder.mediaImageView);
+                }
+                holder.mediaImageView.setOnClickListener(view -> {
+                    appViewModel.postSeleccionado.setValue(post);
+                    navController.navigate(R.id.mediaFragment);
+                });
+                holder.contentTextView.setPadding(0,0,0,6);
+            } else {
+                holder.mediaImageView.setVisibility(View.GONE);
+                holder.contentTextView.setPadding(0,0,0,32);
+
+            }
+
+            // ? Perfil del usuario
+            holder.userInfo.setOnClickListener(view -> {
+                appViewModel.postSeleccionado.setValue(post);
+                navController.navigate(R.id.usersProfileFragment);
+            });
+        }
+
+        class PostViewHolder extends RecyclerView.ViewHolder {
+            ImageView authorPhotoImageView, likeImageView, mediaImageView;
+            TextView authorTextView, contentTextView, numLikesTextView, timeTextView;
+            ConstraintLayout userInfo;
+            PostViewHolder(@NonNull View itemView) {
+                super(itemView);
+                authorPhotoImageView = itemView.findViewById(R.id.photoImageView);
+                likeImageView = itemView.findViewById(R.id.likeImageView);
+                mediaImageView = itemView.findViewById(R.id.mediaImage);
+                authorTextView = itemView.findViewById(R.id.authorTextView);
+                contentTextView = itemView.findViewById(R.id.contentTextView);
+                numLikesTextView = itemView.findViewById(R.id.numLikesTextView);
+                timeTextView = itemView.findViewById(R.id.timeTextView);
+                userInfo = itemView.findViewById(R.id.userInfoPost);
+            }
+        }
     }
 }
