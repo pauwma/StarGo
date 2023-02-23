@@ -137,8 +137,12 @@ public class HomeFragment extends Fragment {
 
             // ? Perfil del usuario
             holder.userInfo.setOnClickListener(view -> {
-                appViewModel.postSeleccionado.setValue(post);
-                navController.navigate(R.id.usersProfileFragment);
+                if (post.uid.equals(FirebaseAuth.getInstance().getUid())){
+                    navController.navigate(R.id.profileFragment);
+                } else {
+                    appViewModel.postSeleccionado.setValue(post);
+                    navController.navigate(R.id.usersProfileFragment);
+                }
             });
         }
 
