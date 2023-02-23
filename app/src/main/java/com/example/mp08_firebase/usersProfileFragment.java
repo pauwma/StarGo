@@ -1,8 +1,6 @@
 package com.example.mp08_firebase;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,27 +9,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -54,7 +48,6 @@ public class usersProfileFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_users_profile, container, false);
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
@@ -63,9 +56,17 @@ public class usersProfileFragment extends Fragment {
         emailTextView = view.findViewById(R.id.emailTextView);
         navController = Navigation.findNavController(view);
 
+        // ChatGPT - Esta es la función en la que quiero obtener la información de firebase del usuario a través de su UID
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            UserRecord user = null;
+            try {
+                user = FirebaseAuth.getInstance().getUser(post.uid);
+            } catch (FirebaseAuthException e) {
+                e.printStackTrace();
+            }
+
 
             if(user != null){
                 displayNameTextView.setText(user.getDisplayName());

@@ -67,5 +67,7 @@ dependencies {
 
     // ? Dependencia de imagen redonda
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    
+
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
+
 }
