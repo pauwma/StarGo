@@ -117,10 +117,15 @@ public class NewPostFragment extends Fragment {
     private void guardarEnFirestore(String postContent, String mediaUrl) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        String photo = user.getPhotoUrl() == null ? null : user.getPhotoUrl().toString(); // ? Si el usuario no contiene foto
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
-        Post post = new Post(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), postContent, date, mediaUrl, mediaTipo);
+       Post post = null;
+        if (user.getPhotoUrl() == null){
+            String[] userMailSplit = user.getEmail().split("@");
+            post = new Post(user.getUid(), userMailSplit[0],"https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg", postContent, date, mediaUrl, mediaTipo);
+        } else {
+            post = new Post(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), postContent, date, mediaUrl, mediaTipo);
+        }
 
         FirebaseFirestore.getInstance().collection("posts")
                 .add(post)

@@ -69,8 +69,8 @@ public class ProfileFragment extends Fragment {
 
         if(user.getPhotoUrl() == null){
             // TODO Poner nombre de usuario si no tiene
-            // String[] userMailSplit = user.getDisplayName().split("@");
-            // displayNameTextView.setText(userMailSplit[0]);
+            String[] userMailSplit = user.getEmail().split("@");
+            displayNameTextView.setText(userMailSplit[0]);
             Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
         }
 
