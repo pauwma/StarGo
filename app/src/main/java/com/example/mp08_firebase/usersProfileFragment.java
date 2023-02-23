@@ -51,18 +51,15 @@ public class usersProfileFragment extends Fragment {
         emailTextView = view.findViewById(R.id.emailTextView);
         navController = Navigation.findNavController(view);
 
-        // ChatGPT - Esta es la función en la que quiero obtener la información de firebase del usuario a través de su UID
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
             displayNameTextView.setText(post.author);
             uid = post.uid;
             Glide.with(requireView()).load(post.authorPhotoUrl).into(photoImageView);
 
-
             if(post.authorPhotoUrl == null){
-                // TODO Poner nombre de usuario si no tiene
-                // String[] userMailSplit = user.getDisplayName().split("@");
-                // displayNameTextView.setText(userMailSplit[0]);
+                String[] userMailSplit = post.author.split("@");
+                displayNameTextView.setText(userMailSplit[0]);
                 Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
             }
 
