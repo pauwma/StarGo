@@ -17,12 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -59,23 +54,12 @@ public class usersProfileFragment extends Fragment {
         // ChatGPT - Esta es la función en la que quiero obtener la información de firebase del usuario a través de su UID
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            UserRecord user = null;
-            try {
-                user = FirebaseAuth.getInstance().getUser(post.uid);
-            } catch (FirebaseAuthException e) {
-                e.printStackTrace();
-            }
+            displayNameTextView.setText(post.author);
+            uid = post.uid;
+            Glide.with(requireView()).load(post.authorPhotoUrl).into(photoImageView);
 
 
-            if(user != null){
-                displayNameTextView.setText(user.getDisplayName());
-                emailTextView.setText(user.getEmail());
-                uid = user.getUid();
-                Glide.with(requireView()).load(user.getPhotoUrl()).into(photoImageView);
-            }
-
-            if(user.getPhotoUrl() == null){
+            if(post.authorPhotoUrl == null){
                 // TODO Poner nombre de usuario si no tiene
                 // String[] userMailSplit = user.getDisplayName().split("@");
                 // displayNameTextView.setText(userMailSplit[0]);
