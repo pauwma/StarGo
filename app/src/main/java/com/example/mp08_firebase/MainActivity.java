@@ -6,6 +6,9 @@ import android.view.View;
 
 import com.example.mp08_firebase.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,11 +31,15 @@ public class MainActivity extends AppCompatActivity {
     // Lista con los ID de los fragmentos que no deben mostrar el BottomNavigationView
     private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment);
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        mAuth = FirebaseAuth.getInstance();
 
         navController = Navigation.findNavController(this, R.id.frameLayout);
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -42,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Configura el BottomNavigationView con el NavController
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        // Persistencia del user de Firebase
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        FirebaseFirestore.getInstance().setFirestoreSettings(settings);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -75,8 +89,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (savedInstanceState == null) {
+        // Verifica si el usuario está autenticado
+        if (mAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signInFragment);
+        } else {
+            navController.navigate(R.id.homeFragment);
         }
     }
 }
