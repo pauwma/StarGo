@@ -80,6 +80,14 @@ public class usersProfileFragment extends Fragment {
 
             appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         });
+
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.homeFragment);
+            }
+        });
     }
 
     class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
