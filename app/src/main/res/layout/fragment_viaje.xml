@@ -67,28 +67,36 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:background="@drawable/custom_edit_text"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
         android:orientation="horizontal">
 
-        <ImageButton
+        <LinearLayout
             android:id="@+id/less_people"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_less_round"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:gravity="center">
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_less_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/peopleImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_user_icon"
-            android:layout_marginLeft="20dp"
-            />
+        <LinearLayout
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp">
+            <ImageView
+                android:id="@+id/peopleImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_user_icon"
+                />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/people_number"
@@ -98,21 +106,25 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:layout_marginLeft="3dp"
-            android:layout_marginRight="18dp"
+            android:layout_marginRight="8dp"
             android:layout_marginBottom="1dp"
             />
 
-        <ImageButton
+        <LinearLayout
             android:id="@+id/more_people"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_plus_round"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
-
+            android:layout_width="55dp"
+            android:layout_height="50dp"
+            android:gravity="center">
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_plus_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageButton

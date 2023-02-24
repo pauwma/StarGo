@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,7 +31,7 @@ public class ViajeFragment extends Fragment {
     NavController navController;
     private Button pickDateBtn;
     private ImageView peopleImg;
-    private ImageButton moreButton, lessButton;
+    private LinearLayout moreButton, lessButton;
     private TextView selectedDates, peopleNumber;
 
     // Variable para llevar el registro de la fecha de inicio y finalización
