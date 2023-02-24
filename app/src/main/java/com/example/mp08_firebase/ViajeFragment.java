@@ -29,10 +29,9 @@ import java.util.Locale;
 public class ViajeFragment extends Fragment {
 
     NavController navController;
-    private Button pickDateBtn;
     private ImageView peopleImg;
     private LinearLayout moreButton, lessButton;
-    private TextView selectedDates, peopleNumber;
+    private TextView dateText, dateText2, peopleNumber;
 
     // Variable para llevar el registro de la fecha de inicio y finalización
     private Calendar startDate = null;
@@ -47,33 +46,62 @@ public class ViajeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        pickDateBtn = view.findViewById(R.id.dateButton);
         lessButton = view.findViewById(R.id.less_people);
         moreButton = view.findViewById(R.id.more_people);
-        selectedDates = view.findViewById(R.id.dateText);
         peopleNumber = view.findViewById(R.id.people_number);
         peopleImg = view.findViewById(R.id.peopleImg);
+        dateText = view.findViewById(R.id.dateText);
+        dateText2 = view.findViewById(R.id.dateText2);
+
+        // Obtener el calendario con la fecha actual
+        Calendar currentDate = Calendar.getInstance();
+
+        // Mostrar la fecha actual en el dateText
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        dateText.setText(sdf.format(currentDate.getTime()));
+        currentDate.add(Calendar.DAY_OF_MONTH,1);
+        dateText2.setText(sdf.format(currentDate.getTime()));
+        dateText2.setAlpha(0.4f);
 
         // Llamar a checkNumberOfPeople() en la creación del fragmento
         checkNumberOfPeople();
 
-        pickDateBtn.setOnClickListener(new View.OnClickListener() {
+
+        dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Crear dos instancias de calendario para almacenar la fecha de inicio y finalización
                 final Calendar startDateCalendar = Calendar.getInstance();
-                final Calendar endDateCalendar = Calendar.getInstance();
+                final Calendar minDateCalendar = Calendar.getInstance();
+                minDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
 
-                // Crear dos date picker dialog, uno para la fecha de inicio y otro para la fecha de finalización
                 DatePickerDialog.OnDateSetListener startDateListener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         // Actualizar la fecha de inicio y mostrar la fecha en el botón
                         startDateCalendar.set(year, month, dayOfMonth);
                         startDate = startDateCalendar;
-                        updateSelectedDatesText();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        dateText.setText(sdf.format(startDate.getTime()));
                     }
                 };
+
+                DatePickerDialog startDatePickerDialog = new DatePickerDialog(getContext(), startDateListener,
+                        startDateCalendar.get(Calendar.YEAR), startDateCalendar.get(Calendar.MONTH), startDateCalendar.get(Calendar.DAY_OF_MONTH));
+
+                startDatePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis());
+                startDatePickerDialog.show();
+            }
+        });
+
+        dateText2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar endDateCalendar = Calendar.getInstance();
+                final Calendar minDateCalendar = Calendar.getInstance();
+                minDateCalendar.set(Calendar.HOUR_OF_DAY, 0);
+                minDateCalendar.set(Calendar.MINUTE, 0);
+                minDateCalendar.set(Calendar.SECOND, 0);
+                minDateCalendar.set(Calendar.MILLISECOND, 0);
 
                 DatePickerDialog.OnDateSetListener endDateListener = new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -81,18 +109,15 @@ public class ViajeFragment extends Fragment {
                         // Actualizar la fecha de finalización y mostrar la fecha en el botón
                         endDateCalendar.set(year, month, dayOfMonth);
                         endDate = endDateCalendar;
-                        updateSelectedDatesText();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        dateText2.setText(sdf.format(endDate.getTime()));
                     }
                 };
-
-                // Mostrar los dos date picker dialogs
-                DatePickerDialog startDatePickerDialog = new DatePickerDialog(getContext(), startDateListener,
-                        startDateCalendar.get(Calendar.YEAR), startDateCalendar.get(Calendar.MONTH), startDateCalendar.get(Calendar.DAY_OF_MONTH));
 
                 DatePickerDialog endDatePickerDialog = new DatePickerDialog(getContext(), endDateListener,
                         endDateCalendar.get(Calendar.YEAR), endDateCalendar.get(Calendar.MONTH), endDateCalendar.get(Calendar.DAY_OF_MONTH));
 
-                startDatePickerDialog.show();
+                endDatePickerDialog.getDatePicker().setMinDate(minDateCalendar.getTimeInMillis());
                 endDatePickerDialog.show();
             }
         });
@@ -103,7 +128,6 @@ public class ViajeFragment extends Fragment {
                 cambioNumeroPersonas(true);
             }
         });
-
         lessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -113,14 +137,6 @@ public class ViajeFragment extends Fragment {
     }
 
 
-
-    // Actualizar el texto del botón con la fecha de inicio y finalización seleccionadas
-    private void updateSelectedDatesText() {
-        if (startDate != null && endDate != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            selectedDates.setText(sdf.format(startDate.getTime()) + " - " + sdf.format(endDate.getTime()));
-        }
-    }
 
     private void cambioNumeroPersonas(boolean cambio){
         int tmpNumber = Integer.parseInt(String.valueOf(peopleNumber.getText()));
