@@ -20,6 +20,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
+    <ImageButton
+        android:id="@+id/likeChange"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="25dp"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/like_borde"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profilePostsRecyclerView"
         android:layout_width="match_parent"

@@ -30,6 +30,9 @@ public class usersProfileFragment extends Fragment {
     ImageView photoImageView;
     TextView displayNameTextView, emailTextView;
     String uid;
+    Query queryPosts, queryLikes;
+    boolean posts;
+    RecyclerView profilePostRecyclerView;
     public AppViewModel appViewModel;
 
     @Override
@@ -63,19 +66,30 @@ public class usersProfileFragment extends Fragment {
                 Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
             }
 
+            queryPosts = FirebaseFirestore.getInstance().collection("posts")
+                    .whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
+
+            queryLikes = FirebaseFirestore.getInstance()
+                    .collection("posts")
+                    .whereEqualTo("likes." + uid, true).orderBy("date", Query.Direction.DESCENDING);;
+
             // ? Lista de posts
-            RecyclerView profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+            profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+            changePosts(queryPosts);
+        });
 
-            Query query = FirebaseFirestore.getInstance().collection("posts").whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
-
-            FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
-                    .setQuery(query, Post.class)
-                    .setLifecycleOwner(this)
-                    .build();
-
-            profilePostRecyclerView.setAdapter(new PostsAdapter(options));
-
-            appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        // ? Botón settings
+        view.findViewById(R.id.likeChange).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (posts){
+                    posts = false;
+                    changePosts(queryLikes);
+                } else {
+                    posts = true;
+                    changePosts(queryPosts);
+                }
+            }
         });
 
         // ? Flecha Back
@@ -86,6 +100,18 @@ public class usersProfileFragment extends Fragment {
             }
         });
     }
+
+    public void changePosts(Query query){
+        FirestoreRecyclerOptions<Post> optionsPosts = new FirestoreRecyclerOptions.Builder<Post>()
+                .setQuery(query, Post.class)
+                .setLifecycleOwner(this)
+                .build();
+
+        profilePostRecyclerView.setAdapter(new PostsAdapter(optionsPosts));
+        // Actualizar la variable posts según la query recibida
+        posts = (query == queryPosts);
+    }
+
 
     class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
         public PostsAdapter(@NonNull FirestoreRecyclerOptions<Post> options) {super(options);}
