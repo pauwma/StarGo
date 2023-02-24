@@ -46,7 +46,7 @@ public class NewPostFragment extends Fragment {
 
     Button publishButton;
     EditText postConentEditText;
-    NavController navController;   // <-----------------
+    NavController navController;
     public AppViewModel appViewModel;
     Uri mediaUri;
     String mediaTipo;
@@ -119,7 +119,7 @@ public class NewPostFragment extends Fragment {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
-       Post post = null;
+        Post post = null;
         if (user.getPhotoUrl() == null){
             String[] userMailSplit = user.getEmail().split("@");
             post = new Post(user.getUid(), userMailSplit[0],"https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg", postContent, date, mediaUrl, mediaTipo);

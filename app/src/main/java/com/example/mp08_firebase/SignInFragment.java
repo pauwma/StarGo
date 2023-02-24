@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,9 +34,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.List;
 
 public class SignInFragment extends Fragment {
 
@@ -181,16 +186,35 @@ public class SignInFragment extends Fragment {
     }
 
     private void accederConEmail() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (email.isEmpty() || password.isEmpty()) {
+            Snackbar.make(getView(), "Por favor ingrese su email y contraseña", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
 
-        mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            actualizarUI(mAuth.getCurrentUser());
+        // Verificar si el correo electrónico ya está registrado en Firebase
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> signInMethods = task.getResult().getSignInMethods();
+                        if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                            // El correo electrónico ya está registrado, proceder con el inicio de sesión
+                            mAuth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(requireActivity(), task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            // El inicio de sesión fue exitoso
+                                        } else {
+                                            Snackbar.make(getView(), "Error al iniciar sesión", Snackbar.LENGTH_SHORT).show();
+                                        }
+                                    });
                         } else {
-                            Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
+                            // El correo electrónico no está registrado en Firebase
+                            Toast.makeText(getContext(), "El usuario no está registrado", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Snackbar.make(getView(), "Error al verificar el correo electrónico", Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }
