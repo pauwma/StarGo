@@ -18,7 +18,6 @@
         android:hint="Buscar"
         android:paddingStart="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,5 +57,77 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateButton" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toTopOf="@id/nextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:background="@drawable/custom_edit_text"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/less_people"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_less_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:id="@+id/peopleImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_user_icon"
+            android:layout_marginLeft="20dp"
+            />
+
+        <TextView
+            android:id="@+id/people_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="1dp"
+            />
+
+        <ImageButton
+            android:id="@+id/more_people"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_plus_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_button_inicio"
+        android:paddingLeft="22dp"
+        android:paddingTop="10dp"
+        android:paddingRight="22dp"
+        android:paddingBottom="10dp"
+        android:src="@drawable/arrow_icon_inicio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
