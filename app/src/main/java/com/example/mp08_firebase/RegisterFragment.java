@@ -122,6 +122,7 @@ public class RegisterFragment extends Fragment {
                             userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
                             DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
                             Map<String,Object> user = new HashMap<>();
+                            user.put("uid",userUID);
                             user.put("username",username);
                             user.put("email",email);
                             user.put("phone",phone);
