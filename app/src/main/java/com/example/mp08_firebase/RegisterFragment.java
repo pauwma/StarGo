@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +26,17 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterFragment extends Fragment {
 
-    NavController navController;   // <-----------------
-    private EditText emailEditText, passwordEditText;
+    NavController navController;
+    private String username, email, phone, password;
+    private EditText emailEditText, passwordEditText, usernameEditText, phoneEditText;
     private ImageButton registerButton;
     private ImageButton showPasswordButton;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore fStore;
     private Typeface originalTypeface;
 
 
@@ -40,13 +44,16 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(view);  // <-----------------
+        navController = Navigation.findNavController(view);
 
+        usernameEditText = view.findViewById(R.id.usernameEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
+        phoneEditText = view.findViewById(R.id.phoneEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
+        showPasswordButton = view.findViewById(R.id.showPasswordButton);
 
+        // ? Botón de registrar
         registerButton = view.findViewById(R.id.registerButton);
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,10 +61,8 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        passwordEditText = view.findViewById(R.id.passwordEditText);
-        showPasswordButton = view.findViewById(R.id.showPasswordButton);
+        // ? Función de mostrar contraseña
         originalTypeface = passwordEditText.getTypeface();
-
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -95,7 +100,6 @@ public class RegisterFragment extends Fragment {
         });
 
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     private void crearCuenta() {
@@ -130,15 +134,46 @@ public class RegisterFragment extends Fragment {
     private boolean validarFormulario() {
         boolean valid = true;
 
-        if (TextUtils.isEmpty(emailEditText.getText().toString())) {
-            emailEditText.setError("Required.");
+        username = usernameEditText.getText().toString().trim();
+        email = emailEditText.getText().toString().trim();
+        phone = phoneEditText.getText().toString().trim();
+        password = passwordEditText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(username)) {
+            usernameEditText.setError("Debes introducir un nombre de usuario.");
+            valid = false;
+        } else if (username.contains(" ")) {
+            usernameEditText.setError("El nombre de usuario no puede contener espacios.");
+            valid = false;
+        } else {
+            usernameEditText.setError(null);
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            emailEditText.setError("Debes introducir un correo.");
+            valid = false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Debes introducir un correo válido.");
             valid = false;
         } else {
             emailEditText.setError(null);
         }
 
-        if (TextUtils.isEmpty(passwordEditText.getText().toString())) {
-            passwordEditText.setError("Required.");
+        if (TextUtils.isEmpty(phone)) {
+            phoneEditText.setError("Debes introducir un número de teléfono.");
+            valid = false;
+        } else if (!Patterns.PHONE.matcher(phone).matches()) {
+            phoneEditText.setError("Debes introducir un número de teléfono válido.");
+            valid = false;
+        } else {
+            phoneEditText.setError(null);
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            passwordEditText.setError("Debes introducir una contraseña.");
+            valid = false;
+        } else if (password.length() < 8) {
+            passwordEditText.setError("La contraseña debe tener al menos " + 8 + " caracteres.");
             valid = false;
         } else {
             passwordEditText.setError(null);
@@ -146,6 +181,7 @@ public class RegisterFragment extends Fragment {
 
         return valid;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
