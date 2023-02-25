@@ -26,15 +26,18 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterFragment extends Fragment {
 
     NavController navController;
-    private String username, email, phone, password;
+    private String username, email, phone, password, userUID;
     private EditText emailEditText, passwordEditText, usernameEditText, phoneEditText;
-    private ImageButton registerButton;
-    private ImageButton showPasswordButton;
+    private ImageButton registerButton, showPasswordButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
     private Typeface originalTypeface;
@@ -51,6 +54,9 @@ public class RegisterFragment extends Fragment {
         phoneEditText = view.findViewById(R.id.phoneEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
         showPasswordButton = view.findViewById(R.id.showPasswordButton);
+
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         // ? Botón de registrar
         registerButton = view.findViewById(R.id.registerButton);
@@ -99,7 +105,6 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        mAuth = FirebaseAuth.getInstance();
     }
 
     private void crearCuenta() {
@@ -114,6 +119,13 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
+                            DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
+                            Map<String,Object> user = new HashMap<>();
+                            user.put("username",username);
+                            user.put("email",email);
+                            user.put("phone",phone);
+                            documentReference.set(user);
                             actualizarUI(mAuth.getCurrentUser());
                         } else {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
@@ -131,6 +143,7 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    // ? Comprobación de los inputs
     private boolean validarFormulario() {
         boolean valid = true;
 
