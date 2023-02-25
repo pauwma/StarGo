@@ -200,6 +200,7 @@ public class SignInFragment extends Fragment {
                                                     userAdd.put("uid",userUID);
                                                     userAdd.put("username", Objects.requireNonNull(user.getDisplayName()).trim());
                                                     userAdd.put("email",user.getEmail());
+                                                    userAdd.put("avatar",user.getPhotoUrl());
                                                     try {
                                                         userAdd.put("phone",user.getPhoneNumber());
                                                     } catch (Exception e){}
