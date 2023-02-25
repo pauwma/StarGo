@@ -5,4 +5,4 @@ https://www.figma.com/file/Imvsi0Qx6A3rEepnSdoddn/StarGo---MockUp?t=YbVS0gzbEXKx
 
 ToDo
 
- - Todos los iconos en outline y en solid
+ - Todos los iconos en outline y en solid 
