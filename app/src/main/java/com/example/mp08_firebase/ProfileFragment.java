@@ -1,6 +1,7 @@
 package com.example.mp08_firebase;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -35,11 +37,17 @@ import java.util.Calendar;
 
 public class ProfileFragment extends Fragment {
 
-    NavController navController;   // <-----------------
+    NavController navController;
     ImageView photoImageView, deleteImageView;
-    TextView displayNameTextView, emailTextView;
+    TextView displayNameTextView;
     String uid;
     public AppViewModel appViewModel;
+
+    private FirebaseFirestore fStore;
+    private FirebaseUser user;
+
+    // ? User Stats
+    TextView postsNumber, followersNumber, followingNumber;
 
     public ProfileFragment() {}
 
@@ -53,19 +61,36 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        fStore = FirebaseFirestore.getInstance();
+
         photoImageView = view.findViewById(R.id.photoImageView);
         displayNameTextView = view.findViewById(R.id.displayNameTextView);
-        emailTextView = view.findViewById(R.id.emailTextView);
-        navController = Navigation.findNavController(view);  // <-----------------
+        navController = Navigation.findNavController(view);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // ? User Stats
+        postsNumber = view.findViewById(R.id.postNumber);
+        followersNumber = view.findViewById(R.id.followersNumber);
+        followingNumber = view.findViewById(R.id.followingNumber);
 
         if(user != null){
             displayNameTextView.setText(user.getDisplayName());
-            emailTextView.setText(user.getEmail());
             uid = user.getUid();
             Glide.with(requireView()).load(user.getPhotoUrl()).into(photoImageView);
         }
+
+        CollectionReference postsRef = fStore.collection("posts");
+        Query queryPostsNumber = postsRef.whereEqualTo("uid", uid);
+        queryPostsNumber.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int postCount = task.getResult().size();
+                postsNumber.setText(String.valueOf(postCount));
+            } else {
+                // Error al obtener el número de posts del usuario.
+            }
+        });
+
+
 
         if(user.getPhotoUrl() == null){
             // TODO Poner nombre de usuario si no tiene
