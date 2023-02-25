@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,6 +36,10 @@ public class usersProfileFragment extends Fragment {
     boolean posts;
     RecyclerView profilePostRecyclerView;
     public AppViewModel appViewModel;
+    private FirebaseFirestore fStore;
+
+    // ? User Stats
+    TextView postsNumber, followersNumber, followingNumber;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,9 @@ public class usersProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        fStore = FirebaseFirestore.getInstance();
+
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         photoImageView = view.findViewById(R.id.photoImageView);
         displayNameTextView = view.findViewById(R.id.displayNameTextView);
@@ -75,6 +84,22 @@ public class usersProfileFragment extends Fragment {
             // ? Lista de posts
             profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
             changePosts(queryPosts);
+        });
+
+        // ? User Stats
+        postsNumber = view.findViewById(R.id.postNumber);
+        followersNumber = view.findViewById(R.id.followersNumber);
+        followingNumber = view.findViewById(R.id.followingNumber);
+
+        CollectionReference postsRef = fStore.collection("posts");
+        Query queryPostsNumber = postsRef.whereEqualTo("uid", uid);
+        queryPostsNumber.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int postCount = task.getResult().size();
+                postsNumber.setText(String.valueOf(postCount));
+            } else {
+                // Error al obtener el número de posts del usuario.
+            }
         });
 
         // ? Botón settings

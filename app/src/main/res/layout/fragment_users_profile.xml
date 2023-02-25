@@ -33,17 +33,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profilePostsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/displayNameTextView" />
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/photoImageView"
         android:layout_width="90dp"
@@ -59,10 +48,108 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="\@pauwma"
+        android:fontFamily="@font/montserrat_regular"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+
+    <LinearLayout
+        android:id="@+id/userStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/displayNameTextView">
+
+        <LinearLayout
+            android:id="@+id/postsStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp">
+            <TextView
+                android:id="@+id/postNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="0"
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat_semibold"/>
+            <TextView
+                android:id="@+id/postNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Publicaciones"
+                android:fontFamily="@font/montserrat_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/followersStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp">
+            <TextView
+                android:id="@+id/followersNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="0"
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat_semibold"/>
+            <TextView
+                android:id="@+id/followersNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Seguidores"
+                android:fontFamily="@font/montserrat_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/followingStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp">
+            <TextView
+                android:id="@+id/followingNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="0"
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat_semibold"/>
+            <TextView
+                android:id="@+id/followingNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Siguiendo"
+                android:fontFamily="@font/montserrat_regular"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profilePostsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userStats" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
