@@ -244,7 +244,7 @@ public class SignInFragment extends Fragment {
                                     .addOnCompleteListener(requireActivity(), task2 -> {
                                         if (task2.isSuccessful()) {
                                             FirebaseUser user = mAuth.getCurrentUser();
-                                            // El inicio de sesión fue exitoso
+                                            actualizarUI(user);
                                         } else {
                                             Snackbar.make(getView(), "Error al iniciar sesión", Snackbar.LENGTH_SHORT).show();
                                         }
