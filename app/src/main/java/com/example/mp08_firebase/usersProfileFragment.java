@@ -102,7 +102,7 @@ public class usersProfileFragment extends Fragment {
             }
         });
 
-        // ? Botón settings
+        // ? Botón likes
         view.findViewById(R.id.likeChange).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

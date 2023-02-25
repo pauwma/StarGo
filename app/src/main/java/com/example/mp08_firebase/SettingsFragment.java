@@ -35,6 +35,14 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
+
         // ? Cerrar sesión
         view.findViewById(R.id.cerrarSesion).setOnClickListener(new View.OnClickListener() {
             @Override
