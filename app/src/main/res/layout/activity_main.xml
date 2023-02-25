@@ -22,6 +22,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        app:layout_constraintBottom_toBottomOf="@+id/frameLayout" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:visibility="invisible"
         android:id="@+id/bottom_navigation_view"
