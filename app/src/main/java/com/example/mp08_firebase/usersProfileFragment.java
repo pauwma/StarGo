@@ -51,7 +51,6 @@ public class usersProfileFragment extends Fragment {
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         photoImageView = view.findViewById(R.id.photoImageView);
         displayNameTextView = view.findViewById(R.id.displayNameTextView);
-        emailTextView = view.findViewById(R.id.emailTextView);
         navController = Navigation.findNavController(view);
 
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
