@@ -33,13 +33,21 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class SignInFragment extends Fragment {
 
@@ -48,9 +56,9 @@ public class SignInFragment extends Fragment {
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private EditText emailEditText, passwordEditText;
     private Typeface originalTypeface;
-    private ImageButton showPasswordButton;
-    private ImageButton emailSignInButton;
+    private ImageButton showPasswordButton, emailSignInButton;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore fStore;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -58,6 +66,17 @@ public class SignInFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
+        emailEditText = view.findViewById(R.id.emailEditText);
+        emailSignInButton = view.findViewById(R.id.emailSignInButton);
+
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        showPasswordButton = view.findViewById(R.id.showPasswordButton);
+        originalTypeface = passwordEditText.getTypeface();
+
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
+        // ? Botón crear cuenta
         view.findViewById(R.id.gotoCreateAccountTextView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,12 +92,6 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        emailEditText = view.findViewById(R.id.emailEditText);
-        emailSignInButton = view.findViewById(R.id.emailSignInButton);
-
-        passwordEditText = view.findViewById(R.id.passwordEditText);
-        showPasswordButton = view.findViewById(R.id.showPasswordButton);
-        originalTypeface = passwordEditText.getTypeface();
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -116,14 +129,13 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        mAuth = FirebaseAuth.getInstance();
-
         emailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 accederConEmail();
             }
         });
+
         googleSignInButton = view.findViewById(R.id.googleSignInButton);
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -161,22 +173,49 @@ public class SignInFragment extends Fragment {
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         if(acct == null) return;
-        mAuth.signInWithCredential(GoogleAuthProvider.getCredential(acct.getIdToken(
-                ), null))
-                .addOnCompleteListener(requireActivity(), new
-                        OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.e("ABCD", "signInWithCredential:success");
-                                    actualizarUI(mAuth.getCurrentUser());
-                                } else {
-                                    Log.e("ABCD", "signInWithCredential:failure",
-                                            task.getException());
-                                }
-                            }
-                        });
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            db.collection("users")
+                                    .whereEqualTo("uid", user.getUid())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                                if (documents.size() > 0) {
+                                                    actualizarUI(user);
+                                                } else {
+                                                    String userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
+                                                    DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
+                                                    Map<String,Object> userAdd = new HashMap<>();
+                                                    userAdd.put("uid",userUID);
+                                                    userAdd.put("username", Objects.requireNonNull(user.getDisplayName()).trim());
+                                                    userAdd.put("email",user.getEmail());
+                                                    try {
+                                                        userAdd.put("phone",user.getPhoneNumber());
+                                                    } catch (Exception e){}
+                                                    documentReference.set(userAdd);
+                                                    actualizarUI(mAuth.getCurrentUser());
+                                                }
+                                            } else {
+                                            }
+                                        }
+                                    });
+                        } else {
+                        }
+                    }
+                });
     }
+
 
 
     private void actualizarUI(FirebaseUser currentUser) {
