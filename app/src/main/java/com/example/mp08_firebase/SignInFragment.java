@@ -52,7 +52,7 @@ import java.util.Objects;
 public class SignInFragment extends Fragment {
 
     NavController navController;
-    private SignInButton googleSignInButton;
+    private ImageButton googleSignInButton;
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private EditText emailEditText, passwordEditText;
     private Typeface originalTypeface;
@@ -121,10 +121,10 @@ public class SignInFragment extends Fragment {
             public void onClick(View view) {
                 if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.ocultar_icon);
+                    showPasswordButton.setImageResource(R.drawable.eye_icon);
                 } else {
                     passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.ocultar_no_icon);
+                    showPasswordButton.setImageResource(R.drawable.eye_close_icon);
                 }
             }
         });
