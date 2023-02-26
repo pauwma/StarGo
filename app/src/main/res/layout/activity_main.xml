@@ -9,12 +9,12 @@
     tools:openDrawer="start">
 
     <fragment
-        android:id="@+id/frameLayout"
+        android:id="@+id/mainLayout"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,11 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/border"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout" />
+        app:layout_constraintBottom_toBottomOf="@+id/mainLayout" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:visibility="invisible"
-        android:id="@+id/bottom_navigation_view"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +39,5 @@
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="unlabeled"
         app:itemHorizontalTranslationEnabled="false" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

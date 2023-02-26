@@ -41,11 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        navController = Navigation.findNavController(this, R.id.frameLayout);
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
 
         // Configura el NavController
-        NavController navController = Navigation.findNavController(this, R.id.frameLayout);
+        navController = Navigation.findNavController(this, R.id.mainLayout);
 
         // Configura el BottomNavigationView con el NavController
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
