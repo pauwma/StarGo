@@ -25,7 +25,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#1f1f1f"
+        android:background="@color/border"
         app:layout_constraintBottom_toBottomOf="@+id/frameLayout" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

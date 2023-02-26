@@ -5,4 +5,6 @@
     <color name="black">#FF000000</color>
     <color name="background">#000000</color> <!--#0a0a0a #0f0f0f #000000-->
     <color name="white">#FFFFFFFF</color>
+    <color name="secondary">#262626</color>
+    <color name="border">#1f1f1f</color>
 </resources>
