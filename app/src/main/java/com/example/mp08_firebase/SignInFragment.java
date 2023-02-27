@@ -201,9 +201,6 @@ public class SignInFragment extends Fragment {
                                                     userAdd.put("username", Objects.requireNonNull(user.getDisplayName()).trim());
                                                     userAdd.put("email",user.getEmail());
                                                     userAdd.put("avatar",user.getPhotoUrl());
-                                                    try {
-                                                        userAdd.put("phone",user.getPhoneNumber());
-                                                    } catch (Exception e){}
                                                     documentReference.set(userAdd);
                                                     actualizarUI(mAuth.getCurrentUser());
                                                 }

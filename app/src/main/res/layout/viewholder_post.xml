@@ -10,34 +10,54 @@
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/constraintPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1e1e1e"
-        android:maxHeight="300dp">
+        android:minHeight="100dp"
+        android:background="#1e1e1e">
 
         <ImageView
             android:id="@+id/mediaImage"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_borders"
             android:scaleType="centerInside"
+            android:src="@drawable/ic_user_icon3"
+            app:layout_constraintBottom_toBottomOf="@+id/fade_up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contentTextView"
-            app:srcCompat="@drawable/rounded_borders"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rounded_borders" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/userInfoPost"
+        <View
+            android:id="@+id/fade_up"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/dark_fade"
+            android:rotation="180"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/fade_down"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/dark_fade"
+            app:layout_constraintBottom_toBottomOf="@+id/mediaImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/userInfoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="12dp"
-            android:orientation="horizontal"
-            android:paddingTop="4dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/photoImageView"
@@ -45,7 +65,7 @@
                 android:layout_height="30dp"
                 android:adjustViewBounds="true"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:layout_editor_absoluteY="4dp" />
 
             <TextView
                 android:id="@+id/authorTextView"
@@ -54,83 +74,94 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:fontFamily="@font/montserrat_bold"
-                android:gravity="center_vertical"
+                android:textColor="@color/white"
                 android:text="Author"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/photoImageView"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/puntoBetweenUserTime"
-                style="@style/Base.TextAppearance.AppCompat.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="1dp"
-                android:gravity="center"
-                android:paddingLeft="2dp"
-                android:text="·"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/authorTextView"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginLeft="6dp"/>
 
             <TextView
                 android:id="@+id/timeTextView"
                 style="@style/Base.TextAppearance.AppCompat.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
                 android:fontFamily="@font/montserrat_semibold"
-                android:gravity="center"
-                android:paddingLeft="6dp"
                 android:text="Time"
+                android:textColor="@color/white"
                 android:textAlignment="center"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/puntoBetweenUserTime"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginLeft="8dp"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/contentTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:paddingBottom="12dp"
+            android:layout_marginBottom="14dp"
             android:text="Contenido"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userInfoPost" />
+            android:paddingTop="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/likeImageView"
+
+        <LinearLayout
+            android:id="@+id/actionsLayout"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="12dp"
             android:layout_marginEnd="14dp"
-            android:layout_marginBottom="14dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/numLikesTextView"
-            app:srcCompat="@drawable/favorite_full" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/numLikesTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="16dp"
-            android:text="200K"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/likeImageView" />
+            <ImageButton
+                android:id="@+id/commentImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                app:srcCompat="@drawable/comment_icon"
+                android:layout_marginRight="8dp"/>
 
+            <TextView
+                android:id="@+id/numCommentsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/white"
+                android:text="0"
+                android:textAlignment="textEnd" />
+
+            <ImageButton
+                android:id="@+id/likeImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                app:srcCompat="@drawable/favorite_full"
+                android:layout_marginRight="8dp"/>
+
+            <TextView
+                android:id="@+id/numLikesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:text="200K"
+                android:textAlignment="textEnd"
+                android:textColor="@color/white" />
+
+            <ImageButton
+                android:id="@+id/shareImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                app:srcCompat="@drawable/share_icon" />
+
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

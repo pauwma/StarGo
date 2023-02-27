@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -104,11 +107,11 @@ public class HomeFragment extends Fragment {
             final String postKey = getSnapshots().getSnapshot(position).getId();
             final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             if(post.likes.containsKey(uid))
-                holder.likeImageView.setImageResource(R.drawable.favorite_full);
+                holder.likeImageButton.setImageResource(R.drawable.like_solid_icon);
             else
-                holder.likeImageView.setImageResource(R.drawable.like_borde);
+                holder.likeImageButton.setImageResource(R.drawable.like_icon);
             holder.numLikesTextView.setText(String.valueOf(post.likes.size()));
-            holder.likeImageView.setOnClickListener(view -> {
+            holder.likeImageButton.setOnClickListener(view -> {
                 FirebaseFirestore.getInstance().collection("posts")
                         .document(postKey)
                         .update("likes."+uid, post.likes.containsKey(uid) ?
@@ -128,11 +131,18 @@ public class HomeFragment extends Fragment {
                     appViewModel.postSeleccionado.setValue(post);
                     navController.navigate(R.id.mediaFragment);
                 });
-                holder.contentTextView.setPadding(0,0,0,6);
+                //holder.contentTextView.setPadding(0,0,0,6);
             } else {
                 holder.mediaImageView.setVisibility(View.GONE);
-                holder.contentTextView.setPadding(0,0,0,32);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(holder.constraintLayout);
+                // AQUI CHATGPT
+                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.BOTTOM, holder.actionsLayout.getId(), ConstraintSet.TOP);
+                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.TOP, holder.userInfo.getId(), ConstraintSet.BOTTOM);
+                constraintSet.applyTo(holder.constraintLayout);
 
+                holder.fadeUp.setVisibility(View.GONE);
+                holder.fadeDown.setVisibility(View.GONE);
             }
 
             // ? Perfil del usuario
@@ -147,19 +157,28 @@ public class HomeFragment extends Fragment {
         }
 
         class PostViewHolder extends RecyclerView.ViewHolder {
-            ImageView authorPhotoImageView, likeImageView, mediaImageView;
+            ConstraintLayout constraintLayout;
+            ImageView authorPhotoImageView, mediaImageView;
+            ImageButton likeImageButton, commentImageButton, shareImageButton;
             TextView authorTextView, contentTextView, numLikesTextView, timeTextView;
-            ConstraintLayout userInfo;
+            View fadeUp, fadeDown;
+            LinearLayout userInfo, actionsLayout;
             PostViewHolder(@NonNull View itemView) {
                 super(itemView);
+                constraintLayout = itemView.findViewById(R.id.constraintPost);
                 authorPhotoImageView = itemView.findViewById(R.id.photoImageView);
-                likeImageView = itemView.findViewById(R.id.likeImageView);
+                likeImageButton = itemView.findViewById(R.id.likeImageButton);
+                commentImageButton = itemView.findViewById(R.id.commentImageButton);
+                shareImageButton = itemView.findViewById(R.id.shareImageButton);
                 mediaImageView = itemView.findViewById(R.id.mediaImage);
                 authorTextView = itemView.findViewById(R.id.authorTextView);
                 contentTextView = itemView.findViewById(R.id.contentTextView);
                 numLikesTextView = itemView.findViewById(R.id.numLikesTextView);
                 timeTextView = itemView.findViewById(R.id.timeTextView);
-                userInfo = itemView.findViewById(R.id.userInfoPost);
+                userInfo = itemView.findViewById(R.id.userInfoLayout);
+                actionsLayout = itemView.findViewById(R.id.actionsLayout);
+                fadeUp = itemView.findViewById(R.id.fade_up);
+                fadeDown = itemView.findViewById(R.id.fade_down);
             }
         }
     }
