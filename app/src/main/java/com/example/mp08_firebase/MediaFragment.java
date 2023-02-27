@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +17,10 @@ import com.bumptech.glide.Glide;
 
 public class MediaFragment extends Fragment {
     VideoView videoView;
-    ImageView imageView;
+    ImageView imageView, photoImageView;
+    TextView authorTextView, timeTextView;
     public AppViewModel appViewModel;
+    String userUID;
     public MediaFragment() {
 // Required empty public constructor
     }
@@ -32,8 +35,12 @@ public class MediaFragment extends Fragment {
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         imageView = view.findViewById(R.id.imageView);
         videoView = view.findViewById(R.id.videoView);
+        photoImageView = view.findViewById(R.id.photoImageView);
+        authorTextView = view.findViewById(R.id.authorTextView);
+        timeTextView = view.findViewById(R.id.timeTextView);
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
+            userUID = post.uid;
             if ("video".equals(post.mediaType) ||
                     "audio".equals(post.mediaType)) {
                 MediaController mc = new MediaController(requireContext());
@@ -46,4 +53,5 @@ public class MediaFragment extends Fragment {
             }
         });
     }
+
 }
