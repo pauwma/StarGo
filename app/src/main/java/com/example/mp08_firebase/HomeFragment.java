@@ -120,6 +120,8 @@ public class HomeFragment extends Fragment {
 
             // ? Miniatura de media
             if (post.mediaUrl != null) {
+                holder.fadeUp.setVisibility(View.VISIBLE);
+                holder.fadeDown.setVisibility(View.VISIBLE);
                 holder.contentTextView.setText(post.content);
                 holder.mediaImageView.setVisibility(View.VISIBLE);
                 if ("audio".equals(post.mediaType)) {
