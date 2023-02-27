@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
                 holder.mediaImageView.setVisibility(View.GONE);
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(holder.constraintLayout);
-                // AQUI CHATGPT
+                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.RIGHT, holder.actionsLayout.getId(), ConstraintSet.RIGHT);
                 constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.BOTTOM, holder.actionsLayout.getId(), ConstraintSet.TOP);
                 constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.TOP, holder.userInfo.getId(), ConstraintSet.BOTTOM);
                 constraintSet.applyTo(holder.constraintLayout);
