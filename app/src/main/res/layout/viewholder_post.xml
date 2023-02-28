@@ -88,6 +88,7 @@
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:textSize="12sp"
+                android:alpha="0.7"
                 android:layout_marginLeft="8dp"/>
         </LinearLayout>
 
@@ -159,8 +160,6 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 app:srcCompat="@drawable/share_icon" />
-
-
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
