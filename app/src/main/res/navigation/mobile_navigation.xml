@@ -85,4 +85,9 @@
         android:name="com.example.mp08_firebase.usersProfileFragment"
         android:label="fragment_users_profile"
         tools:layout="@layout/fragment_users_profile" />
+    <fragment
+        android:id="@+id/seleccionViajeFragment"
+        android:name="com.example.mp08_firebase.SeleccionViajeFragment"
+        android:label="fragment_seleccion_viaje"
+        tools:layout="@layout/fragment_seleccion_viaje" />
 </navigation>
