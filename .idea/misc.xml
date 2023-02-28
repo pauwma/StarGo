@@ -34,7 +34,6 @@
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_viaje.xml" value="0.5" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/nav_header_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/viewholder_post.xml" value="0.6610526315789473" />
-        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/viewholder_post_profile.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/menu/main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/mipmap-anydpi-v26/ic_launcher2_round.xml" value="0.3235" />
@@ -53,6 +52,7 @@
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_users_profile.xml" value="0.6223839854413102" />
+        <entry key="app/src/main/res/layout/fragment_viaje.xml" value="0.33" />
         <entry key="app/src/main/res/layout/viewholder_post.xml" value="0.5933649289099526" />
         <entry key="app/src/main/res/layout/viewholder_post_profile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/viewholder_post_text.xml" value="1.5" />
