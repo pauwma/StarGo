@@ -58,23 +58,29 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int currentFragmentId = navController.getCurrentDestination().getId();
+                int selectedFragmentId = 0;
                 switch (item.getItemId()) {
                     case R.id.home:
-                        navController.navigate(R.id.homeFragment);
+                        selectedFragmentId = R.id.homeFragment;
                         break;
                     case R.id.search:
-                        navController.navigate(R.id.buscadorFragment);
+                        selectedFragmentId = R.id.buscadorFragment;
                         break;
                     case R.id.profile:
-                        navController.navigate(R.id.profileFragment);
+                        selectedFragmentId = R.id.profileFragment;
                         break;
                     case R.id.settings:
-                        navController.navigate(R.id.viajeFragment);
+                        selectedFragmentId = R.id.viajeFragment;
                         break;
+                }
+                if (currentFragmentId != selectedFragmentId) {
+                    navController.navigate(selectedFragmentId);
                 }
                 return true;
             }
         });
+
 
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
