@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         navController.navigate(R.id.profileFragment);
                         break;
                     case R.id.settings:
-                        navController.navigate(R.id.viajeFragment);
+                        navController.navigate(R.id.seleccionViajeFragment);
                         break;
                 }
                 return true;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Verifica si el usuario está autenticado
         if (mAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signInFragment);
+            navController.navigate(R.id.seleccionViajeFragment);
         } else {
             navController.navigate(R.id.homeFragment);
         }

@@ -1,6 +1,7 @@
 package com.example.mp08_firebase;
 
 import android.app.DatePickerDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,7 +42,7 @@ public class ViajeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        navController = Navigation.findNavController(view);
         lessButton = view.findViewById(R.id.less_people);
         moreButton = view.findViewById(R.id.more_people);
         peopleNumber = view.findViewById(R.id.people_number);
@@ -62,6 +63,12 @@ public class ViajeFragment extends Fragment {
         // Llamar a checkNumberOfPeople() en la creación del fragmento
         checkNumberOfPeople();
 
+        view.findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.seleccionViajeFragment);
+            }
+        });
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override

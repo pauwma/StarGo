@@ -68,8 +68,5 @@ dependencies {
     // ? Dependencia de imagen redonda
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    // ? Dependencia de Discrete Scroll View    -->     https://github.com/yarolegovich/DiscreteScrollView
-    // implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
-    implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
 
 }
