@@ -54,13 +54,14 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_media.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_new_post.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_planeta_viajes.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_recuperacion.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.67" />
         <entry key="app/src/main/res/layout/fragment_seleccion_viaje.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_users_profile.xml" value="0.6223839854413102" />
-        <entry key="app/src/main/res/layout/fragment_viaje.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_viaje.xml" value="0.33" />
         <entry key="app/src/main/res/layout/viewholder_post.xml" value="0.5933649289099526" />
         <entry key="app/src/main/res/layout/viewholder_post_profile.xml" value="0.5" />
         <entry key="app/src/main/res/layout/viewholder_post_text.xml" value="1.5" />

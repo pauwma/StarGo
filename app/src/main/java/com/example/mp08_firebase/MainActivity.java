@@ -91,12 +91,6 @@ public class MainActivity extends AppCompatActivity {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
-
-                    // verifica si el fragmento actual pertenece a un elemento del BottomNavigationView
-                    MenuItem item = bottomNavigationView.getMenu().findItem(destination.getId());
-                    if (item != null) {
-                        bottomNavigationView.setSelectedItemId(item.getItemId());
-                    }
                 }
             }
         });

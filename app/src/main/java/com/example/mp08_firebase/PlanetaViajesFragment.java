@@ -33,5 +33,12 @@ public class PlanetaViajesFragment extends Fragment {
                 navController.navigateUp();
             }
         });
+
+        view.findViewById(R.id.viaje2CardView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.seleccionViajeFragment);
+            }
+        });
     }
 }

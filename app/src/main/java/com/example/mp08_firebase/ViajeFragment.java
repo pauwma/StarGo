@@ -32,5 +32,12 @@ public class ViajeFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.recomendado2Layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.seleccionViajeFragment);
+            }
+        });
+
     }
 }
