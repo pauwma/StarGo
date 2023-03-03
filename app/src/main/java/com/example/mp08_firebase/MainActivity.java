@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // ! NO SE SELECCIONA EL ITEM SEGÚN EL FRAGMENTO        PEJ: PERFIL PROPIO POR POST NO SELECCIONA EL PERFIL
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
@@ -90,9 +91,16 @@ public class MainActivity extends AppCompatActivity {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
+
+                    // verifica si el fragmento actual pertenece a un elemento del BottomNavigationView
+                    MenuItem item = bottomNavigationView.getMenu().findItem(destination.getId());
+                    if (item != null) {
+                        bottomNavigationView.setSelectedItemId(item.getItemId());
+                    }
                 }
             }
         });
+
 
         // Verifica si el usuario está autenticado
         if (mAuth.getCurrentUser() == null) {

@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3235" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/bottom_sheet.xml" value="0.275" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/custom_button_1e.xml" value="0.275" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/custom_button_create_account.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/custom_button_inicio.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/custom_edit_text.xml" value="0.337" />
@@ -16,6 +18,7 @@
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/like_borde.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/like_border.xml" value="0.337" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/rounded_borders.xml" value="0.337" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/drawable/rounded_borders_principal.xml" value="0.275" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/app_bar_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/content_main.xml" value="0.38697916666666665" />
@@ -24,10 +27,12 @@
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_media.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_new_post.xml" value="0.25" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_planeta_viajes.xml" value="0.3729166666666667" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_recuperacion.xml" value="0.22" />
-        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_register.xml" value="0.5" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_register.xml" value="0.25" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_seleccion_viaje.xml" value="0.22" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_selected_viaje.xml" value="0.25" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_settings.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_sign_in.xml" value="0.33" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_sign_out.xml" value="0.38697916666666665" />
@@ -35,6 +40,7 @@
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/fragment_viaje.xml" value="0.22" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/nav_header_main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/viewholder_post.xml" value="0.6610526315789473" />
+        <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/layout/viewholder_post_profile.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/menu/main.xml" value="0.38697916666666665" />
         <entry key="..\:/Aplicaciones/AndroidStudio/StarGo/app/src/main/res/mipmap-anydpi-v26/ic_launcher2_round.xml" value="0.3235" />
