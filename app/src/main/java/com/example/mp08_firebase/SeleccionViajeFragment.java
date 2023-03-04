@@ -42,10 +42,13 @@ public class SeleccionViajeFragment extends Fragment {
         carousel.setAutoPlayDelay(3500);
         List<CarouselItem> list = new ArrayList<>();
         list.add(new CarouselItem(R.drawable.starship));
-        list.add(new CarouselItem(R.drawable.starship_expose_1));
-        list.add(new CarouselItem(R.drawable.starship_expose_2));
-        list.add(new CarouselItem(R.drawable.starship_expose_3));
-        list.add(new CarouselItem(R.drawable.starship_expose_4));
+        list.add(new CarouselItem(R.drawable.suite_2));
+        list.add(new CarouselItem(R.drawable.premium_1));
+        list.add(new CarouselItem(R.drawable.starship30_2));
+        list.add(new CarouselItem(R.drawable.starship30_3));
+        list.add(new CarouselItem(R.drawable.starship30_4));
+        list.add(new CarouselItem(R.drawable.starship30_5));
+        list.add(new CarouselItem(R.drawable.starship30_6));
         carousel.setData(list);
 
 
