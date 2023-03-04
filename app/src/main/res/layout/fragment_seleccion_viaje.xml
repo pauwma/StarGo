@@ -13,19 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/exposeImages"
+        <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+            android:id="@+id/sliderImages"
             android:layout_width="match_parent"
             android:layout_height="170dp"
-            android:src="@drawable/starship_expose_4"
-            android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:imageScaleType="centerCrop"
+            app:showCaption="false"
+            app:showNavigationButtons="false"
+            app:previousButtonLayout="@null"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/border"
-            app:layout_constraintBottom_toBottomOf="@+id/exposeImages" />
+            app:layout_constraintBottom_toBottomOf="@+id/sliderImages" />
 
         <LinearLayout
             android:id="@+id/upBar"
@@ -58,7 +60,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/exposeImages">
+            app:layout_constraintTop_toBottomOf="@id/sliderImages">
 
             <TextView
                 android:id="@+id/tituloNaveTextView"
@@ -71,7 +73,7 @@
                 android:textColor="@color/white"
                 android:textSize="24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/exposeImages" />
+                app:layout_constraintTop_toBottomOf="@id/sliderImages" />
 
             <ImageView
                 android:id="@+id/empresaImageView"
@@ -162,12 +164,6 @@
                         app:cardBackgroundColor="@color/secondary"
                         app:cardCornerRadius="10dp"
                         app:cardUseCompatPadding="true">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/moonship" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
