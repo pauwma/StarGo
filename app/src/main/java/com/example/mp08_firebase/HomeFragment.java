@@ -1,5 +1,7 @@
 package com.example.mp08_firebase;
 
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,8 +39,10 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
 
-    NavController navController;   // <-----------------
-    public AppViewModel appViewModel;
+    private NavController navController;
+    private AppViewModel appViewModel;
+    private FloatingActionButton addButtonA, addButtonB;
+    private FloatingActionsMenu fabMenu;
 
     public HomeFragment() {
     }
@@ -45,14 +51,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(view);  // <-----------------
-
-        view.findViewById(R.id.gotoNewPostFragmentButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.newPostFragment);
-            }
-        });
+        navController = Navigation.findNavController(view);
 
         RecyclerView postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
 
@@ -64,6 +63,27 @@ public class HomeFragment extends Fragment {
                 .build();
 
         postsRecyclerView.setAdapter(new PostsAdapter(options));
+
+        // AQUI CHATGPT
+        addButtonA = view.findViewById(R.id.action_a);
+        addButtonB = view.findViewById(R.id.action_b);
+        fabMenu = view.findViewById(R.id.multiple_actions);
+
+        addButtonA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.newPostFragment);
+                fabMenu.collapse();
+            }
+        });
+
+        addButtonB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.newPostFragment);
+                fabMenu.collapse();
+            }
+        });
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
     }
@@ -156,6 +176,7 @@ public class HomeFragment extends Fragment {
                     navController.navigate(R.id.usersProfileFragment);
                 }
             });
+
         }
 
         class PostViewHolder extends RecyclerView.ViewHolder {
