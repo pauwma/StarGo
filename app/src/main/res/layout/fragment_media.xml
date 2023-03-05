@@ -113,7 +113,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="2px"
                 android:background="@color/border"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintTop_toBottomOf="parent" />
@@ -195,9 +195,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_height="2px"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/border"
                 app:layout_constraintBottom_toTopOf="@id/commentsLayout"
                 app:layout_constraintTop_toBottomOf="@id/descTextView" />
@@ -206,7 +206,7 @@
                 android:id="@+id/commentsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 app:layout_constraintTop_toBottomOf="@id/descTextView"
                 android:orientation="vertical">

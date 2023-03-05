@@ -138,26 +138,7 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/custom_button_inicio"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent">
 
-                            <TextView
-                                android:id="@+id/precioTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="1.499€"
-                                android:textColor="@color/white"
-                                android:textSize="18dp" />
-                        </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -244,25 +225,6 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/custom_button_inicio"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="1.450€"
-                                android:textColor="@color/white"
-                                android:textSize="18dp" />
-                        </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -344,25 +306,7 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/custom_button_inicio"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="1.499€"
-                                android:textColor="@color/white"
-                                android:textSize="18dp" />
-                        </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -448,26 +392,6 @@
                                 android:textColor="@color/white"
                                 android:textSize="12dp" />
 
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:background="@drawable/custom_button_inicio"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:fontFamily="@font/montserrat_semibold"
-                                android:text="1.450€"
-                                android:textColor="@color/white"
-                                android:textSize="18dp" />
                         </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

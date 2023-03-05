@@ -122,7 +122,8 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1.5dp"
+                        android:alpha="0.6"
                         android:layout_marginHorizontal="4dp"
                         android:layout_marginTop="2dp"
                         android:background="@color/white"/>
@@ -154,7 +155,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
+                    android:layout_height="250dp"
                     app:cardBackgroundColor="@color/secondary"
                     app:cardCornerRadius="10dp"
                     app:cardUseCompatPadding="true">
@@ -234,7 +235,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
+                    android:layout_height="250dp"
                     app:cardBackgroundColor="@color/secondary"
                     app:cardCornerRadius="10dp"
                     app:cardUseCompatPadding="true">
@@ -277,7 +278,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:text="Premiun"
+                            android:text="Premium"
                             android:textColor="@color/white"
                             android:textSize="20dp"
                             app:layout_constraintBottom_toTopOf="@id/LocationTextView2"

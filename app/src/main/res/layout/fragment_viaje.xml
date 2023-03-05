@@ -67,11 +67,13 @@
             android:layout_marginTop="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/categoriasTextView">
+            app:layout_constraintTop_toBottomOf="@id/categoriasTextView"
+            android:scrollbars="none">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp">
 
                 <LinearLayout
                     android:id="@+id/tierraLayout"
@@ -88,7 +90,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="68dp"
                         android:layout_height="68dp"
-                        app:cardBackgroundColor="@color/secondary"
+                        app:cardBackgroundColor="@color/background"
                         app:cardCornerRadius="10dp"
                         app:cardUseCompatPadding="true">
 
@@ -111,7 +113,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/searchSettings" />
 
                 </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/isslayout"
                     android:layout_width="wrap_content"
@@ -127,7 +128,7 @@
                         android:layout_width="68dp"
                         android:layout_height="68dp"
                         app:cardCornerRadius="10dp"
-                        app:cardBackgroundColor="@color/secondary"
+                        app:cardBackgroundColor="@color/background"
                         app:cardUseCompatPadding="true">
 
                         <ImageView
@@ -142,46 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
-                        android:text="ISS"
-                        android:textColor="@color/white"
-                        android:textSize="12dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/searchSettings" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lunaLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="68dp"
-                        android:layout_height="68dp"
-                        app:cardBackgroundColor="@color/secondary"
-                        app:cardCornerRadius="10dp"
-                        app:cardUseCompatPadding="true">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/earth" />
-
-                    </androidx.cardview.widget.CardView>
-
-                    <TextView
-                        style="@style/title1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:text="Luna"
+                        android:text="Estaciones"
                         android:textColor="@color/white"
                         android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -203,7 +165,7 @@
                         android:layout_width="68dp"
                         android:layout_height="68dp"
                         app:cardCornerRadius="10dp"
-                        app:cardBackgroundColor="@color/secondary"
+                        app:cardBackgroundColor="@color/background"
                         app:cardUseCompatPadding="true">
 
                         <ImageView
@@ -241,7 +203,7 @@
                         android:layout_width="68dp"
                         android:layout_height="68dp"
                         app:cardCornerRadius="10dp"
-                        app:cardBackgroundColor="@color/secondary"
+                        app:cardBackgroundColor="@color/background"
                         app:cardUseCompatPadding="true">
 
                         <ImageView
@@ -258,6 +220,79 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
                         android:text="Marte"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/europalayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/martelayout"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="@color/background"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:layout_margin="2dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/europa" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        style="@style/title1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Europa"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/proximablayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginEnd="50dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/europalayout"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="@color/background"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:layout_margin="2dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/proxima_b" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        style="@style/title1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Próxima B"
                         android:textColor="@color/white"
                         android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="parent"/>
@@ -383,26 +418,6 @@
 
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:background="@drawable/custom_button_inicio"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintRight_toRightOf="parent">
-
-                                <TextView
-                                    android:id="@+id/precioTextView"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginHorizontal="8dp"
-                                    android:layout_marginVertical="4dp"
-                                    android:fontFamily="@font/montserrat_semibold"
-                                    android:text="1.499€"
-                                    android:textColor="@color/white"
-                                    android:textSize="18dp" />
-                            </LinearLayout>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -495,26 +510,6 @@
                                     android:textColor="@color/white"
                                     android:textSize="12dp" />
 
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:background="@drawable/custom_button_inicio"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintRight_toRightOf="parent">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginHorizontal="8dp"
-                                    android:layout_marginVertical="4dp"
-                                    android:fontFamily="@font/montserrat_semibold"
-                                    android:text="1.450€"
-                                    android:textColor="@color/white"
-                                    android:textSize="18dp" />
                             </LinearLayout>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>

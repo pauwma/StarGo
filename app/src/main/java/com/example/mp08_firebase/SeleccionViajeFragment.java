@@ -42,8 +42,6 @@ public class SeleccionViajeFragment extends Fragment {
         carousel.setAutoPlayDelay(3500);
         List<CarouselItem> list = new ArrayList<>();
         list.add(new CarouselItem(R.drawable.starship));
-        list.add(new CarouselItem(R.drawable.suite_2));
-        list.add(new CarouselItem(R.drawable.premium_1));
         list.add(new CarouselItem(R.drawable.starship30_2));
         list.add(new CarouselItem(R.drawable.starship30_3));
         list.add(new CarouselItem(R.drawable.starship30_4));
@@ -51,6 +49,12 @@ public class SeleccionViajeFragment extends Fragment {
         list.add(new CarouselItem(R.drawable.starship30_6));
         carousel.setData(list);
 
+        view.findViewById(R.id.suiteLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.reservaViajeFragment);
+            }
+        });
 
         // ? Flecha Back
         view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
