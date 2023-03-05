@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:fontFamily="@font/montserrat_regular"
+                android:fontFamily="@font/montserrat_semibold"
                 android:text="\@pauwma"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -41,15 +41,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 
+            <TextView
+                android:id="@+id/descTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="64dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Ad astra 🚀"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/displayNameTextView" />
+
+            <TextView
+                android:id="@+id/editTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_borders"
+                android:fontFamily="@font/montserrat_regular"
+                android:paddingHorizontal="14dp"
+                android:text="Editar perfil"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/descTextView"
+                app:layout_constraintStart_toStartOf="@+id/descTextView"
+                app:layout_constraintTop_toBottomOf="@+id/descTextView" />
+
             <ImageButton
                 android:id="@+id/settingsRueda"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:background="@null"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_settings_icon"
+                android:src="@drawable/hamburguer_v2_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
@@ -64,7 +98,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toStartOf="@+id/followersStat"
-                app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
+                app:layout_constraintTop_toBottomOf="@+id/editTextView">
 
                 <TextView
                     android:id="@+id/postNumber"
@@ -94,7 +128,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
+                app:layout_constraintTop_toBottomOf="@+id/editTextView">
 
                 <TextView
                     android:id="@+id/followersNumber"
@@ -125,7 +159,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintStart_toEndOf="@+id/followersStat"
-                app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
+                app:layout_constraintTop_toBottomOf="@+id/editTextView">
 
                 <TextView
                     android:id="@+id/followingNumber"
