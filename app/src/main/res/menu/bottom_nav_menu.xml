@@ -14,6 +14,6 @@
         android:title="Settings" />
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/mail_icon"
+        android:icon="@drawable/profile_selector"
         android:title="Profile" />
 </menu>

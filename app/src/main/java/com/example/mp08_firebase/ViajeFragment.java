@@ -39,5 +39,12 @@ public class ViajeFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.popular1Layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.reservaViajeFragment);
+            }
+        });
+
     }
 }

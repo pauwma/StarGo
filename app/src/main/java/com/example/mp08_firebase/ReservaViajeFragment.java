@@ -51,5 +51,13 @@ public class ReservaViajeFragment extends Fragment {
                 navController.navigateUp();
             }
         });
+
+        // ? Reservar botón
+        view.findViewById(R.id.reservarButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.ticketViajeFragment);
+            }
+        });
     }
 }

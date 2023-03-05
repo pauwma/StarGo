@@ -56,20 +56,52 @@
                 app:layout_constraintTop_toBottomOf="@id/sliderImages" />
 
             <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@id/tituloNaveTextView"
+                app:layout_constraintTop_toBottomOf="@id/tituloNaveTextView">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_morado_icon" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_morado_icon" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_morado_icon" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_morado_icon" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_morado_icon" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="26dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/tituloNaveTextView"
+                app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tituloNaveTextView">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginBottom="2dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -79,10 +111,10 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="2"
                         android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textSize="15dp" />
 
                     <ImageView
-                        android:layout_width="12dp"
+                        android:layout_width="15dp"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_user_icon" />
 
@@ -100,7 +132,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="24 m2"
                         android:textColor="@color/white"
-                        android:textSize="12dp" />
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
@@ -110,14 +142,14 @@
                 android:id="@+id/DescTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginHorizontal="14dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="Este habitación contiene lo más top de nuestras instalaciones, una cómoda cama con vistas al precioso e inmersivo paisaje espacial, una sala de estar para poder descansar en un ambiente tranquilo y un lujoso baño. También contiene servicio al cliente 24h y de limpieza prioritario."
                 android:textColor="@color/white"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tituloNaveTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -137,8 +169,47 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <TextView
+            android:id="@+id/precioText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Total"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/precio1Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="1.545"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/precioText" />
+
+        <TextView
+            android:id="@+id/tituloNaveTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:text=". 99"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:layout_constraintStart_toEndOf="@id/precio1Text"
+            app:layout_constraintBottom_toBottomOf="@id/precio1Text"/>
+
+
         <Button
-            android:id="@+id/gotoCreateAccountTextView"
+            android:id="@+id/reservarButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"

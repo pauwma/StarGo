@@ -1,13 +1,16 @@
 package com.example.mp08_firebase;
 
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -29,12 +33,14 @@ import java.util.Objects;
 public class MediaFragment extends Fragment {
     VideoView videoView;
     ImageView imageView, photoImageView;
-    ImageButton crossButton;
-    TextView authorTextView, timeTextView;
+    ImageButton crossButton, likebutton;
+    TextView authorTextView, timeTextView, numLikes;
     public AppViewModel appViewModel;
     NavController navController;
     String userUID;
     Post post;
+    private GestureDetector gestureDetector;
+
     FirebaseFirestore fStore;
 
 
@@ -56,6 +62,8 @@ public class MediaFragment extends Fragment {
         authorTextView = view.findViewById(R.id.authorTextView);
         timeTextView = view.findViewById(R.id.timeTextView);
         crossButton = view.findViewById(R.id.crossImageButton);
+        numLikes = view.findViewById(R.id.numLikesTextView);
+        likebutton = view.findViewById(R.id.likeImageButton);
         userUID = Objects.requireNonNull(appViewModel.postSeleccionado.getValue()).uid;
 
         // ? Flecha Back
@@ -99,6 +107,43 @@ public class MediaFragment extends Fragment {
 
             Glide.with(getContext()).load(post.authorPhotoUrl).circleCrop().into(photoImageView);
             authorTextView.setText(post.author);
+            numLikes.setText(String.valueOf(post.likes.size()));
+
+
+            // ? Gestion de likes
+            final String postKey = userUID;
+            final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            if(post.likes.containsKey(uid))
+                likebutton.setImageResource(R.drawable.like_solid_icon);
+            else
+                likebutton.setImageResource(R.drawable.like_icon);
+            numLikes.setText(String.valueOf(post.likes.size()));
+
+            likebutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseFirestore.getInstance().collection("posts")
+                            .document(postKey)
+                            .update("likes."+uid, post.likes.containsKey(uid) ?
+                                    FieldValue.delete() : true);
+                }
+            });
+        });
+
+
+        gestureDetector = new GestureDetector(requireContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                Toast.makeText(requireContext(), "Like!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        view.findViewById(R.id.imageView).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
         });
 
         // ? Perfil del usuario
