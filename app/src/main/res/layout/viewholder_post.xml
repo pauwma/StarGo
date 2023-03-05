@@ -103,8 +103,9 @@
             android:text="Contenido"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userInfoLayout"
+            app:layout_constraintBottom_toTopOf="@id/actionsLayout"
+            app:layout_constraintEnd_toEndOf="@id/actionsLayout"
             app:layout_constraintStart_toStartOf="parent" />
 
 
