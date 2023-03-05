@@ -63,13 +63,13 @@
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="24dp"
-
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableStart="@drawable/search_icon"
                 android:drawablePadding="10dp"
                 android:ems="10"
+                android:textColorHint="#8FFFFFFF"
                 android:hint="Buscar"
                 android:paddingStart="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,50 +86,202 @@
                 app:layout_constraintTop_toBottomOf="@id/searchSettings">
 
                 <LinearLayout
-                    android:id="@+id/cerrarSesion"
+                    android:id="@+id/cuentaSetting"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:layout_marginBottom="18dp">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_user_icon" />
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/cuenta_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
-                        android:paddingLeft="14dp"
-                        android:text="Cerrar sesión"
+                        android:layout_marginLeft="14dp"
+                        android:text="Cuenta"
                         android:textColor="@color/white"
                         android:textSize="16dp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/notificacionesSetting"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:layout_marginBottom="18dp">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_user_icon" />
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/notificationes_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
-                        android:paddingLeft="14dp"
+                        android:layout_marginLeft="14dp"
+                        android:text="Notificaciones"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/privacidadSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/eye_close_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
+                        android:text="Privacidad"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/seguridadSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/seguridad_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
+                        android:text="Seguridad"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pagosSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/pagos_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
+                        android:text="Pagos"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/historialSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/historial_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
+                        android:text="Historial"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/estadisticasSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/estadisticas_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
+                        android:text="Estadísticas"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cerrarSesionSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="18dp">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_marginLeft="4dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/cerrar_sesion_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginLeft="14dp"
                         android:text="Cerrar sesión"
                         android:textColor="@color/white"
                         android:textSize="16dp" />
                 </LinearLayout>
 
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

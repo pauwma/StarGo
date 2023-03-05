@@ -44,7 +44,7 @@ public class SettingsFragment extends Fragment {
         });
 
         // ? Cerrar sesión
-        view.findViewById(R.id.cerrarSesion).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.cerrarSesionSetting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GoogleSignIn.getClient(requireActivity(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
