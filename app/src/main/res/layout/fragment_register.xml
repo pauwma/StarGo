@@ -1,134 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterFragment"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:scrollbars="none">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="266dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_register" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        style="@style/title1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserrat_semibold"
-        android:text="¿Como te llamas?"
-        android:textColor="@color/white"
-        android:textSize="35dp"
-        app:layout_constraintBottom_toTopOf="@+id/usernameEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        <LinearLayout
+            android:id="@+id/upBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/usernameEditText"
-        android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
+            <ImageButton
+                android:id="@+id/flechaBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="24dp"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_left_icon"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
-        android:background="@drawable/custom_edit_text"
-        android:drawableStart="@drawable/ic_baseline_person_24"
-        android:drawablePadding="10dp"
-        android:ems="10"
-        android:hint="Nombre de usuario"
-        android:paddingStart="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:background="@drawable/custom_edit_text"
-        android:layout_marginTop="14dp"
-        android:ems="10"
-        android:hint="Correo electrónico"
-        android:inputType="textEmailAddress"
-        android:paddingStart="15dp"
-        android:drawablePadding="10dp"
-        android:drawableStart="@drawable/mail_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="266dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/img_register" />
 
-    <EditText
-        android:id="@+id/phoneEditText"
-        android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:background="@drawable/custom_edit_text"
-        android:layout_marginTop="14dp"
-        android:ems="10"
-        android:hint="Número de teléfono"
-        android:inputType="phone"
-        android:drawableStart="@drawable/phone_icon"
-        android:drawablePadding="10dp"
-        android:paddingStart="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+        <TextView
+            android:id="@+id/textView"
+            style="@style/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="240dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="¿Como te llamas?"
+            android:textColor="@color/white"
+            android:textSize="35dp"
+            app:layout_constraintBottom_toTopOf="@+id/usernameEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="348dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/custom_edit_text"
-        android:drawableStart="@drawable/candado_icon"
-        android:drawablePadding="10dp"
-        android:ems="10"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:paddingStart="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneEditText"
-        android:importantForAutofill="no" />
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="348dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:textColorHint="#8FFFFFFF"
+            android:background="@drawable/custom_edit_text"
+            android:drawableStart="@drawable/usuario_icon"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Nombre de usuario"
+            android:paddingStart="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <ImageButton
-        android:id="@+id/showPasswordButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="2dp"
-        android:paddingRight="6dp"
-        android:src="@drawable/ocultar_no_icon"
-        android:background="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/passwordEditText"
-        app:layout_constraintRight_toRightOf="@id/passwordEditText"
-        app:layout_constraintTop_toTopOf="@+id/passwordEditText" />
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="348dp"
+            android:layout_height="50dp"
+            android:background="@drawable/custom_edit_text"
+            android:layout_marginTop="14dp"
+            android:ems="10"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:paddingStart="15dp"
+            android:textColorHint="#8FFFFFFF"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/correo_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
 
-    <ImageButton
-        android:id="@+id/registerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/custom_button_inicio"
-        android:fontFamily="@font/montserrat_bold"
-        android:paddingLeft="22dp"
-        android:paddingTop="10dp"
-        android:paddingRight="22dp"
-        android:paddingBottom="10dp"
-        android:src="@drawable/arrow_icon_inicio"
-        android:text="->"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
-        tools:ignore="ContentDescription" />
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="348dp"
+            android:layout_height="50dp"
+            android:background="@drawable/custom_edit_text"
+            android:layout_marginTop="14dp"
+            android:ems="10"
+            android:hint="Número de teléfono"
+            android:inputType="phone"
+            android:drawableStart="@drawable/telefono_icon"
+            android:drawablePadding="10dp"
+            android:textColorHint="#8FFFFFFF"
+            android:paddingStart="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="348dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/custom_edit_text"
+            android:drawableStart="@drawable/candado_icon"
+            android:drawablePadding="12dp"
+            android:ems="10"
+            android:hint="Contraseña"
+            android:textColorHint="#8FFFFFFF"
+            android:inputType="textPassword"
+            android:paddingStart="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phoneEditText"
+            android:importantForAutofill="no" />
+
+        <ImageButton
+            android:id="@+id/showPasswordButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="2dp"
+            android:paddingRight="6dp"
+            android:src="@drawable/ocultar_no_icon"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/passwordEditText"
+            app:layout_constraintRight_toRightOf="@id/passwordEditText"
+            app:layout_constraintTop_toTopOf="@+id/passwordEditText" />
+
+        <ImageButton
+            android:id="@+id/registerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custom_button_inicio"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingLeft="22dp"
+            android:paddingTop="10dp"
+            android:paddingRight="22dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/arrow_icon_inicio"
+            android:text="->"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

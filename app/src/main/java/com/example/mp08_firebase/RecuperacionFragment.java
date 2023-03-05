@@ -32,6 +32,14 @@ public class RecuperacionFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
+
         view.findViewById(R.id.forgotButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

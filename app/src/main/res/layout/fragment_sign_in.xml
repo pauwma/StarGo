@@ -9,8 +9,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp">
+        android:scrollbars="none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -19,8 +20,10 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="246dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="32dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/textView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -31,23 +34,23 @@
                 style="@style/title1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="226dp"
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="¿Te conozco?"
                 android:textColor="@color/white"
                 android:textSize="35dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/emailEditText"
                 android:layout_width="348dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="32dp"
-
+                android:layout_marginTop="22dp"
+                android:textColorHint="#8FFFFFFF"
                 android:background="@drawable/custom_edit_text"
-                android:drawableStart="@drawable/ic_baseline_person_24"
+                android:drawableStart="@drawable/usuario_icon"
                 android:drawablePadding="10dp"
                 android:ems="10"
                 android:hint="Usuario"
@@ -63,9 +66,10 @@
                 android:layout_marginTop="14dp"
                 android:background="@drawable/custom_edit_text"
                 android:drawableStart="@drawable/candado_icon"
-                android:drawablePadding="10dp"
+                android:drawablePadding="12dp"
                 android:ems="10"
                 android:hint="Contraseña"
+                android:textColorHint="#8FFFFFFF"
                 android:inputType="textPassword"
                 android:paddingStart="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,8 +80,8 @@
                 android:id="@+id/showPasswordButton"
                 android:layout_width="26dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
                 android:layout_marginRight="12dp"
+                android:layout_marginBottom="2dp"
                 android:background="@null"
                 android:scaleType="fitCenter"
                 android:src="@drawable/eye_icon"
@@ -103,7 +107,7 @@
                 android:id="@+id/emailSignInButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="22dp"
                 android:background="@drawable/custom_button_inicio"
                 android:paddingLeft="22dp"
                 android:paddingTop="10dp"
@@ -119,10 +123,8 @@
                 android:id="@+id/separacion"
                 android:layout_width="260dp"
                 android:layout_height="2dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/secondary"
-                app:layout_constraintBottom_toTopOf="@+id/gotoCreateAccountTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/emailSignInButton" />
@@ -131,7 +133,8 @@
                 android:id="@+id/gotoCreateAccountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/custom_button_create_account"
                 android:fontFamily="@font/montserrat_regular"
                 android:paddingLeft="22dp"
@@ -143,7 +146,8 @@
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/socialsLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/separacion" />
 
             <LinearLayout
                 android:id="@+id/socialsLayout"

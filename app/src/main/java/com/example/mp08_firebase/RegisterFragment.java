@@ -67,6 +67,14 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
+
         // ? Función de mostrar contraseña
         originalTypeface = passwordEditText.getTypeface();
         passwordEditText.addTextChangedListener(new TextWatcher() {
