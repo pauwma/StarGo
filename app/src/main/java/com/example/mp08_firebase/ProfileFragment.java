@@ -125,6 +125,14 @@ public class ProfileFragment extends Fragment {
                 navController.navigate(R.id.settingsFragment);
             }
         });
+
+        // ? Botón editar
+        view.findViewById(R.id.editTextView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.editarPerfilFragment);
+            }
+        });
     }
 
     class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
