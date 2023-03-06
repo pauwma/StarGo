@@ -20,14 +20,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class EditarPerfilFragment extends Fragment {
 
     public AppViewModel appViewModel;
     NavController navController;
     private ImageView photoEditProfile;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private String uid;
+    private FirebaseStorage storage;
+    private FirebaseFirestore firestore;
+    private Uri selectedImage;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +58,13 @@ public class EditarPerfilFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        uid = currentUser.getUid();
+        storage = FirebaseStorage.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+
+
         // ? Flecha Back
         view.findViewById(R.id.cruzBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +74,22 @@ public class EditarPerfilFragment extends Fragment {
         });
 
         photoEditProfile = view.findViewById(R.id.photoEditProfile);
+        DocumentReference userRef = firestore.collection("users").document(uid);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String avatarUrl = document.getString("avatar");
+                        if (avatarUrl != null) {
+                            Glide.with(requireView()).load(avatarUrl).into(photoEditProfile);
+                        }
+                    }
+                }
+            }
+        });
+
         photoEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +118,7 @@ public class EditarPerfilFragment extends Fragment {
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             // Obtiene la Uri de la imagen seleccionada
-            Uri selectedImage = data.getData();
+            selectedImage = data.getData();
 
             try {
                 Glide.with(requireView()).load(selectedImage).into(photoEditProfile);
@@ -93,7 +135,7 @@ public class EditarPerfilFragment extends Fragment {
         builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // Aquí es donde colocarías la lógica para aplicar los cambios
-                // ...
+                subirAvatar();
             }
         });
 
@@ -106,6 +148,55 @@ public class EditarPerfilFragment extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void subirAvatar(){
+        if (selectedImage != null) {
+            // Crear una referencia al archivo de imagen en el Storage de Firebase
+            StorageReference imageRef = storage.getReference().child("avatar").child(uid);
+
+            // Subir la imagen al Storage de Firebase
+            UploadTask uploadTask = imageRef.putFile(selectedImage);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continuar con la tarea para obtener la URL de descarga de la imagen
+                    return imageRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        // Obtener la URL de descarga de la imagen subida
+                        Uri downloadUri = task.getResult();
+
+                        // Actualizar el parámetro "avatar" del usuario en la colección "users" de Firestore
+                        DocumentReference userRef = firestore.collection("users").document(uid);
+                        userRef.update("avatar", downloadUri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // La imagen se subió correctamente y se guardó la referencia en la colección "users" de Firestore
+                                    Toast.makeText(getContext(),"Imagen actualizada", Toast.LENGTH_SHORT).show();
+                                    navController.navigateUp();
+                                } else {
+                                    // Ocurrió un error al actualizar el parámetro "avatar" del usuario en la colección "users" de Firestore
+                                    Toast.makeText(getContext(),"Error al actualizar el parámetro", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        // Ocurrió un error al obtener la URL de descarga de la imagen subida
+                        Toast.makeText(getContext(),"Error al obtener la URL de descarga", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
     }
 
 }
