@@ -20,9 +20,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -39,7 +45,11 @@ public class usersProfileFragment extends Fragment {
     boolean posts;
     RecyclerView profilePostRecyclerView;
     public AppViewModel appViewModel;
+    private FirebaseDatabase fDatabase;
     private FirebaseFirestore fStore;
+    private FirebaseUser user;
+    private DatabaseReference usersRef;
+    private DatabaseReference userRef;
 
     // ? User Stats
     TextView postsNumber, followersNumber, followingNumber;
@@ -69,8 +79,6 @@ public class usersProfileFragment extends Fragment {
         {
             displayNameTextView.setText(post.author);
             uid = post.uid;
-            Glide.with(requireView()).load(post.authorPhotoUrl).into(photoImageView);
-
             if(post.authorPhotoUrl == null){
                 String[] userMailSplit = post.author.split("@");
                 displayNameTextView.setText(userMailSplit[0]);
@@ -87,7 +95,31 @@ public class usersProfileFragment extends Fragment {
             // ? Lista de posts
             profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
             changePosts(queryPosts);
+
+            // Obtener referencia a la base de datos de Firebase
+            fDatabase = FirebaseDatabase.getInstance();
+            // Obtener referencia a la colección "users"
+            usersRef = fDatabase.getReference("users");
+            // Obtener referencia a los datos del usuario
+            userRef = usersRef.child(uid);
+            DocumentReference userRef = fStore.collection("users").document(uid);
+            // ? Imagen del perfil del usuario
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String avatarUrl = document.getString("avatar");
+                            if (avatarUrl != null) {
+                                Glide.with(requireView()).load(avatarUrl).into(photoImageView);
+                            }
+                        }
+                    }
+                }
+            });
         });
+
 
         // ? User Stats
         postsNumber = view.findViewById(R.id.postNumber);
