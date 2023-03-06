@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_profileFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editarPerfilFragment"
+            app:destination="@id/editarPerfilFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -142,4 +145,9 @@
         android:name="com.example.mp08_firebase.TicketViajeFragment"
         android:label="fragment_ticket_viaje"
         tools:layout="@layout/fragment_ticket_viaje" />
+    <fragment
+        android:id="@+id/editarPerfilFragment"
+        android:name="com.example.mp08_firebase.EditarPerfilFragment"
+        android:label="fragment_editar_perfil"
+        tools:layout="@layout/fragment_editar_perfil" />
 </navigation>

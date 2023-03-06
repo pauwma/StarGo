@@ -12,9 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/photoImageView"
                 android:layout_width="90dp"
