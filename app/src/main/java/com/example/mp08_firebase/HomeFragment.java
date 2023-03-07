@@ -64,6 +64,8 @@ public class HomeFragment extends Fragment {
 
         postsRecyclerView.setAdapter(new PostsAdapter(options));
 
+
+        // ? Botones
         addButtonA = view.findViewById(R.id.action_a);
         addButtonB = view.findViewById(R.id.action_b);
         fabMenu = view.findViewById(R.id.multiple_actions);
