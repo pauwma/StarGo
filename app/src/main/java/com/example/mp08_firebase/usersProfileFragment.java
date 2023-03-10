@@ -221,6 +221,7 @@ public class usersProfileFragment extends Fragment {
                 holder.fadeUp.setVisibility(View.VISIBLE);
                 holder.fadeDown.setVisibility(View.VISIBLE);
                 holder.contentTextView.setText(post.content);
+                holder.contentTextView.setAlpha(0f);
                 holder.mediaImageView.setVisibility(View.VISIBLE);
                 if ("audio".equals(post.mediaType)) {
                     Glide.with(requireView()).load(R.drawable.ic_baseline_audio_file_24).centerCrop().into(holder.mediaImageView);
@@ -245,11 +246,6 @@ public class usersProfileFragment extends Fragment {
                 holder.fadeDown.setVisibility(View.GONE);
             }
 
-            // ? Perfil del usuario
-            holder.userInfo.setOnClickListener(view -> {
-                appViewModel.postSeleccionado.setValue(post);
-                navController.navigate(R.id.usersProfileFragment);
-            });
         }
 
         class PostViewHolder extends RecyclerView.ViewHolder {

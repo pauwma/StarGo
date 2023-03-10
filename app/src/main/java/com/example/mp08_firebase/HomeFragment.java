@@ -145,7 +145,7 @@ public class HomeFragment extends Fragment {
                 holder.fadeDown.setVisibility(View.VISIBLE);
                 holder.contentTextView.setText(post.content);
                 holder.mediaImageView.setVisibility(View.VISIBLE);
-                holder.contentTextView.setVisibility(View.GONE);
+                holder.contentTextView.setAlpha(0f);
                 if ("audio".equals(post.mediaType)) {
                     Glide.with(requireView()).load(R.drawable.ic_baseline_audio_file_24).centerCrop().into(holder.mediaImageView);
                 } else {
@@ -157,13 +157,6 @@ public class HomeFragment extends Fragment {
                 });
             } else {
                 holder.mediaImageView.setVisibility(View.GONE);
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(holder.constraintLayout);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.RIGHT, holder.actionsLayout.getId(), ConstraintSet.RIGHT);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.BOTTOM, holder.actionsLayout.getId(), ConstraintSet.TOP);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.TOP, holder.userInfo.getId(), ConstraintSet.BOTTOM);
-                constraintSet.applyTo(holder.constraintLayout);
-
                 holder.fadeUp.setVisibility(View.GONE);
                 holder.fadeDown.setVisibility(View.GONE);
             }
