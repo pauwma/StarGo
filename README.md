@@ -7,11 +7,11 @@
 
 La estructura de la base de datos propuesta es la siguiente:
 
-- chats
- - chatId
-   - participantes
-    - userId1
-    - userId2
+* chats
+ * chatId
+   * participantes
+    * userId1
+    * userId2
     ...
    - mensajes
     - messageId
