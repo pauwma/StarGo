@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +68,7 @@ public class RegisterFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crearCuenta();
+                validarFormulario();
             }
         });
 
@@ -116,10 +121,6 @@ public class RegisterFragment extends Fragment {
     }
 
     private void crearCuenta() {
-        if (!validarFormulario()) {
-            return;
-        }
-
         registerButton.setEnabled(false);
 
         mAuth.createUserWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
@@ -131,14 +132,13 @@ public class RegisterFragment extends Fragment {
                             DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
                             Map<String,Object> user = new HashMap<>();
                             user.put("uid",userUID);
-                            user.put("username",username);
+                            user.put("username",username.toLowerCase());
                             user.put("email",email);
                             user.put("phone",phone);
                             documentReference.set(user);
                             actualizarUI(mAuth.getCurrentUser());
                         } else {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
-
                         }
                         registerButton.setEnabled(true);
                     }
@@ -153,7 +153,7 @@ public class RegisterFragment extends Fragment {
     }
 
     // ? Comprobación de los inputs
-    private boolean validarFormulario() {
+    private void validarFormulario() {
         boolean valid = true;
 
         username = usernameEditText.getText().toString().trim();
@@ -166,6 +166,9 @@ public class RegisterFragment extends Fragment {
             valid = false;
         } else if (username.contains(" ")) {
             usernameEditText.setError("El nombre de usuario no puede contener espacios.");
+            valid = false;
+        } else if (!username.toLowerCase().equals(username)) {
+            usernameEditText.setError("El nombre de usuario no puede contener mayúsculas.");
             valid = false;
         } else {
             usernameEditText.setError(null);
@@ -201,8 +204,54 @@ public class RegisterFragment extends Fragment {
             passwordEditText.setError(null);
         }
 
-        return valid;
+        if (valid) {
+            checkEmailExists(email);
+        }
     }
+
+    private void checkUsernameExists(final String username) {
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .whereEqualTo("username", username.toLowerCase())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && !task.getResult().isEmpty()) {
+                                usernameEditText.setError("El nombre de usuario ya está en uso.");
+                            } else {
+                                crearCuenta();
+                            }
+                        } else {
+                            Log.e("RegisterFragment", "Error checking for existing username", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void checkEmailExists(final String email) {
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .whereEqualTo("email", email.toLowerCase())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && !task.getResult().isEmpty()) {
+                                emailEditText.setError("El correo electrónico ya está en uso.");
+                            } else {
+                                checkUsernameExists(username);
+                            }
+                        } else {
+                            Log.e("RegisterFragment", "Error checking for existing email", task.getException());
+                        }
+                    }
+                });
+    }
+
+
 
 
     @Override

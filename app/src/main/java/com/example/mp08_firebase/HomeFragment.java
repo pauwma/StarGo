@@ -87,6 +87,16 @@ public class HomeFragment extends Fragment {
         });
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+
+        // ? Navegación a chats
+        ImageButton chatButton = view.findViewById(R.id.imageButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.chatsHomeFragment);
+            }
+        });
+
     }
 
     @Override

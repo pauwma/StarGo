@@ -107,6 +107,9 @@
         <action
             android:id="@+id/action_mainFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_chatsHomeFragment"
+            app:destination="@id/chatsHomeFragment" />
     </fragment>
     <fragment
         android:id="@+id/usersProfileFragment"
@@ -150,4 +153,9 @@
         android:name="com.example.mp08_firebase.EditarPerfilFragment"
         android:label="fragment_editar_perfil"
         tools:layout="@layout/fragment_editar_perfil" />
+    <fragment
+        android:id="@+id/chatsHomeFragment"
+        android:name="com.example.mp08_firebase.ChatsHomeFragment"
+        android:label="fragment_chats_home"
+        tools:layout="@layout/fragment_chats_home" />
 </navigation>
