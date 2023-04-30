@@ -13,7 +13,7 @@ La estructura de la base de datos propuesta es la siguiente:
     * userId1
     * userId2
     ...
-   - mensajes
+   1- mensajes
     - messageId
      - contenido
      - autor
