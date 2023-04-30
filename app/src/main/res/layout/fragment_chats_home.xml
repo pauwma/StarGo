@@ -1,44 +1,137 @@
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/background">
 
-    <EditText
-        android:id="@+id/search_users"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Buscar usuarios..."
-        android:imeOptions="actionSearch"
-        android:inputType="text" />
+    <LinearLayout
+        android:id="@+id/upBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/search_results_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Resultados de la búsqueda"
-        android:visibility="gone" />
+        <ImageButton
+            android:id="@+id/flechaBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="24dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_arrow_left_icon"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_users_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:listitem="@layout/item_user" />
+        <TextView
+            android:id="@+id/textView"
+            style="@style/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Chats"
+            android:textColor="@color/white"
+            android:textSize="19dp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/chats_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chats" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        app:layout_constraintBottom_toBottomOf="@+id/upBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chats_recyclerview"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_chat" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upBar">
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/search_users"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/custom_edit_text"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Buscar usuarios..."
+            android:paddingStart="15dp"
+            android:textColorHint="#8FFFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/search_results_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resultados de la búsqueda"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_users" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_users_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_results_label"
+            tools:listitem="@layout/item_user" />
+
+        <View
+            android:id="@+id/viewSearchUsers"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:background="#1f1f1f"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/search_users_recyclerview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/chats_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:text="Chats"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_users_recyclerview" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chats_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chats_label"
+            tools:listitem="@layout/item_chat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

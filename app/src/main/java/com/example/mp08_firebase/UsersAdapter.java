@@ -3,15 +3,19 @@ package com.example.mp08_firebase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
-    private List<String> users;
+    private List<User> users;
     private OnUserClickListener onUserClickListener;
 
     public UsersAdapter(OnUserClickListener onUserClickListener) {
@@ -19,7 +23,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         this.onUserClickListener = onUserClickListener;
     }
 
-    public void setUsers(List<String> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
         notifyDataSetChanged();
     }
@@ -33,7 +37,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String user = users.get(position);
+        User user = users.get(position);
         holder.bind(user);
     }
 
@@ -43,23 +47,32 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     }
 
     public interface OnUserClickListener {
-        void onUserClick(String username);
+        void onUserClick(User user);
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView usernameTextView;
+        private ImageView profile_image;
         private OnUserClickListener onUserClickListener;
 
         public ViewHolder(@NonNull View itemView, OnUserClickListener onUserClickListener) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.username);
+            profile_image = itemView.findViewById(R.id.profile_image);
             this.onUserClickListener = onUserClickListener;
             itemView.setOnClickListener(this);
         }
 
-        public void bind(String username) {
-            usernameTextView.setText(username);
+        public void bind(User user) {
+            usernameTextView.setText(user.getUsername());
+
+            // Cargar imagen de perfil con Glide
+            Glide.with(itemView.getContext())
+                    .load(user.getProfileImageUrl())
+                    .circleCrop()
+                    .into(profile_image);
         }
 
         @Override
@@ -69,5 +82,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                 onUserClickListener.onUserClick(UsersAdapter.this.users.get(position));
             }
         }
+
     }
 }

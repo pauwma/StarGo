@@ -6,11 +6,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> {
     private List<Chat> chats;
     private OnChatClickListener onChatClickListener;
 
@@ -35,6 +39,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = chats.get(position);
         holder.bind(chat);
+
+        Glide.with(holder.itemView.getContext())
+                .load(chat.getOtherUserProfileImageUrl())
+                .circleCrop()
+                .into(holder.profile_image);
     }
 
     @Override
@@ -47,13 +56,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+        CircleImageView profile_image;
         private TextView chatTitleTextView;
         private OnChatClickListener onChatClickListener;
 
         public ViewHolder(@NonNull View itemView, OnChatClickListener onChatClickListener) {
             super(itemView);
             chatTitleTextView = itemView.findViewById(R.id.chat_title);
+            profile_image = itemView.findViewById(R.id.profile_image);
             this.onChatClickListener = onChatClickListener;
             itemView.setOnClickListener(this);
         }

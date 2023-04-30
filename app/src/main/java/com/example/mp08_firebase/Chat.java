@@ -5,6 +5,7 @@ import java.util.List;
 public class Chat {
 
     private String chatId;
+    private String otherUserProfileImageUrl;
     private String title;
     private List<String> users;
 
@@ -39,5 +40,13 @@ public class Chat {
 
     public void setUsers(List<String> users) {
         this.users = users;
+    }
+
+    public String getOtherUserProfileImageUrl() {
+        return otherUserProfileImageUrl;
+    }
+
+    public void setOtherUserProfileImageUrl(String otherUserProfileImageUrl) {
+        this.otherUserProfileImageUrl = otherUserProfileImageUrl;
     }
 }

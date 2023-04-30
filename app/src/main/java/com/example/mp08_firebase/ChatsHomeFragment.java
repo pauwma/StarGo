@@ -1,6 +1,9 @@
 package com.example.mp08_firebase;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -14,9 +17,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -28,8 +35,11 @@ import java.util.Objects;
 
 public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserClickListener, ChatsAdapter.OnChatClickListener {
 
+    NavController navController;
+
     private EditText searchUsersEditText;
     private RecyclerView searchUsersRecyclerView;
+    private View separacionSearchUsers;
     private RecyclerView chatsRecyclerView;
     private UsersAdapter usersAdapter;
     private ChatsAdapter chatsAdapter;
@@ -49,11 +59,26 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chats_home, container, false);
 
         searchUsersEditText = view.findViewById(R.id.search_users);
         searchUsersRecyclerView = view.findViewById(R.id.search_users_recyclerview);
+        separacionSearchUsers = view.findViewById(R.id.viewSearchUsers);
         chatsRecyclerView = view.findViewById(R.id.chats_recyclerview);
         searchResultsLabel = view.findViewById(R.id.search_results_label);
 
@@ -62,6 +87,8 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
         return view;
     }
+
+
 
     private void setupSearchUsers() {
         usersAdapter = new UsersAdapter(this);
@@ -99,6 +126,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
             usersAdapter.setUsers(new ArrayList<>());
             searchUsersRecyclerView.setVisibility(View.GONE);
             searchResultsLabel.setVisibility(View.GONE);
+            separacionSearchUsers.setVisibility(View.GONE);
             return;
         }
 
@@ -113,26 +141,30 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 .limit(10)
                 .get()
                 .addOnCompleteListener(task -> {
-                    List<String> usernames = new ArrayList<>();
+                    List<User> userList = new ArrayList<>();
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String username = document.getString("username");
-                            if (username != null) {
-                                usernames.add(username);
+                            String profileImageUrl = document.getString("avatar");
+
+                            if (username != null && profileImageUrl != null) {
+                                User user = new User(username, profileImageUrl);
+                                userList.add(user);
                             }
                         }
                     }
 
-                    usersAdapter.setUsers(usernames);
+                    usersAdapter.setUsers(userList);
                     searchUsersRecyclerView.setVisibility(View.VISIBLE);
                     searchResultsLabel.setVisibility(View.VISIBLE);
+                    separacionSearchUsers.setVisibility(View.VISIBLE);
                 });
     }
 
     @Override
-    public void onUserClick(String username) {
+    public void onUserClick(User user) {
         // Crear un nuevo chat con el usuario seleccionado y navegar a la conversación
-        createNewChat(username);
+        createNewChat(user);
     }
 
     @Override
@@ -160,6 +192,25 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     if (value != null) {
                         for (QueryDocumentSnapshot document : value) {
                             Chat chat = document.toObject(Chat.class);
+                            chat.setChatId(document.getId());
+
+                            // Añadir la URL de la imagen de perfil del otro usuario al objeto Chat
+                            for (String userId : chat.getUsers()) {
+                                if (!userId.equals(currentUserId)) {
+                                    db.collection("users")
+                                            .document(userId)
+                                            .get()
+                                            .addOnSuccessListener(userDoc -> {
+                                                String profileImageUrl = userDoc.getString("avatar");
+                                                chat.setOtherUserProfileImageUrl(profileImageUrl);
+
+                                                // Notificar al adaptador que los datos han cambiado
+                                                chatsAdapter.notifyDataSetChanged();
+                                            });
+                                    break;
+                                }
+                            }
+
                             chats.add(chat);
                         }
                     }
@@ -168,13 +219,14 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 });
     }
 
-    private void createNewChat(String username) {
+
+    private void createNewChat(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Obtén el ID del usuario seleccionado a partir de su nombre de usuario
         db.collection("users")
-                .whereEqualTo("username", username)
+                .whereEqualTo("username", user.getUsername())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
@@ -182,7 +234,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
                         // Crear un nuevo documento de chat en Firestore
                         List<String> participants = Arrays.asList(currentUserId, selectedUserId);
-                        Chat newChat = new Chat(null, "Chat with " + username, participants);
+                        Chat newChat = new Chat(null, "Chat with " + user.getUsername(), participants);
 
                         db.collection("chats")
                                 .add(newChat)
