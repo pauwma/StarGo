@@ -1,8 +1,9 @@
 package com.example.mp08_firebase;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Chat {
+public class Chat implements Serializable {
 
     private String chatId;
     private String otherUserProfileImageUrl;

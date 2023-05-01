@@ -240,6 +240,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                                 .add(newChat)
                                 .addOnSuccessListener(documentReference -> {
                                     String chatId = documentReference.getId();
+                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
                                     // Navegar a la conversación
                                     navigateToChatMessages(newChat);
                                 })
@@ -250,9 +251,12 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 });
     }
 
+
     private void navigateToChatMessages(Chat chat) {
-        // Reemplazar con la implementación adecuada para navegar a otro fragmento o actividad
-        // que muestre los mensajes del chat seleccionado
-        // Por ejemplo, puedes utilizar un Navigation Component o un Intent para iniciar una nueva actividad
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("selected_chat", chat);
+        navController.navigate(R.id.action_chatsHomeFragment_to_chatFragment, bundle);
     }
+
+
 }
