@@ -6,18 +6,16 @@
 ### Estructura de la base de datos en Firestore
 
 La estructura de la base de datos propuesta es la siguiente:
-
-* chats
- * chatId
-   * participantes
-    * userId1
-    * userId2
-    ...
-   1- mensajes
-    - messageId
-     - contenido
-     - autor
-     - timestamp
+1- chats
+  2- chatId
+     3- users
+         4- userId1
+         4- userId2 
+     3 - messages (una subcólección dentro del documento de cada chat)
+         4- messageId
+            5- content
+            5 - autor
+            5 - timestamp
 
 ### Pasos para crear la estructura de datos en Firestore
 
