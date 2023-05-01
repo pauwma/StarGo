@@ -35,8 +35,7 @@ import java.util.Objects;
 
 public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserClickListener, ChatsAdapter.OnChatClickListener {
 
-    NavController navController;
-
+    private NavController navController;
     private EditText searchUsersEditText;
     private RecyclerView searchUsersRecyclerView;
     private View separacionSearchUsers;

@@ -4,7 +4,11 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,12 +31,13 @@ import java.util.UUID;
 
 public class ChatFragment extends Fragment {
 
+    private NavController navController;
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
     private Button sendMessageButton;
     private MessagesAdapter messagesAdapter;
-
     private FirebaseFirestore db;
+    private TextView titleProfile;
     private Chat chat;
 
     public void setChat(Chat chat) {
@@ -64,6 +70,20 @@ public class ChatFragment extends Fragment {
         loadMessages();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
     }
 
     private void setupMessagesList() {

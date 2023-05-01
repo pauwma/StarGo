@@ -27,12 +27,21 @@
             android:src="@drawable/ic_arrow_left_icon"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/titleProfile"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="24dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/border" />
+
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/titleUsername"
             style="@style/title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="10dp"
             android:fontFamily="@font/montserrat_semibold"
             android:text="nombre del usuario"
             android:textColor="@color/white"
@@ -43,33 +52,37 @@
         android:id="@+id/messages_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/message_input_layout"
-        app:layout_constraintBottom_toTopOf="@id/message_input_layout" />
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/message_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/message_input_layout"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/send_message_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="8dp"
+        android:text="Enviar"
+        app:layout_constraintBottom_toBottomOf="@+id/message_input"
+        app:layout_constraintEnd_toEndOf="@+id/message_input"
+        app:layout_constraintTop_toTopOf="@+id/message_input" />
+
+
+    <EditText
+        android:id="@+id/message_input"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/custom_edit_text"
+        android:drawableStart="@drawable/search_icon"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Buscar"
+        android:paddingStart="15dp"
+        android:textColorHint="#8FFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:id="@+id/message_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Escribe un mensaje" />
-
-        <Button
-            android:id="@+id/send_message_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enviar" />
-
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

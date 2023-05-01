@@ -8,12 +8,17 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
 
     private List<Message> messages;
+
+    private static final int MESSAGE_TYPE_SENT = 0;
+    private static final int MESSAGE_TYPE_RECEIVED = 1;
 
     public MessagesAdapter() {
         this.messages = new ArrayList<>();
@@ -31,9 +36,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
+        View view;
+        if (viewType == MESSAGE_TYPE_SENT) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_sended, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_received, parent, false);
+        }
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -45,6 +57,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public int getItemCount() {
         return messages.size();
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Message message = messages.get(position);
+        if (message.getSenderId().equals(currentUserId)) {
+            return MESSAGE_TYPE_SENT;
+        } else {
+            return MESSAGE_TYPE_RECEIVED;
+        }
+    }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
