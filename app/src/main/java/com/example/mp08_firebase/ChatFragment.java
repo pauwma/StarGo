@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatFragment extends Fragment {
 
     private NavController navController;
@@ -37,7 +40,8 @@ public class ChatFragment extends Fragment {
     private Button sendMessageButton;
     private MessagesAdapter messagesAdapter;
     private FirebaseFirestore db;
-    private TextView titleProfile;
+    private TextView titleUsername;
+    private CircleImageView titleProfile;
     private Chat chat;
 
     public void setChat(Chat chat) {
@@ -53,11 +57,16 @@ public class ChatFragment extends Fragment {
         sendMessageButton = view.findViewById(R.id.send_message_button);
         db = FirebaseFirestore.getInstance();
 
+        titleUsername = view.findViewById(R.id.titleUsername);
+        titleProfile = view.findViewById(R.id.titleProfile);
+
         setupMessagesList();
 
         if (getArguments() != null) {
             chat = (Chat) getArguments().getSerializable("selected_chat");
         }
+
+        loadChatUserDetails();
 
         sendMessageButton.setOnClickListener(v -> {
             String messageContent = messageInput.getText().toString().trim();
@@ -117,7 +126,35 @@ public class ChatFragment extends Fragment {
                 });
     }
 
+    private void loadChatUserDetails() {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String chatUserId = chat.getUsers().stream().filter(id -> !id.equals(currentUserId)).findFirst().orElse(null);
 
+        if (chatUserId == null) {
+            Log.e(TAG, "Unable to find chat user ID");
+            return;
+        }
+
+        db.collection("users")
+                .document(chatUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User chatUser = documentSnapshot.toObject(User.class);
+
+                    if (chatUser != null) {
+                        titleUsername.setText(chatUser.getUsername());
+
+                        if (chatUser.getProfileImageUrl() != null && !chatUser.getProfileImageUrl().isEmpty()) {
+                            Glide.with(requireContext())
+                                    .load(chatUser.getProfileImageUrl())
+                                    .into(titleProfile);
+                        }
+                    } else {
+                        Log.e(TAG, "Unable to find chat user in Firestore");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error fetching chat user details", e));
+    }
     private void sendMessage(String messageContent) {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         long timestamp = System.currentTimeMillis();
@@ -132,12 +169,9 @@ public class ChatFragment extends Fragment {
         // Aquí puedes guardar el mensaje en tu base de datos o servicio de backend
         saveMessageToFirestore(messageId, newMessage);
     }
-
-
     private String generateMessageId() {
         return UUID.randomUUID().toString();
     }
-
     private void saveMessageToFirestore(String messageId, Message message) {
         // Reemplaza "chatId" por el ID del chat en el que estás trabajando
         String chatId = chat.getChatId();

@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="nombre del usuario"
+            android:text=" "
             android:textColor="@color/white"
             android:textSize="19dp" />
     </LinearLayout>

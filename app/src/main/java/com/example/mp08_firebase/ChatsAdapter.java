@@ -1,5 +1,6 @@
 package com.example.mp08_firebase;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +72,37 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
         }
 
         public void bind(Chat chat) {
-            chatTitleTextView.setText(chat.getTitle());
+            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            List<String> participants = chat.getUsers();
+            String otherUserId = null;
+
+            for (String participant : participants) {
+                if (!participant.equals(currentUserId)) {
+                    otherUserId = participant;
+                    break;
+                }
+            }
+
+            if (otherUserId != null) {
+                FirebaseFirestore.getInstance().collection("users")
+                        .document(otherUserId)
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                User otherUser = documentSnapshot.toObject(User.class);
+                                if (otherUser != null) {
+                                    chatTitleTextView.setText(otherUser.getUsername());
+                                }
+                            } else {
+                                Log.e("ChatsAdapter", "User not found");
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e("ChatsAdapter", "Error loading user details", e));
+            } else {
+                chatTitleTextView.setText(chat.getTitle());
+            }
         }
+
 
         @Override
         public void onClick(View v) {

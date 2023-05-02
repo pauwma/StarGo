@@ -8,14 +8,14 @@ import java.util.Map;
 
 public class User {
     private String username;
-    private String profileImageUrl;
+    private String avatar;
 
     public User() {
     }
 
-    public User(String username, String profileImageUrl) {
+    public User(String username, String avatar) {
         this.username = username;
-        this.profileImageUrl = profileImageUrl;
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -27,10 +27,10 @@ public class User {
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return avatar;
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+        this.avatar = profileImageUrl;
     }
 }
