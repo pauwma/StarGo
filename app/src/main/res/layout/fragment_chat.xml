@@ -58,32 +58,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upBar" />
 
-    <Button
-        android:id="@+id/send_message_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_borders"
-        android:textColor="@color/morado"
-        android:text="Enviar"
-        app:layout_constraintBottom_toBottomOf="@+id/message_input"
-        app:layout_constraintEnd_toEndOf="@+id/message_input"
-        app:layout_constraintTop_toTopOf="@+id/message_input" />
-
-
     <EditText
         android:id="@+id/message_input"
         android:layout_width="0dp"
-        android:layout_height="38dp"
+        android:layout_height="wrap_content"
+        android:minHeight="38dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/custom_edit_text"
         android:ems="10"
         android:hint="Mensaje"
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:minLines="1"
         android:paddingStart="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="40dp"
+        android:scrollbars="vertical"
         android:textColorHint="#8FFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/send_message_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:alpha="0.2"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/send_horizontal_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/message_input"
+        app:layout_constraintEnd_toEndOf="@+id/message_input" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

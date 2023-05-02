@@ -12,12 +12,15 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +40,7 @@ public class ChatFragment extends Fragment {
     private NavController navController;
     private RecyclerView messagesRecyclerView;
     private EditText messageInput;
-    private Button sendMessageButton;
+    private ImageButton sendMessageButton;
     private MessagesAdapter messagesAdapter;
     private FirebaseFirestore db;
     private TextView titleUsername;
@@ -73,6 +76,26 @@ public class ChatFragment extends Fragment {
             if (!messageContent.isEmpty()) {
                 sendMessage(messageContent);
                 messageInput.setText("");
+            }
+        });
+
+        // ? Flecha según contenido
+        messageInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().isEmpty()) {
+                    sendMessageButton.setAlpha(0.2f);
+                } else {
+                    sendMessageButton.setAlpha(1.0f);
+                }
             }
         });
 
