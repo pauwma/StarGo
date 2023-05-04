@@ -23,6 +23,6 @@
         android:textSize="16sp"
         android:textColor="@color/white"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Chat title" />
+        android:text=" " />
 
 </LinearLayout>

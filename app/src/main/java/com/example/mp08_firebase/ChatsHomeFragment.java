@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -42,7 +43,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
     private RecyclerView chatsRecyclerView;
     private UsersAdapter usersAdapter;
     private ChatsAdapter chatsAdapter;
-
+    private  ProgressBar loadingChatsProgressBar;
     private TextView searchResultsLabel;
 
     // ? Delay de searchUsers
@@ -80,14 +81,13 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
         separacionSearchUsers = view.findViewById(R.id.viewSearchUsers);
         chatsRecyclerView = view.findViewById(R.id.chats_recyclerview);
         searchResultsLabel = view.findViewById(R.id.search_results_label);
+        loadingChatsProgressBar = view.findViewById(R.id.loading_chats_progressbar);
 
         setupSearchUsers();
         setupChatsList();
 
         return view;
     }
-
-
 
     private void setupSearchUsers() {
         usersAdapter = new UsersAdapter(this);
@@ -172,8 +172,8 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
         navigateToChatMessages(chat);
     }
 
-
     private void loadChats() {
+        loadingChatsProgressBar.setVisibility(View.VISIBLE); // Muestra el ProgressBar
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Asume que el UID del usuario actual está almacenado en una variable llamada currentUserId
@@ -215,9 +215,10 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     }
 
                     chatsAdapter.setChats(chats);
+                    loadingChatsProgressBar.setVisibility(View.GONE); // Oculta el ProgressBar
+                    chatsRecyclerView.setVisibility(View.VISIBLE); // Muestra el RecyclerView de los chats
                 });
     }
-
 
     private void createNewChat(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -250,12 +251,9 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 });
     }
 
-
     private void navigateToChatMessages(Chat chat) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("selected_chat", chat);
         navController.navigate(R.id.action_chatsHomeFragment_to_chatFragment, bundle);
     }
-
-
 }
