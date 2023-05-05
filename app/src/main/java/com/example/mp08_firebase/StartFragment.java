@@ -47,11 +47,10 @@ import java.util.Objects;
 public class StartFragment extends Fragment {
 
     private NavController navController;
-    //!private ImageButton googleSignInButton;
-    //!private ActivityResultLauncher<Intent> activityResultLauncher;
-    private Button signInButton, createAccountButton;
-    //!private FirebaseAuth mAuth;
-    //!private FirebaseFirestore fStore;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private Button signInButton, createAccountButton, googleSignInButton;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore fStore;
 
     public StartFragment() {
     }
@@ -68,8 +67,8 @@ public class StartFragment extends Fragment {
         navController = Navigation.findNavController(view);
         signInButton = view.findViewById(R.id.signInButton);
 
-        //!mAuth = FirebaseAuth.getInstance();
-        //!fStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,14 +86,13 @@ public class StartFragment extends Fragment {
             }
         });
 
-        //!googleSignInButton = view.findViewById(R.id.googleButton);
-        /* activityResultLauncher = registerForActivityResult(
+        googleSignInButton = view.findViewById(R.id.googleButton);
+        activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
                             Intent data = result.getData();
                             try {
                                 firebaseAuthWithGoogle(GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class));
@@ -110,10 +108,10 @@ public class StartFragment extends Fragment {
             public void onClick(View view) {
                 accederConGoogle();
             }
-        });*/
+        });
     }
 
-    /*private void accederConGoogle() {
+    private void accederConGoogle() {
         GoogleSignInClient googleSignInClient =
                 GoogleSignIn.getClient(requireActivity(), new
                         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -156,10 +154,12 @@ public class StartFragment extends Fragment {
                                                     actualizarUI(mAuth.getCurrentUser());
                                                 }
                                             } else {
+                                                Log.e("ABCD", "Error getting documents: ", task.getException());
                                             }
                                         }
                                     });
                         } else {
+                            Log.e("ABCD", "signInWithCredential:failure", task.getException());
                         }
                     }
                 });
@@ -169,5 +169,5 @@ public class StartFragment extends Fragment {
         if(currentUser != null){
             navController.navigate(R.id.homeFragment);
         }
-    }*/
+    }
 }
