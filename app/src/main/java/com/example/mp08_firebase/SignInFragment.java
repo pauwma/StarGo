@@ -97,6 +97,14 @@ public class SignInFragment extends Fragment {
                 acceder();
             }
         });
+
+        // ? Flecha Back
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
     }
 
     private void actualizarUI(FirebaseUser currentUser) {
