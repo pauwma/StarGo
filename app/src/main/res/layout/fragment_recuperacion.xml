@@ -1,135 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:scrollbars="none">
+    android:background="@color/background">
+
+    <LinearLayout
+        android:id="@+id/upBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/stargoLogo"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        app:layout_constraintBottom_toBottomOf="@+id/upBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/stargo_logo" />
+
+    <ImageButton
+        android:id="@+id/flechaBack"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="24dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_arrow_left_icon"
+        app:layout_constraintTop_toTopOf="@id/stargoLogo"
+        app:layout_constraintBottom_toBottomOf="@id/stargoLogo"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/passwordTitle"
+        style="@style/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:fontFamily="@font/montserrat_bold"
+        android:letterSpacing="-0.02"
+        android:text="Recupera tu contraseña"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stargoLogo" />
+
+    <TextView
+        android:id="@+id/passwordDesc"
+        style="@style/title1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:fontFamily="@font/montserrat_regular"
+        android:letterSpacing="-0.02"
+        android:text="Introduce el correo electrónico o el nombre de usuario asociados a tu cuenta para poder cambiar tu contraseña."
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTitle" />
+
+    <EditText
+        android:id="@+id/userInfoEditText"
+        android:layout_width="0dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="42dp"
+        android:background="@drawable/edit_text_border"
+        android:hint="Usuario o correo"
+        android:inputType="text"
+        android:maxWidth="400dp"
+        android:paddingStart="16dp"
+        android:textColorHint="@color/quick_silver"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordDesc">
+
+        <requestFocus />
+    </EditText>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/downBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="58dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:id="@+id/upBar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/flechaBack"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="24dp"
-                android:background="@null"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_arrow_left_icon"
-                tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="226dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/img_forgot" />
-
-        <TextView
-            android:id="@+id/textView"
-            style="@style/title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Vaya cabeza..."
-            android:textColor="@color/white"
-            android:textSize="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <TextView
-            android:id="@+id/secondTextView"
-            style="@style/title1"
+        <Button
+            android:id="@+id/nextButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="30dp"
-            android:gravity="center"
-            android:fontFamily="@font/montserrat_regular"
-            android:text="Para restablecer tu contraseña, proporciona tu email o número de teléfono asociado con tu cuenta y recibirás instrucciones por correo o mensaje."
-            android:textColor="#a7a7a7"
-            android:textSize="13dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/button_border_purple"
+            android:fontFamily="@font/montserrat_semibold"
+            android:paddingHorizontal="24dp"
+            android:text="Siguiente"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="348dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="48dp"
-
-            android:background="@drawable/custom_edit_text"
-            android:drawableStart="@drawable/mail_icon"
-            android:drawablePadding="10dp"
-            android:ems="10"
-            android:hint="Correo electrónico"
-            android:paddingStart="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/secondTextView" />
-
-        <EditText
-            android:id="@+id/telfEditText"
-            android:layout_width="348dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/custom_edit_text"
-            android:drawableStart="@drawable/phone_icon"
-            android:drawablePadding="10dp"
-            android:ems="10"
-            android:hint="Número de teléfono"
-            android:inputType="textPassword"
-            android:paddingStart="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
-
-        <ImageButton
-            android:id="@+id/forgotButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/custom_button_inicio"
-            android:paddingLeft="22dp"
-            android:paddingTop="10dp"
-            android:paddingRight="22dp"
-            android:paddingBottom="10dp"
-            android:src="@drawable/arrow_icon_inicio"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/telfEditText" />
-
-
-        <View
-            android:id="@+id/separacion"
-            android:layout_width="260dp"
-            android:layout_height="2dp"
-            android:background="#a7a7a7"
-            app:layout_constraintBottom_toTopOf="@+id/telfEditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/eerie_black"
+        app:layout_constraintTop_toTopOf="@+id/downBar" />
+</androidx.constraintlayout.widget.ConstraintLayout>

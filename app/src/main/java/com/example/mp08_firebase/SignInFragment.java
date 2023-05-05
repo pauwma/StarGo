@@ -60,6 +60,8 @@ public class SignInFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
 
+    private boolean allFieldsFilled;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -94,7 +96,7 @@ public class SignInFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                acceder();
+                iniciarSesion();
             }
         });
 
@@ -107,13 +109,19 @@ public class SignInFragment extends Fragment {
         });
     }
 
-    private void actualizarUI(FirebaseUser currentUser) {
-        if(currentUser != null){
-            navController.navigate(R.id.homeFragment);
-        }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_sign_in, container, false);
+
     }
 
-    private void acceder() {
+    private void iniciarSesion() {
+
+        if (!allFieldsFilled){
+            return;
+        }
+
         String email = userInfoEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (email.isEmpty() || password.isEmpty()) {
@@ -147,15 +155,6 @@ public class SignInFragment extends Fragment {
                 });
     }
 
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false);
-
-    }
-
     private class CustomTextWatcher implements TextWatcher {
 
         @Override
@@ -170,16 +169,21 @@ public class SignInFragment extends Fragment {
         public void afterTextChanged(Editable s) {
             updateButtonBackground();
         }
-    }
 
+    }
     private void updateButtonBackground() {
-        boolean allFieldsFilled = !TextUtils.isEmpty(userInfoEditText.getText()) &&
-                !TextUtils.isEmpty(passwordEditText.getText());
+        allFieldsFilled = !TextUtils.isEmpty(userInfoEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText());
 
         if (allFieldsFilled) {
             nextButton.setBackgroundResource(R.drawable.button_purple);
         } else {
             nextButton.setBackgroundResource(R.drawable.button_border_purple);
+        }
+    }
+
+    private void actualizarUI(FirebaseUser currentUser) {
+        if(currentUser != null){
+            navController.navigate(R.id.homeFragment);
         }
     }
 }

@@ -58,8 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/downBar"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createAccountTitle">
@@ -71,7 +70,7 @@
             android:layout_marginStart="42dp"
             android:layout_marginEnd="42dp"
             android:background="@drawable/edit_text_border"
-            android:hint="Usuario, correo o teléfono"
+            android:hint="Correo electrónico"
             android:inputType="text"
             android:maxWidth="400dp"
             android:paddingStart="16dp"

@@ -40,7 +40,7 @@ public class RecuperacionFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.forgotButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.nextButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navController.navigate(R.id.signInFragment);

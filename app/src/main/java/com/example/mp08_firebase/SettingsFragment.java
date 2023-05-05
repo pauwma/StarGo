@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -53,7 +54,13 @@ public class SettingsFragment extends Fragment {
 
                 FirebaseAuth.getInstance().signOut();
 
-                Navigation.findNavController(view).navigate(R.id.signInFragment);
+                // Navegar al fragmento inicial y limpiar la pila de navegación
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.startFragment, true)
+                        .setEnterAnim(android.R.anim.fade_in)
+                        .setExitAnim(android.R.anim.fade_out)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.startFragment, null, navOptions);
             }
         });
     }
