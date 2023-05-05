@@ -1,5 +1,6 @@
 package com.example.mp08_firebase;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,10 +41,10 @@ import java.util.Map;
 
 public class RegisterFragment extends Fragment {
 
-    NavController navController;
+    private NavController navController;
     private String username, email, phone, password, userUID;
-    private EditText emailEditText, passwordEditText, usernameEditText, phoneEditText;
-    private ImageButton registerButton, showPasswordButton;
+    private EditText usernameEditText, mailEditText, phoneEditText, passwordEditText;
+    private Button nextButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
     private Typeface originalTypeface;
@@ -55,17 +57,30 @@ public class RegisterFragment extends Fragment {
         navController = Navigation.findNavController(view);
 
         usernameEditText = view.findViewById(R.id.usernameEditText);
-        emailEditText = view.findViewById(R.id.emailEditText);
+
+        // ? Focus al iniciar el fragment
+        usernameEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(usernameEditText, InputMethodManager.SHOW_IMPLICIT);
+
+        mailEditText = view.findViewById(R.id.mailEditText);
         phoneEditText = view.findViewById(R.id.phoneEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
-        showPasswordButton = view.findViewById(R.id.showPasswordButton);
+
+        // ? Cambios de botón de siguiente
+        CustomTextWatcher textWatcher = new CustomTextWatcher();
+
+        usernameEditText.addTextChangedListener(textWatcher);
+        mailEditText.addTextChangedListener(textWatcher);
+        phoneEditText.addTextChangedListener(textWatcher);
+        passwordEditText.addTextChangedListener(textWatcher);
 
         mAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
         // ? Botón de registrar
-        registerButton = view.findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        nextButton = view.findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 validarFormulario();
@@ -79,51 +94,12 @@ public class RegisterFragment extends Fragment {
                 navController.navigateUp();
             }
         });
-
-        // ? Función de mostrar contraseña
-        originalTypeface = passwordEditText.getTypeface();
-        passwordEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (passwordEditText.getText().toString().isEmpty()) {
-                    passwordEditText.setTypeface(originalTypeface);
-                    showPasswordButton.setVisibility(View.GONE);
-                } else {
-                    showPasswordButton.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        if(passwordEditText.getText().toString().isEmpty()){
-            passwordEditText.setTypeface(originalTypeface);
-            showPasswordButton.setVisibility(View.GONE);
-        }
-        showPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.ocultar_icon);
-                } else {
-                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.ocultar_no_icon);
-                }
-            }
-        });
-
     }
 
     private void crearCuenta() {
-        registerButton.setEnabled(false);
+        nextButton.setEnabled(false);
 
-        mAuth.createUserWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
+        mAuth.createUserWithEmailAndPassword(mailEditText.getText().toString(), passwordEditText.getText().toString())
                 .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -140,7 +116,7 @@ public class RegisterFragment extends Fragment {
                         } else {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
                         }
-                        registerButton.setEnabled(true);
+                        nextButton.setEnabled(true);
                     }
                 });
 
@@ -157,7 +133,7 @@ public class RegisterFragment extends Fragment {
         boolean valid = true;
 
         username = usernameEditText.getText().toString().trim();
-        email = emailEditText.getText().toString().trim();
+        email = mailEditText.getText().toString().trim();
         phone = phoneEditText.getText().toString().trim();
         password = passwordEditText.getText().toString().trim();
 
@@ -175,13 +151,13 @@ public class RegisterFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(email)) {
-            emailEditText.setError("Debes introducir un correo.");
+            mailEditText.setError("Debes introducir un correo.");
             valid = false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.setError("Debes introducir un correo válido.");
+            mailEditText.setError("Debes introducir un correo válido.");
             valid = false;
         } else {
-            emailEditText.setError(null);
+            mailEditText.setError(null);
         }
 
         if (TextUtils.isEmpty(phone)) {
@@ -240,7 +216,7 @@ public class RegisterFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && !task.getResult().isEmpty()) {
-                                emailEditText.setError("El correo electrónico ya está en uso.");
+                                mailEditText.setError("El correo electrónico ya está en uso.");
                             } else {
                                 checkUsernameExists(username);
                             }
@@ -251,13 +227,39 @@ public class RegisterFragment extends Fragment {
                 });
     }
 
-
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
+
+    private class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            updateButtonBackground();
+        }
+    }
+
+    private void updateButtonBackground() {
+        boolean allFieldsFilled = !TextUtils.isEmpty(usernameEditText.getText()) &&
+                !TextUtils.isEmpty(mailEditText.getText()) &&
+                !TextUtils.isEmpty(phoneEditText.getText()) &&
+                !TextUtils.isEmpty(passwordEditText.getText());
+
+        if (allFieldsFilled) {
+            nextButton.setBackgroundResource(R.drawable.button_purple);
+        } else {
+            nextButton.setBackgroundResource(R.drawable.button_border_purple);
+        }
+    }
+
+
 }

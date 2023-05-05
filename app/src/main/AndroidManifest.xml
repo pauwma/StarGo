@@ -12,14 +12,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher2_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MP08_Firebase"
+        android:theme="@style/AppTheme.Light"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MP08_Firebase.NoActionBar">
-            <intent-filter>
+            android:theme="@style/Theme.MP08_Firebase.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

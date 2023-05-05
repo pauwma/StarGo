@@ -8,4 +8,6 @@
     <color name="secondary">#171717</color>
     <color name="terciary">#0E0E0E</color>
     <color name="border">#1f1f1f</color>
+    <color name="eerie_black">#1E1E1E</color>
+    <color name="quick_silver">#A7A7A7</color>
 </resources>
