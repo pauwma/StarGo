@@ -1,16 +1,20 @@
 package com.example.mp08_firebase;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -50,13 +54,9 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SignInFragment extends Fragment {
-
-    NavController navController;
-    private ImageButton googleSignInButton;
-    private ActivityResultLauncher<Intent> activityResultLauncher;
-    private EditText emailEditText, passwordEditText;
-    private Typeface originalTypeface;
-    private ImageButton showPasswordButton, emailSignInButton;
+    private NavController navController;
+    private EditText userInfoEditText, passwordEditText;
+    private Button nextButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
 
@@ -66,155 +66,38 @@ public class SignInFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        emailEditText = view.findViewById(R.id.emailEditText);
-        emailSignInButton = view.findViewById(R.id.emailSignInButton);
-
+        userInfoEditText = view.findViewById(R.id.userInfoEditText);
+        userInfoEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(userInfoEditText, InputMethodManager.SHOW_IMPLICIT);
         passwordEditText = view.findViewById(R.id.passwordEditText);
-        showPasswordButton = view.findViewById(R.id.showPasswordButton);
-        originalTypeface = passwordEditText.getTypeface();
+
+        // ? Cambios de botón de siguiente
+        CustomTextWatcher textWatcher = new CustomTextWatcher();
+
+        userInfoEditText.addTextChangedListener(textWatcher);
+        passwordEditText.addTextChangedListener(textWatcher);
+
+        nextButton = view.findViewById(R.id.nextButton);
 
         mAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        // ? Botón crear cuenta
-        view.findViewById(R.id.gotoCreateAccountTextView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.registerFragment);
-            }
-        });
-
         //? Contraseña olvidada
-        view.findViewById(R.id.contraTextView).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.passwordTextView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navController.navigate(R.id.recuperacionFragment);
             }
         });
 
-
-        passwordEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (passwordEditText.getText().toString().isEmpty()) {
-                    passwordEditText.setTypeface(originalTypeface);
-                    showPasswordButton.setVisibility(View.GONE);
-                } else {
-                    showPasswordButton.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        if(passwordEditText.getText().toString().isEmpty()){
-            passwordEditText.setTypeface(originalTypeface);
-            showPasswordButton.setVisibility(View.GONE);
-        }
-        showPasswordButton.setOnClickListener(new View.OnClickListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (passwordEditText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.eye_icon);
-                } else {
-                    passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    showPasswordButton.setImageResource(R.drawable.eye_close_icon);
-                }
+                acceder();
             }
         });
-
-        emailSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                accederConEmail();
-            }
-        });
-
-        googleSignInButton = view.findViewById(R.id.googleSignInButton);
-        activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            try {
-                                firebaseAuthWithGoogle(GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class));
-                            } catch (ApiException e) {
-                                Log.e("ABCD", "signInResult:failed code=" +
-                                        e.getStatusCode());
-                            }
-                        }
-                    }
-                });
-        googleSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                accederConGoogle();
-            }
-        });
-
     }
-    private void accederConGoogle() {
-        GoogleSignInClient googleSignInClient =
-                GoogleSignIn.getClient(requireActivity(), new
-                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build());
-        activityResultLauncher.launch(googleSignInClient.getSignInIntent());
-    }
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        if(acct == null) return;
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            db.collection("users")
-                                    .whereEqualTo("uid", user.getUid())
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                                                if (documents.size() > 0) {
-                                                    actualizarUI(user);
-                                                } else {
-                                                    String userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
-                                                    DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
-                                                    Map<String,Object> userAdd = new HashMap<>();
-                                                    userAdd.put("uid",userUID);
-                                                    userAdd.put("username", Objects.requireNonNull(user.getDisplayName()).trim());
-                                                    userAdd.put("email",user.getEmail());
-                                                    userAdd.put("avatar",user.getPhotoUrl());
-                                                    documentReference.set(userAdd);
-                                                    actualizarUI(mAuth.getCurrentUser());
-                                                }
-                                            } else {
-                                            }
-                                        }
-                                    });
-                        } else {
-                        }
-                    }
-                });
-    }
-
-
 
     private void actualizarUI(FirebaseUser currentUser) {
         if(currentUser != null){
@@ -222,8 +105,8 @@ public class SignInFragment extends Fragment {
         }
     }
 
-    private void accederConEmail() {
-        String email = emailEditText.getText().toString();
+    private void acceder() {
+        String email = userInfoEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (email.isEmpty() || password.isEmpty()) {
             Snackbar.make(getView(), "Por favor ingrese su email y contraseña", Snackbar.LENGTH_SHORT).show();
@@ -265,4 +148,30 @@ public class SignInFragment extends Fragment {
 
     }
 
+    private class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            updateButtonBackground();
+        }
+    }
+
+    private void updateButtonBackground() {
+        boolean allFieldsFilled = !TextUtils.isEmpty(userInfoEditText.getText()) &&
+                !TextUtils.isEmpty(passwordEditText.getText());
+
+        if (allFieldsFilled) {
+            nextButton.setBackgroundResource(R.drawable.button_purple);
+        } else {
+            nextButton.setBackgroundResource(R.drawable.button_border_purple);
+        }
+    }
 }

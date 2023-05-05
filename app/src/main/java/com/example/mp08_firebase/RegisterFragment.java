@@ -47,8 +47,6 @@ public class RegisterFragment extends Fragment {
     private Button nextButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
-    private Typeface originalTypeface;
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -260,6 +258,4 @@ public class RegisterFragment extends Fragment {
             nextButton.setBackgroundResource(R.drawable.button_border_purple);
         }
     }
-
-
 }
