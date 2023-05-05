@@ -120,8 +120,9 @@ public class StartFragment extends Fragment {
                         .build());
         activityResultLauncher.launch(googleSignInClient.getSignInIntent());
     }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        if(acct == null) return;
+        if (acct == null) return;
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -144,14 +145,20 @@ public class StartFragment extends Fragment {
                                                     actualizarUI(user);
                                                 } else {
                                                     String userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
-                                                    DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
-                                                    Map<String,Object> userAdd = new HashMap<>();
-                                                    userAdd.put("uid",userUID);
-                                                    userAdd.put("username", Objects.requireNonNull(user.getDisplayName()).trim());
-                                                    userAdd.put("email",user.getEmail());
-                                                    userAdd.put("avatar",user.getPhotoUrl());
-                                                    documentReference.set(userAdd);
-                                                    actualizarUI(mAuth.getCurrentUser());
+
+                                                    generateUniqueUsername(Objects.requireNonNull(user.getDisplayName()), db, new OnUniqueUsernameCompleteListener() {
+                                                        @Override
+                                                        public void onComplete(String uniqueUsername) {
+                                                            DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
+                                                            Map<String,Object> userAdd = new HashMap<>();
+                                                            userAdd.put("uid",userUID);
+                                                            userAdd.put("username", uniqueUsername);
+                                                            userAdd.put("email",user.getEmail());
+                                                            userAdd.put("avatar",user.getPhotoUrl());
+                                                            documentReference.set(userAdd);
+                                                            actualizarUI(mAuth.getCurrentUser());
+                                                        }
+                                                    });
                                                 }
                                             } else {
                                                 Log.e("ABCD", "Error getting documents: ", task.getException());
@@ -165,9 +172,53 @@ public class StartFragment extends Fragment {
                 });
     }
 
+
+    private String validateAndTransformUsername(String username) {
+        username = username.trim().toLowerCase();
+        if (username.length() > 32) {
+            username = username.substring(0, 32);
+        }
+        username = username.replaceAll("\\s+", "");
+
+        return username;
+    }
+
+    private void generateUniqueUsername(String displayName, FirebaseFirestore db, OnUniqueUsernameCompleteListener onCompleteListener) {
+        String transformedUsername = displayName.trim().toLowerCase().replaceAll("\\s+", "_").substring(0, Math.min(displayName.length(), 32));
+
+        checkUsernameExists(transformedUsername, db, onCompleteListener, 1);
+    }
+
+
+    private void checkUsernameExists(String username, FirebaseFirestore db, OnUniqueUsernameCompleteListener onCompleteListener, int attempt) {
+        db.collection("users")
+                .whereEqualTo("username", username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                            if (documents.size() > 0) {
+                                checkUsernameExists(username + attempt, db, onCompleteListener, attempt + 1);
+                            } else {
+                                onCompleteListener.onComplete(username);
+                            }
+                        } else {
+                            onCompleteListener.onComplete(username);
+                        }
+                    }
+                });
+    }
+
     private void actualizarUI(FirebaseUser currentUser) {
         if(currentUser != null){
             navController.navigate(R.id.homeFragment);
         }
     }
+
+    public interface OnUniqueUsernameCompleteListener {
+        void onComplete(String uniqueUsername);
+    }
+
 }
