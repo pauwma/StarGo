@@ -84,7 +84,7 @@ public class SignInFragment extends Fragment {
         fStore = FirebaseFirestore.getInstance();
 
         //? Contraseña olvidada
-        view.findViewById(R.id.passwordTextView).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.passwordButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navController.navigate(R.id.recuperacionFragment);

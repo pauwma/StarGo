@@ -99,27 +99,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userInfoEditText" />
-
-        <TextView
-            android:id="@+id/passwordTextView"
-            style="@style/title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="8dp"
-            android:layout_marginTop="24dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:fontFamily="@font/montserrat_bold"
-            android:letterSpacing="-0.02"
-            android:text="¿Has olvidado la contraseña?"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordEditText"/>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -130,6 +109,21 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/passwordButton"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/button_border_white"
+            android:fontFamily="@font/montserrat_semibold"
+            android:paddingHorizontal="16dp"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/nextButton"
