@@ -54,7 +54,7 @@ public class RegisterFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        usernameEditText = view.findViewById(R.id.usernameEditText);
+        usernameEditText = view.findViewById(R.id.userInfoEditText);
 
         // ? Focus al iniciar el fragment
         usernameEditText.requestFocus();
