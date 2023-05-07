@@ -155,6 +155,7 @@ public class StartFragment extends Fragment {
                                                             userAdd.put("username", uniqueUsername);
                                                             userAdd.put("email",user.getEmail());
                                                             userAdd.put("avatar",user.getPhotoUrl());
+                                                            userAdd.put("displayName", user.getDisplayName());
                                                             documentReference.set(userAdd);
                                                             actualizarUI(mAuth.getCurrentUser());
                                                         }

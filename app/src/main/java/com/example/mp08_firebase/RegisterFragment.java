@@ -1,7 +1,10 @@
 package com.example.mp08_firebase;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -24,6 +27,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -32,12 +37,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class RegisterFragment extends Fragment {
 
@@ -54,7 +65,7 @@ public class RegisterFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        usernameEditText = view.findViewById(R.id.userInfoEditText);
+        usernameEditText = view.findViewById(R.id.usernameEditText);
 
         // ? Focus al iniciar el fragment
         usernameEditText.requestFocus();
@@ -104,13 +115,55 @@ public class RegisterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             userUID = mAuth.getCurrentUser().getUid(); // Obtiene el UID del usuario creado.
                             DocumentReference documentReference = fStore.collection("users").document(userUID); // Crea un documento en la colección "users" con el UID.
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("uid",userUID);
-                            user.put("username",username.toLowerCase());
-                            user.put("email",email);
-                            user.put("phone",phone);
-                            documentReference.set(user);
-                            actualizarUI(mAuth.getCurrentUser());
+
+                            // Listar imágenes de la carpeta "default_avatars" en Firebase Storage
+                            StorageReference storageRef = FirebaseStorage.getInstance().getReference("default_avatars");
+                            storageRef.listAll()
+                                    .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                        @Override
+                                        public void onSuccess(ListResult listResult) {
+                                            List<StorageReference> avatarRefs = new ArrayList<>();
+                                            for (StorageReference item : listResult.getItems()) {
+                                                avatarRefs.add(item);
+                                            }
+
+                                            // Seleccionar una imagen al azar
+                                            int randomIndex = new Random().nextInt(avatarRefs.size());
+                                            StorageReference randomAvatarRef = avatarRefs.get(randomIndex);
+
+                                            // Obtener el enlace de descarga directa del archivo seleccionado al azar
+                                            randomAvatarRef.getDownloadUrl()
+                                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            String randomAvatarUrl = uri.toString();
+
+                                                            Map<String, Object> user = new HashMap<>();
+                                                            user.put("uid", userUID);
+                                                            user.put("username", username.toLowerCase());
+                                                            user.put("email", email);
+                                                            user.put("phone", phone);
+                                                            user.put("avatar", randomAvatarUrl); // Añadir el atributo "avatar" con el enlace de descarga directa de la imagen
+                                                            documentReference.set(user);
+                                                            actualizarUI(mAuth.getCurrentUser());
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e(TAG, "Error al obtener enlace de descarga: " + e.getMessage());
+                                                            // Manejar el error aquí, si es necesario
+                                                        }
+                                                    });
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "Error al listar avatars: " + e.getMessage());
+                                            // Manejar el error aquí, si es necesario
+                                        }
+                                    });
                         } else {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
                         }
@@ -119,6 +172,8 @@ public class RegisterFragment extends Fragment {
                 });
 
     }
+
+
 
     private void actualizarUI(FirebaseUser currentUser) {
         if(currentUser != null){

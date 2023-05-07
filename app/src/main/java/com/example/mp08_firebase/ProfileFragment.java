@@ -51,11 +51,11 @@ import java.util.Calendar;
 
 public class ProfileFragment extends Fragment {
 
-    NavController navController;
-    ImageView photoImageView, deleteImageView;
-    TextView displayNameTextView;
-    String uid;
-    public AppViewModel appViewModel;
+    private NavController navController;
+    private ImageView photoImageView;
+    // public AppViewModel appViewModel;
+    // ? User Stats
+    private TextView postsNumber, followersNumber, followingNumber, usernameTitleTextView;
 
     private FirebaseDatabase fDatabase;
     private FirebaseFirestore fStore;
@@ -63,8 +63,6 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference usersRef;
     private DatabaseReference userRef;
 
-    // ? User Stats
-    TextView postsNumber, followersNumber, followingNumber;
 
     public ProfileFragment() {}
 
@@ -78,24 +76,20 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(view);
         user = FirebaseAuth.getInstance().getCurrentUser();
         fStore = FirebaseFirestore.getInstance();
 
         photoImageView = view.findViewById(R.id.photoImageView);
-        displayNameTextView = view.findViewById(R.id.displayNameTextView);
-        navController = Navigation.findNavController(view);
+        usernameTitleTextView = view.findViewById(R.id.usernameTitleTextView);
 
         // ? User Stats
         postsNumber = view.findViewById(R.id.postNumber);
         followersNumber = view.findViewById(R.id.followersNumber);
         followingNumber = view.findViewById(R.id.followingNumber);
-        uid = user.getUid();
 
-        if(user != null){
-            displayNameTextView.setText(user.getDisplayName());
-            // ! Glide.with(requireView()).load(user.getPhotoUrl()).into(photoImageView);
-        }
-
+        // ! ELIMINAR
+        String uid = user.getUid();
 
         CollectionReference postsRef = fStore.collection("posts");
         Query queryPostsNumber = postsRef.whereEqualTo("uid", uid);
@@ -121,6 +115,9 @@ public class ProfileFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        String username = document.getString("username");
+                        usernameTitleTextView.setText(username);
+
                         String avatarUrl = document.getString("avatar");
                         if (avatarUrl != null) {
                             Glide.with(requireView()).load(avatarUrl).into(photoImageView);
@@ -131,16 +128,8 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
-        if(user.getPhotoUrl() == null){
-            String[] userMailSplit = user.getEmail().split("@");
-            displayNameTextView.setText(userMailSplit[0]);
-            //Glide.with(requireView()).load(R.drawable.user_default_image).into(photoImageView);
-        }
-
-
         // ? Lista de posts
-        RecyclerView profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+        /*RecyclerView profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
 
         Query query = FirebaseFirestore.getInstance().collection("posts").whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
 
@@ -151,11 +140,10 @@ public class ProfileFragment extends Fragment {
 
         profilePostRecyclerView.setAdapter(new ProfileFragment.PostsAdapter(options));
 
-        appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
-
+        appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);*/
 
         // ? Botón settings
-        view.findViewById(R.id.settingsRueda).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.settingsFragment);
@@ -163,7 +151,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // ? Botón editar
-        view.findViewById(R.id.editTextView).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.editProfileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.editarPerfilFragment);
@@ -171,6 +159,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
+
+    /*
     class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
         public PostsAdapter(@NonNull FirestoreRecyclerOptions<Post> options) {super(options);}
 
@@ -292,5 +283,5 @@ public class ProfileFragment extends Fragment {
                 deleteImageView = itemView.findViewById(R.id.deleteImageView);
             }
         }
-    }
+    }*/
 }

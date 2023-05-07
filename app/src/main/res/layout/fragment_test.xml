@@ -4,125 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background">
-
-    <LinearLayout
-        android:id="@+id/upBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/black"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-        android:id="@+id/stargoLogo"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        app:layout_constraintBottom_toBottomOf="@+id/upBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/stargo_logo" />
 
     <ImageButton
         android:id="@+id/flechaBack"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:background="@null"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_arrow_left_icon"
-        app:layout_constraintTop_toTopOf="@id/stargoLogo"
-        app:layout_constraintBottom_toBottomOf="@id/stargoLogo"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/flecha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+
+
+    <ImageButton
+        android:id="@+id/likeChange"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="25dp"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/like_borde"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/photoImageView"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/passwordTitle"
-        style="@style/title1"
+        android:id="@+id/displayNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="\@pauwma"
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+
+    <LinearLayout
+        android:id="@+id/postsStat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:fontFamily="@font/montserrat_bold"
-        android:letterSpacing="-0.02"
-        android:text="Recupera tu contraseña"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stargoLogo" />
-
-    <TextView
-        android:id="@+id/passwordDesc"
-        style="@style/title1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="38dp"
+        android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="38dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:fontFamily="@font/montserrat_regular"
-        android:letterSpacing="-0.02"
-        android:text="Introduce el correo electrónico o el nombre de usuario asociados a tu cuenta para poder cambiar tu contraseña."
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTitle" />
+        android:layout_marginEnd="28dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/followersStat"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
 
-    <EditText
-        android:id="@+id/userInfoEditText"
-        android:layout_width="0dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="42dp"
-        android:background="@drawable/edit_text_border"
-        android:hint="Usuario o correo"
-        android:inputType="text"
-        android:maxWidth="400dp"
-        android:paddingStart="16dp"
-        android:textColorHint="@color/quick_silver"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordDesc">
-
-        <requestFocus />
-    </EditText>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/downBar"
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:background="@color/black"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/button_border_purple"
+        <TextView
+            android:id="@+id/postNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_semibold"
-            android:paddingHorizontal="24dp"
-            android:text="Siguiente"
-            android:textAllCaps="false"
+            android:text="0"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/postNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="Publicaciones"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
-    <View
-        android:id="@+id/view"
+    <LinearLayout
+        android:id="@+id/followersStat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
+
+        <TextView
+            android:id="@+id/followersNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/followersNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="Seguidores"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/followingStat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@+id/followersStat"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameTextView">
+
+        <TextView
+            android:id="@+id/followingNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/followingNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="Siguiendo"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profilePostsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/eerie_black"
-        app:layout_constraintTop_toTopOf="@+id/downBar" />
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/followersStat" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
