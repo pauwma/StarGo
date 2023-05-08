@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -64,22 +65,21 @@ public class NewPostFragment extends Fragment {
         return rootView;
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(view);
+
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+
         publishButton = view.findViewById(R.id.publishButton);
         postConentEditText = view.findViewById(R.id.postContentEditText);
-        navController = Navigation.findNavController(view);  // <-----------------
-
-
 
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                publicar();
+                publish();
             }
         });
 
@@ -96,77 +96,79 @@ public class NewPostFragment extends Fragment {
         });
     }
 
-    private void publicar() {
-        String postContent = postConentEditText.getText().toString();
-
-        if(TextUtils.isEmpty(postContent)){
-            postConentEditText.setError("Required");
-            return;
+    private void publish() {
+        if (validPost()) {
+            postUpload();
         }
+    }
 
-        publishButton.setEnabled(false);
-
-        if (mediaTipo == null) {
-            guardarEnFirestore(postContent, null);
+    private boolean validPost() {
+        String postContent = postConentEditText.getText().toString().trim();
+        if (postContent.isEmpty() && mediaUri == null) {
+            Toast.makeText(requireContext(), "Debe agregar contenido o media al post", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        else
-        {
-            pujaIguardarEnFirestore(postContent);
-        }    }
+        return true;
+    }
 
-    private void guardarEnFirestore(String postContent, String mediaUrl) {
+    private void postUpload() {
+        String postContent = postConentEditText.getText().toString().trim();
+        if (mediaUri != null) {
+            mediaToFirestore(postContent);
+        } else {
+            postToFirestore(postContent, null, null);
+        }
+    }
+
+
+    private void postToFirestore(String postContent, String mediaUrl, String mediaType) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        Post post = null;
-        if (user.getPhotoUrl() == null){
-            String[] userMailSplit = user.getEmail().split("@");
-            post = new Post(user.getUid(), userMailSplit[0],"https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg", postContent, date, mediaUrl, mediaTipo);
-        } else {
-            post = new Post(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), postContent, date, mediaUrl, mediaTipo);
-        }
+        // (String uid, long timestamp, String media, String mediaType, String content, List<String> hashtags)
+        Post post = new Post(user.getUid(), System.currentTimeMillis(), mediaUrl, mediaType, postContent, null);
 
-        FirebaseFirestore.getInstance().collection("posts")
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts")
                 .add(post)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        navController.popBackStack();
-                        appViewModel.setMediaSeleccionado( null, null);
+                        String postId = documentReference.getId();
+                        post.setPostId(postId);
+                        db.collection("posts").document(postId).set(post)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        navController.popBackStack();
+                                        appViewModel.setMediaSeleccionado(null, null);
+                                    }
+                                });
                     }
                 });
     }
 
-    // ? Cuando si hay contenido para subir
-    private void pujaIguardarEnFirestore(final String postText) {
+
+
+    // Cuando si hay contenido para subir
+    private void mediaToFirestore(String postContent) {
         FirebaseStorage.getInstance().getReference(mediaTipo + "/" + UUID.randomUUID())
                 .putFile(mediaUri)
                 .continueWithTask(task -> task.getResult().getStorage().getDownloadUrl())
-                .addOnSuccessListener(url -> guardarEnFirestore(postText,
-                        url.toString()));
+                .addOnSuccessListener(url -> postToFirestore(postContent, url.toString(), mediaTipo));
     }
-
-    private final ActivityResultLauncher<String> galeria =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+    private final ActivityResultLauncher<String> galeria = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 appViewModel.setMediaSeleccionado(uri, mediaTipo);
             });
-    private final ActivityResultLauncher<Uri> camaraFotos =
-            registerForActivityResult(new ActivityResultContracts.TakePicture(),
-                    isSuccess -> {
+    private final ActivityResultLauncher<Uri> camaraFotos = registerForActivityResult(new ActivityResultContracts.TakePicture(), isSuccess -> {
                         appViewModel.setMediaSeleccionado(mediaUri, "image");
                     });
-    private final ActivityResultLauncher<Uri> camaraVideos;
-    {
+    private final ActivityResultLauncher<Uri> camaraVideos; {
         camaraVideos = registerForActivityResult(new ActivityResultContracts.TakeVideo(), isSuccess
                 -> {
             appViewModel.setMediaSeleccionado(mediaUri, "video");
         });
     }
-
-    private final ActivityResultLauncher<Intent> grabadoraAudio =
-            registerForActivityResult(new
-                    ActivityResultContracts.StartActivityForResult(), result -> {
+    private final ActivityResultLauncher<Intent> grabadoraAudio = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     appViewModel.setMediaSeleccionado(result.getData().getData(),
                             "audio");

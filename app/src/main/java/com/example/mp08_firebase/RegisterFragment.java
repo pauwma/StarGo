@@ -140,10 +140,11 @@ public class RegisterFragment extends Fragment {
 
                                                             Map<String, Object> user = new HashMap<>();
                                                             user.put("uid", userUID);
-                                                            user.put("username", username.toLowerCase());
+                                                            user.put("username", username);
+                                                            user.put("displayName", username);
                                                             user.put("email", email);
                                                             user.put("phone", phone);
-                                                            user.put("avatar", randomAvatarUrl); // Añadir el atributo "avatar" con el enlace de descarga directa de la imagen
+                                                            user.put("avatar", randomAvatarUrl);
                                                             documentReference.set(user);
                                                             actualizarUI(mAuth.getCurrentUser());
                                                         }

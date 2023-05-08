@@ -64,7 +64,7 @@ public class MediaFragment extends Fragment {
         crossButton = view.findViewById(R.id.crossImageButton);
         numLikes = view.findViewById(R.id.numLikesTextView);
         likebutton = view.findViewById(R.id.likeImageButton);
-        userUID = Objects.requireNonNull(appViewModel.postSeleccionado.getValue()).uid;
+        userUID = Objects.requireNonNull(appViewModel.postSeleccionado.getValue()).getUid();
 
         // ? Flecha Back
         crossButton.setOnClickListener(new View.OnClickListener() {
@@ -79,55 +79,34 @@ public class MediaFragment extends Fragment {
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
             this.post = post;
-            userUID = post.uid;
-            if ("video".equals(post.mediaType) ||
-                    "audio".equals(post.mediaType)) {
+            userUID = post.getUid();
+            if ("video".equals(post.getMediaType()) ||
+                    "audio".equals(post.getMediaType())) {
                 MediaController mc = new MediaController(requireContext());
                 mc.setAnchorView(videoView);
                 videoView.setMediaController(mc);
-                videoView.setVideoPath(post.mediaUrl);
+                videoView.setVideoPath(post.getMedia());
                 videoView.start();
-            } else if ("image".equals(post.mediaType)) {
-                Glide.with(requireView()).load(post.mediaUrl).into(imageView);
+            } else if ("image".equals(post.getMediaType())) {
+                Glide.with(requireView()).load(post.getMedia()).into(imageView);
             }
             Calendar now = Calendar.getInstance();
             Calendar postDate = Calendar.getInstance();
-            postDate.setTime(post.date);
             long diff = now.getTimeInMillis() - postDate.getTimeInMillis();
             long diffHours = diff / (60 * 60 * 1000);
             if (diffHours < 24) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                String formattedDate = dateFormat.format(post.date);
+                String formattedDate = dateFormat.format(post.getTimestamp());
                 timeTextView.setText(formattedDate + " h");
             } else {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
-                String formattedDate = dateFormat.format(post.date);
+                String formattedDate = dateFormat.format(post.getTimestamp());
                 timeTextView.setText(formattedDate);
             }
 
-            Glide.with(getContext()).load(post.authorPhotoUrl).circleCrop().into(photoImageView);
-            authorTextView.setText(post.author);
-            numLikes.setText(String.valueOf(post.likes.size()));
+            Glide.with(getContext()).load(post.getAvatar()).circleCrop().into(photoImageView);
+            authorTextView.setText(post.getDisplayName());
 
-
-            // ? Gestion de likes
-            final String postKey = userUID;
-            final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            if(post.likes.containsKey(uid))
-                likebutton.setImageResource(R.drawable.like_solid_icon);
-            else
-                likebutton.setImageResource(R.drawable.like_icon);
-            numLikes.setText(String.valueOf(post.likes.size()));
-
-            likebutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FirebaseFirestore.getInstance().collection("posts")
-                            .document(postKey)
-                            .update("likes."+uid, post.likes.containsKey(uid) ?
-                                    FieldValue.delete() : true);
-                }
-            });
         });
 
 
@@ -150,7 +129,7 @@ public class MediaFragment extends Fragment {
         view.findViewById(R.id.userInfoLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (post.uid.equals(FirebaseAuth.getInstance().getUid())){
+                if (post.getUid().equals(FirebaseAuth.getInstance().getUid())){
                     navController.navigate(R.id.profileFragment);
                 } else {
                     appViewModel.postSeleccionado.setValue(post);

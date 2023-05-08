@@ -121,7 +121,7 @@ public class usersProfileFragment extends Fragment {
 
         appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
         {
-            profileUID = post.uid;
+            profileUID = post.getUid();
 
             // ? Stats
 
@@ -331,106 +331,4 @@ public class usersProfileFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-    class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.PostViewHolder> {
-        public PostsAdapter(@NonNull FirestoreRecyclerOptions<Post> options) {super(options);}
-
-        @NonNull
-        @Override
-        public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new PostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_post, parent, false));
-        }
-
-        @Override
-        protected void onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull final Post post) {
-            Glide.with(getContext()).load(post.authorPhotoUrl).circleCrop().into(holder.authorPhotoImageView);
-            holder.authorTextView.setText(post.author);
-            holder.contentTextView.setText(post.content);
-            Calendar now = Calendar.getInstance();
-            Calendar postDate = Calendar.getInstance();
-            postDate.setTime(post.date);
-            long diff = now.getTimeInMillis() - postDate.getTimeInMillis();
-            long diffHours = diff / (60 * 60 * 1000);
-            if (diffHours < 24) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                String formattedDate = dateFormat.format(post.date);
-                holder.timeTextView.setText(formattedDate + " h");
-            } else {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
-                String formattedDate = dateFormat.format(post.date);
-                holder.timeTextView.setText(formattedDate);
-            }
-
-            // ? Gestion de likes
-            final String postKey = getSnapshots().getSnapshot(position).getId();
-            final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            if(post.likes.containsKey(uid))
-                holder.likeImageButton.setImageResource(R.drawable.like_solid_icon);
-            else
-                holder.likeImageButton.setImageResource(R.drawable.like_icon);
-            holder.numLikesTextView.setText(String.valueOf(post.likes.size()));
-            holder.likeImageButton.setOnClickListener(view -> {
-                FirebaseFirestore.getInstance().collection("posts")
-                        .document(postKey)
-                        .update("likes."+uid, post.likes.containsKey(uid) ?
-                                FieldValue.delete() : true);
-            });
-
-            // ? Miniatura de media
-            if (post.mediaUrl != null) {
-                holder.fadeUp.setVisibility(View.VISIBLE);
-                holder.fadeDown.setVisibility(View.VISIBLE);
-                holder.contentTextView.setText(post.content);
-                holder.contentTextView.setAlpha(0f);
-                holder.mediaImageView.setVisibility(View.VISIBLE);
-                if ("audio".equals(post.mediaType)) {
-                    Glide.with(requireView()).load(R.drawable.ic_baseline_audio_file_24).centerCrop().into(holder.mediaImageView);
-                } else {
-                    Glide.with(requireView()).load(post.mediaUrl).centerCrop().into(holder.mediaImageView);
-                }
-                holder.mediaImageView.setOnClickListener(view -> {
-                    appViewModel.postSeleccionado.setValue(post);
-                    navController.navigate(R.id.mediaFragment);
-                });
-                //holder.contentTextView.setPadding(0,0,0,6);
-            } else {
-                holder.mediaImageView.setVisibility(View.GONE);
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(holder.constraintLayout);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.RIGHT, holder.actionsLayout.getId(), ConstraintSet.RIGHT);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.BOTTOM, holder.actionsLayout.getId(), ConstraintSet.TOP);
-                constraintSet.connect(holder.contentTextView.getId(), ConstraintSet.TOP, holder.userInfo.getId(), ConstraintSet.BOTTOM);
-                constraintSet.applyTo(holder.constraintLayout);
-
-                holder.fadeUp.setVisibility(View.GONE);
-                holder.fadeDown.setVisibility(View.GONE);
-            }
-
-        }
-
-        class PostViewHolder extends RecyclerView.ViewHolder {
-            ConstraintLayout constraintLayout;
-            ImageView authorPhotoImageView, mediaImageView;
-            ImageButton likeImageButton, commentImageButton, shareImageButton;
-            TextView authorTextView, contentTextView, numLikesTextView, timeTextView;
-            View fadeUp, fadeDown;
-            LinearLayout userInfo, actionsLayout;
-            PostViewHolder(@NonNull View itemView) {
-                super(itemView);
-                constraintLayout = itemView.findViewById(R.id.constraintPost);
-                authorPhotoImageView = itemView.findViewById(R.id.photoImageView);
-                likeImageButton = itemView.findViewById(R.id.likeImageButton);
-                commentImageButton = itemView.findViewById(R.id.commentImageButton);
-                shareImageButton = itemView.findViewById(R.id.shareImageButton);
-                mediaImageView = itemView.findViewById(R.id.mediaImage);
-                authorTextView = itemView.findViewById(R.id.authorTextView);
-                contentTextView = itemView.findViewById(R.id.contentTextView);
-                numLikesTextView = itemView.findViewById(R.id.numLikesTextView);
-                timeTextView = itemView.findViewById(R.id.timeTextView);
-                userInfo = itemView.findViewById(R.id.userInfoLayout);
-                actionsLayout = itemView.findViewById(R.id.actionsLayout);
-                fadeUp = itemView.findViewById(R.id.fade_up);
-                fadeDown = itemView.findViewById(R.id.fade_down);
-            }
-        }
-    }
 }
