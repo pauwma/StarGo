@@ -40,8 +40,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NewPostFragment extends Fragment {
 
@@ -96,7 +100,18 @@ public class NewPostFragment extends Fragment {
         });
     }
 
+    List<String> extractHashtags(String content) {
+        List<String> hashtags = new ArrayList<>();
+        Pattern pattern = Pattern.compile("(?:^|\\s)#(\\w+)");
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            hashtags.add(matcher.group(1));
+        }
+        return hashtags;
+    }
+
     private void publish() {
+        hideKeyboard();
         if (validPost()) {
             postUpload();
         }
@@ -124,8 +139,10 @@ public class NewPostFragment extends Fragment {
     private void postToFirestore(String postContent, String mediaUrl, String mediaType) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+
+
         // (String uid, long timestamp, String media, String mediaType, String content, List<String> hashtags)
-        Post post = new Post(user.getUid(), System.currentTimeMillis(), mediaUrl, mediaType, postContent, null);
+        Post post = new Post(user.getUid(), System.currentTimeMillis(), mediaUrl, mediaType, postContent, extractHashtags(postContent));
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts")
@@ -148,8 +165,6 @@ public class NewPostFragment extends Fragment {
     }
 
 
-
-    // Cuando si hay contenido para subir
     private void mediaToFirestore(String postContent) {
         FirebaseStorage.getInstance().getReference(mediaTipo + "/" + UUID.randomUUID())
                 .putFile(mediaUri)
@@ -208,4 +223,13 @@ public class NewPostFragment extends Fragment {
         grabadoraAudio.launch(new
                 Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION));
     }
+
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }
