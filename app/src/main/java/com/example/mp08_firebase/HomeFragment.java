@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -20,7 +22,7 @@ import com.google.firebase.firestore.Query;
 public class HomeFragment extends Fragment {
 
     private NavController navController;
-    private AppViewModel appViewModel;
+    private ProgressBar progressBar;
     private FloatingActionButton addButtonA, addButtonB;
     private FloatingActionsMenu fabMenu;
     private PostsAdapter adapter;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
         addButtonA = view.findViewById(R.id.action_a);
         addButtonB = view.findViewById(R.id.action_b);
         fabMenu = view.findViewById(R.id.multiple_actions);
+        progressBar = view.findViewById(R.id.progressBar);
 
         addButtonA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,17 +60,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Query query = FirebaseFirestore.getInstance().collection("posts").limit(50).orderBy("date", Query.Direction.DESCENDING);
+        Query query = FirebaseFirestore.getInstance().collection("posts").limit(50).orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
                 .setQuery(query, Post.class)
                 .build();
 
-        adapter = new PostsAdapter(getContext(), options);
+        adapter = new PostsAdapter(getContext(), options, progressBar);
         postsRecyclerView.setAdapter(adapter);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // El resto del código aquí
     }
 
     @Override

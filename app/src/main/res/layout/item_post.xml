@@ -3,19 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatarImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/starship"
-        app:civ_border_color="@color/border"
-        app:civ_border_width="2px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,8 +19,10 @@
         android:id="@+id/displayNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="1dp"
         android:ellipsize="end"
+        android:fontFamily="@font/montserrat_medium"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -37,8 +35,10 @@
         android:id="@+id/usernameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="5dp"
+        android:alpha="0.7"
         android:ellipsize="end"
+        android:fontFamily="@font/montserrat_regular"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -51,32 +51,94 @@
         android:id="@+id/timestampTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:alpha="0.7"
         android:ellipsize="end"
+        android:fontFamily="@font/montserrat_regular"
         android:maxLines="1"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/displayNameTextView"
         app:layout_constraintStart_toEndOf="@+id/usernameTextView"
-        app:layout_constraintTop_toTopOf="@+id/displayNameTextView"
         tools:text="timestamp" />
 
     <TextView
         android:id="@+id/contentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="10dp"
         android:ellipsize="end"
-        android:maxLines="5"
+        android:fontFamily="@font/montserrat_regular"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/avatarImageView"
         app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
         tools:text="" />
 
     <!-- Agrega otros elementos como botones de "Me gusta" y "Comentar", número de me gusta y comentarios, etc. -->
+
+    <ImageButton
+        android:id="@+id/commentButton"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="166dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:src="@drawable/comment_icon"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contentTextView" />
+
+    <TextView
+        android:id="@+id/commentsNumTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/commentButton"
+        app:layout_constraintStart_toEndOf="@+id/commentButton"
+        app:layout_constraintTop_toTopOf="@+id/commentButton"
+        tools:text="" />
+
+    <ImageButton
+        android:id="@+id/likeButton"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="90dp"
+        android:background="@null"
+        android:src="@drawable/like_icon"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@+id/commentButton"
+        app:layout_constraintStart_toEndOf="@+id/commentButton"
+        app:layout_constraintTop_toTopOf="@+id/commentButton" />
+
+    <TextView
+        android:id="@+id/likesNumTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+        app:layout_constraintStart_toEndOf="@+id/likeButton"
+        app:layout_constraintTop_toTopOf="@+id/likeButton"
+        tools:text="" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/eerie_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/likeButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

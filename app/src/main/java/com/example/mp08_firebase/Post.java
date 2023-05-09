@@ -6,9 +6,6 @@ import java.util.List;
 public class Post {
     private String postId;
     private String uid;
-    private String username;
-    private String displayName;
-    private String avatar;
     private long timestamp;
     private String media;
     private String mediaType;
@@ -17,24 +14,25 @@ public class Post {
 
     public Post() {}
 
-    public Post(String postId, String uid, long timestamp, String media, String mediaType, String content, List<String> hashtags) {
+    public Post(String postId, String uid, long timestamp, String mediaUrl, String mediaType, String content, List<String> hashtags) {
         this.postId = postId;
         this.uid = uid;
         this.timestamp = timestamp;
-        this.media = media;
+        this.media = mediaUrl;
         this.mediaType = mediaType;
         this.content = content;
         this.hashtags = hashtags;
     }
 
-    public Post(String uid, long currentTimeMillis, String mediaUrl, String mediaType, String postContent, List<String> hashtags) {
+    public Post(String uid, long timestamp, String mediaUrl, String mediaType, String content, List<String> hashtags) {
         this.uid = uid;
         this.timestamp = timestamp;
-        this.media = media;
+        this.media = mediaUrl;
         this.mediaType = mediaType;
         this.content = content;
         this.hashtags = hashtags;
     }
+
 
     public String getPostId() {
         return postId;
@@ -50,30 +48,6 @@ public class Post {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public long getTimestamp() {

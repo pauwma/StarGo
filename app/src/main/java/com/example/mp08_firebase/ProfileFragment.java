@@ -1,6 +1,7 @@
 package com.example.mp08_firebase;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,11 +34,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ProfileFragment extends Fragment {
 
     private NavController navController;
     private String uid;
+    private PostsAdapter adapter;
+    private RecyclerView postsRecyclerView;
     private ConstraintLayout profileLayout;
     private ImageView photoImageView;
     private TextView displayNameTextView, descTextView;
@@ -86,8 +96,20 @@ public class ProfileFragment extends Fragment {
                 postsNumber.setText(String.valueOf(postCount));
             } else {
                 // Error al obtener el número de posts del usuario.
+                Log.e("ProfileFragment", "Error al obtener el número de posts del usuario", task.getException());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.d("ProfileFragment", "Posts recuperados correctamente: " + queryDocumentSnapshots.size());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("ProfileFragment", "Error al recuperar los posts", e);
             }
         });
+
 
         getFollowers().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -142,6 +164,17 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
+        setupRecyclerView(view);
+        /*Query query = FirebaseFirestore.getInstance().collection("posts").whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
+                .setQuery(query, Post.class)
+                .build();
+
+        adapter = new PostsAdapter(getContext(), options, progressBar);
+        postsRecyclerView.setAdapter(adapter);
+        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));*/
 
         view.findViewById(R.id.settingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,4 +230,55 @@ public class ProfileFragment extends Fragment {
 
         return taskCompletionSource.getTask();
     }
+
+    private void setupRecyclerView(View view) {
+        // Configurar el RecyclerView y el adaptador
+
+        // Asegúrate de tener una referencia al RecyclerView en el layout de tu fragmento
+        RecyclerView recyclerView = view.findViewById(R.id.postsRecyclerView);
+
+        // Establecer el LinearLayoutManager para el RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Crear una referencia a la colección de Firestore donde se almacenan los posts
+        CollectionReference postsRef = FirebaseFirestore.getInstance().collection("posts");
+
+        // Crear una consulta para obtener los posts que deseas mostrar
+        Query query = postsRef.whereEqualTo("uid", uid).orderBy("timestamp", Query.Direction.DESCENDING);
+
+        // Crear opciones para el FirestoreRecyclerAdapter usando la consulta
+        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
+                .setQuery(query, Post.class)
+                .build();
+
+        // Asegúrate de tener una referencia al ProgressBar en el layout de tu fragmento
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+
+        // Crear y configurar el adaptador
+        PostsAdapter adapter = new PostsAdapter(getContext(), options, progressBar);
+
+        // Establecer el adaptador para el RecyclerView
+        recyclerView.setAdapter(adapter);
+
+        // Iniciar la escucha de cambios en los datos
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.stopListening();
+        }
+    }
+
+
 }

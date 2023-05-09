@@ -104,8 +104,6 @@ public class MediaFragment extends Fragment {
                 timeTextView.setText(formattedDate);
             }
 
-            Glide.with(getContext()).load(post.getAvatar()).circleCrop().into(photoImageView);
-            authorTextView.setText(post.getDisplayName());
 
         });
 
