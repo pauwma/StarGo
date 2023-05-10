@@ -118,9 +118,11 @@ public class EditarPerfilFragment extends Fragment {
 
         // Encuentra los dos TextViews que agregaste para mostrar el contador de caracteres
         TextView displayNameCounterTextView = view.findViewById(R.id.displayNameCounterTextView);
+        TextView usernameCounterTextView = view.findViewById(R.id.usernameCounterTextView);
         TextView bioCounterTextView = view.findViewById(R.id.bioCounterTextView);
         // Establece los límites de caracteres para displayNameEditText y bioEditText
         displayNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
+        usernameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
         bioEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(136)});
 
         // Añade addTextChangedListener para actualizar el contador de caracteres dinámicamente
@@ -138,6 +140,22 @@ public class EditarPerfilFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 displayNameCounterTextView.setText(s.length() + "/32");
+            }
+        });
+        usernameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                usernameCounterTextView.setText(s.length() + "/32");
             }
         });
         bioEditText.addTextChangedListener(new TextWatcher() {
@@ -175,6 +193,26 @@ public class EditarPerfilFragment extends Fragment {
                 }
             }
         });
+        usernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    usernameCounterTextView.setVisibility(View.VISIBLE);
+                } else {
+                    usernameCounterTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        usernameEditText.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (usernameEditText.hasFocus()) {
+                    usernameCounterTextView.setVisibility(View.VISIBLE);
+                } else {
+                    usernameCounterTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         bioEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -195,7 +233,6 @@ public class EditarPerfilFragment extends Fragment {
                 }
             }
         });
-
         photoEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
