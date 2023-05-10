@@ -53,24 +53,26 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView usernameTextView;
+        private TextView displayNameTextView, usernameTextView;
         private ImageView profile_image;
         private OnUserClickListener onUserClickListener;
 
         public ViewHolder(@NonNull View itemView, OnUserClickListener onUserClickListener) {
             super(itemView);
-            usernameTextView = itemView.findViewById(R.id.username);
+            displayNameTextView = itemView.findViewById(R.id.displayNameTextView);
+            usernameTextView = itemView.findViewById(R.id.usernameTextView);
             profile_image = itemView.findViewById(R.id.profile_image);
             this.onUserClickListener = onUserClickListener;
             itemView.setOnClickListener(this);
         }
 
         public void bind(User user) {
-            usernameTextView.setText(user.getUsername());
+            usernameTextView.setText("@" + user.getUsername());
+            displayNameTextView.setText(user.getDisplayName());
 
             // Cargar imagen de perfil con Glide
             Glide.with(itemView.getContext())
-                    .load(user.getProfileImageUrl())
+                    .load(user.getAvatar())
                     .circleCrop()
                     .into(profile_image);
         }

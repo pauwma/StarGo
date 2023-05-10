@@ -167,9 +167,9 @@ public class ChatFragment extends Fragment {
                     if (chatUser != null) {
                         titleUsername.setText(chatUser.getUsername());
 
-                        if (chatUser.getProfileImageUrl() != null && !chatUser.getProfileImageUrl().isEmpty()) {
+                        if (chatUser.getAvatar() != null && !chatUser.getAvatar().isEmpty()) {
                             Glide.with(requireContext())
-                                    .load(chatUser.getProfileImageUrl())
+                                    .load(chatUser.getAvatar())
                                     .into(titleProfile);
                         }
                     } else {

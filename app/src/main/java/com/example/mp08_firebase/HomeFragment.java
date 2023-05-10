@@ -44,6 +44,13 @@ public class HomeFragment extends Fragment {
         fabMenu = view.findViewById(R.id.multiple_actions);
         progressBar = view.findViewById(R.id.progressBar);
 
+        view.findViewById(R.id.chatsImageButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.chatsHomeFragment);
+            }
+        });
+
         addButtonA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

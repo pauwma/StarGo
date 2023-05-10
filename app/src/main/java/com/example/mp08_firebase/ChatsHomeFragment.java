@@ -144,10 +144,14 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String username = document.getString("username");
+                            String displayName = document.getString("displayName");
+                            if (displayName == null ||displayName.isEmpty()){
+                                displayName = username;
+                            }
                             String profileImageUrl = document.getString("avatar");
 
                             if (username != null && profileImageUrl != null) {
-                                User user = new User(username, profileImageUrl);
+                                User user = new User(username,profileImageUrl,displayName);
                                 userList.add(user);
                             }
                         }
