@@ -183,6 +183,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.uploadButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.newPostFragment);
+            }
+        });
+
         view.findViewById(R.id.editProfileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,6 +250,7 @@ public class ProfileFragment extends Fragment {
         // Crear una referencia a la colección de Firestore donde se almacenan los posts
         CollectionReference postsRef = FirebaseFirestore.getInstance().collection("posts");
 
+        // Crear una consulta para obtener los posts que deseas mostrar
         // Crear una consulta para obtener los posts que deseas mostrar
         Query query = postsRef.whereEqualTo("uid", uid).orderBy("timestamp", Query.Direction.DESCENDING);
 
