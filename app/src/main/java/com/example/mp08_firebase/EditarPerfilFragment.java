@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -82,7 +83,7 @@ public class EditarPerfilFragment extends Fragment {
         bioEditText = view.findViewById(R.id.bioEditText);
 
 
-        // ? Flecha Back
+        // ? Cruz Back
         view.findViewById(R.id.cruzBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +125,16 @@ public class EditarPerfilFragment extends Fragment {
         displayNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
         usernameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
         bioEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(136)});
+        bioEditText.setFilters(new InputFilter[]{new InputFilter() {
+            public CharSequence filter(CharSequence src, int start, int end, Spanned dst, int dstart, int dend) {
+                if (src.equals("\n")) { // si se trata de un salto de línea
+                    if (dst.toString().split("\n").length >= 5) { // si ya hay 5 líneas
+                        return ""; // ignora el salto de línea
+                    }
+                }
+                return src; // de lo contrario, continúa con la entrada original
+            }
+        }});
 
         // Añade addTextChangedListener para actualizar el contador de caracteres dinámicamente
         displayNameEditText.addTextChangedListener(new TextWatcher() {
@@ -280,6 +291,23 @@ public class EditarPerfilFragment extends Fragment {
             valid = false;
         } else {
             usernameEditText.setError(null);
+        }
+
+        if (tmpDisplayName.length() > 32) {
+            displayNameEditText.setError("La biografía no puede tener más de 136 caracteres.");
+            valid = false;
+        } else {
+            displayNameEditText.setError(null);
+        }
+
+        if (tmpBio.split("\n").length > 5) {
+            bioEditText.setError("La biografía no puede tener más de 5 líneas.");
+            valid = false;
+        } else if (tmpBio.length() > 136) {
+            bioEditText.setError("La biografía no puede tener más de 136 caracteres.");
+            valid = false;
+        } else {
+            bioEditText.setError(null);
         }
 
         return valid;

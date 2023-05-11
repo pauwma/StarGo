@@ -1,6 +1,7 @@
 package com.example.mp08_firebase;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -12,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import androidx.core.content.ContextCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -91,6 +94,20 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                             holder.displayNameTextView.setText(displayName);
                             holder.usernameTextView.setText("@" + username);
                             Glide.with(context).load(avatar).into(holder.avatarImageView);
+
+                            // Agregar OnClickListener a avatarImageView
+                            holder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (post.getUid().equals(FirebaseAuth.getInstance().getUid())){
+                                        Navigation.findNavController(v).navigate(R.id.profileFragment);
+                                    } else {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("userUID", post.getUid()); // Pasar el UID del usuario al fragmento de perfil del usuario
+                                        Navigation.findNavController(v).navigate(R.id.usersProfileFragment, bundle);
+                                    }
+                                }
+                            });
                         }
                     }
                 });
@@ -275,6 +292,4 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
 
         return currentLikes;
     }
-
-
 }

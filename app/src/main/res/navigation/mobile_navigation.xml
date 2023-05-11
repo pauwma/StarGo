@@ -115,7 +115,11 @@
         android:id="@+id/usersProfileFragment"
         android:name="com.example.mp08_firebase.usersProfileFragment"
         android:label="fragment_users_profile"
-        tools:layout="@layout/fragment_users_profile" />
+        tools:layout="@layout/fragment_users_profile">
+    <argument
+        android:name="userUID"
+        app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/seleccionViajeFragment"
         android:name="com.example.mp08_firebase.SeleccionViajeFragment"

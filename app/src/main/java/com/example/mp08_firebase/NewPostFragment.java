@@ -79,11 +79,21 @@ public class NewPostFragment extends Fragment {
 
         publishButton = view.findViewById(R.id.publishButton);
         postConentEditText = view.findViewById(R.id.postContentEditText);
-
+        postConentEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(postConentEditText, InputMethodManager.SHOW_IMPLICIT);
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 publish();
+            }
+        });
+
+        // ? Cruz Back
+        view.findViewById(R.id.cruzBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
             }
         });
 

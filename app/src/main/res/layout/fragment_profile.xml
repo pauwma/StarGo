@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/montserrat_semibold"
+            android:fontFamily="@font/montserrat_medium"
             android:text=""
             android:textColor="@color/white"
             android:textSize="20sp" />
@@ -92,8 +92,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
-            app:civ_border_color="@color/border"
-            app:civ_border_width="2px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -205,7 +203,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:maxLines="3"
             android:text=""
-            android:textColor="@color/white"
+            android:textColor="@color/quick_silver"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

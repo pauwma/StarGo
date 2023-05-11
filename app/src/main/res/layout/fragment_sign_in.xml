@@ -74,7 +74,7 @@
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat_regular"
             android:textSize="16dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:maxWidth="400dp"
             android:paddingStart="16dp"
             android:textColorHint="@color/quick_silver"

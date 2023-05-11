@@ -51,10 +51,10 @@ public class usersProfileFragment extends Fragment {
     private ProgressBar progressBar;
     private ImageView photoImageView;
     // ? User Stats
-    private TextView postsNumber, followersNumber, followingNumber, usernameTitleTextView;
+    private TextView postsNumber, followersNumber, followingNumber, usernameTitleTextView, displayNameTextView, bioTextView;
     private String userUID, profileUID;
     private Query queryPosts;
-    RecyclerView profilePostRecyclerView;
+    private RecyclerView profilePostRecyclerView;
     public AppViewModel appViewModel;
     private FirebaseDatabase fDatabase;
     private FirebaseFirestore fStore;
@@ -89,6 +89,9 @@ public class usersProfileFragment extends Fragment {
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         photoImageView = view.findViewById(R.id.photoImageView);
         usernameTitleTextView = view.findViewById(R.id.usernameTitleTextView);
+        displayNameTextView = view.findViewById(R.id.displayNameTextView);
+        bioTextView = view.findViewById(R.id.descTextView);
+        usernameTitleTextView = view.findViewById(R.id.usernameTitleTextView);
         followersNumber = view.findViewById(R.id.followersNumber);
         followingNumber = view.findViewById(R.id.followingNumber);
 
@@ -119,81 +122,85 @@ public class usersProfileFragment extends Fragment {
         followLayout = view.findViewById(R.id.followLayout);
         followingLayout = view.findViewById(R.id.followingLayout);
 
-        appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
-        {
-            profileUID = post.getUid();
+        profileUID = getArguments().getString("userUID");
 
-            // ? Stats
+        // ? Stats
+        if (userUID != null && profileUID != null) {
+            getFollowers().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    int followersCount = task.getResult();
+                    followersNumber.setText(String.valueOf(followersCount));
+                } else {
+                    // Maneja el error
+                }
+            });
 
-            if (userUID != null && profileUID != null) {
-                getFollowers().addOnCompleteListener(task -> {
+            getFollowing().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    int followingCount = task.getResult();
+                    followingNumber.setText(String.valueOf(followingCount));
+                } else {
+                    // Maneja el error
+                }
+            });
+        } else {
+            // Maneja el caso en que userUID o profileUID sea nulo
+        }
+
+
+        // ? Comprobación de seguimiento
+        isUserFollowing()
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        int followersCount = task.getResult();
-                        followersNumber.setText(String.valueOf(followersCount));
-                    } else {
-                        // Maneja el error
-                    }
-                });
-
-                getFollowing().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        int followingCount = task.getResult();
-                        followingNumber.setText(String.valueOf(followingCount));
-                    } else {
-                        // Maneja el error
-                    }
-                });
-            } else {
-                // Maneja el caso en que userUID o profileUID sea nulo
-            }
-
-
-            // ? Comprobación de seguimiento
-            isUserFollowing()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            boolean isFollowing = task.getResult();
-                            if (isFollowing) {
-                                followingLayout.setVisibility(View.VISIBLE);
-                                followLayout.setVisibility(View.GONE);
-                            } else {
-                                followingLayout.setVisibility(View.GONE);
-                                followLayout.setVisibility(View.VISIBLE);
-                            }
+                        boolean isFollowing = task.getResult();
+                        if (isFollowing) {
+                            followingLayout.setVisibility(View.VISIBLE);
+                            followLayout.setVisibility(View.GONE);
                         } else {
-                            // Manejar el error
-                            Log.e(TAG, "Error al verificar si el usuario sigue a otro: " + task.getException().getMessage());
+                            followingLayout.setVisibility(View.GONE);
+                            followLayout.setVisibility(View.VISIBLE);
                         }
-                    });
+                    } else {
+                        // Manejar el error
+                        Log.e(TAG, "Error al verificar si el usuario sigue a otro: " + task.getException().getMessage());
+                    }
+                });
 
-            queryPosts = FirebaseFirestore.getInstance().collection("posts")
-                    .whereEqualTo("uid", profileUID).limit(50).orderBy("date", Query.Direction.DESCENDING);
+        queryPosts = FirebaseFirestore.getInstance().collection("posts")
+                .whereEqualTo("uid", profileUID).limit(50).orderBy("date", Query.Direction.DESCENDING);
 
-            // ? Lista de posts
-            profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+        // ? Lista de posts
+        profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
 
-            // Obtener referencia a la base de datos de Firebase
-            fDatabase = FirebaseDatabase.getInstance();
-            // Obtener referencia a la colección "users"
-            usersRef = fDatabase.getReference("users");
-            // Obtener referencia a los datos del usuario
-            userRef = usersRef.child(profileUID);
-            DocumentReference userRef = fStore.collection("users").document(profileUID);
-            // ? Imagen del perfil del usuario
-            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String avatarUrl = document.getString("avatar");
-                            if (avatarUrl != null) {
-                                Glide.with(requireView()).load(avatarUrl).into(photoImageView);
-                            }
+        // Obtener referencia a la base de datos de Firebase
+        fDatabase = FirebaseDatabase.getInstance();
+        // Obtener referencia a la colección "users"
+        usersRef = fDatabase.getReference("users");
+        // Obtener referencia a los datos del usuario
+        userRef = usersRef.child(profileUID);
+        DocumentReference userRef = fStore.collection("users").document(profileUID);
+        // ? Imagen del perfil del usuario
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String avatarUrl = document.getString("avatar");
+                        usernameTitleTextView.setText(document.getString("username"));
+                        displayNameTextView.setText(document.getString("displayName"));
+                        String description = document.getString("description");
+                        if (description != null) {
+                            bioTextView.setText(description);
+                        } else {
+                            bioTextView.setVisibility(View.GONE);
+                        }
+                        if (avatarUrl != null) {
+                            Glide.with(requireView()).load(avatarUrl).into(photoImageView);
                         }
                     }
                 }
-            });
+            }
         });
 
         // ? User Stats

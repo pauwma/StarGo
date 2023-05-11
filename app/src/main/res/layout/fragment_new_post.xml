@@ -7,68 +7,87 @@
     tools:context="NewPostFragment"
     android:background="@color/background">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="@drawable/rounded_borders"
-        app:layout_constraintBottom_toTopOf="@+id/botonesMedia">
+        android:layout_height="60dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/cruzBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/cruz_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/publishButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="36dp"
-            android:layout_gravity="end"
-            android:layout_marginHorizontal="4dp"
-            android:layout_marginVertical="10dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/custom_button_inicio"
-            android:text="Publish"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/button_border_purple"
+            android:fontFamily="@font/montserrat_semibold"
+            android:paddingHorizontal="24dp"
+            android:text="Publicar"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <EditText
-            android:id="@+id/postContentEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColorHint="#90FFFFFF"
-            android:background="@drawable/rounded_borders"
-            android:focusableInTouchMode="true"
-            android:gravity="top|left"
-            android:hint="¿Qué pasa contigo?"
-            android:lines="6"
-            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <requestFocus />
-        </EditText>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/previsualizacion"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-            android:maxHeight="400dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@id/publishButton"
-            app:layout_constraintHeight_max="300dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postContentEditText" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        app:layout_constraintBottom_toBottomOf="@+id/upBar" />
+
+    <EditText
+        android:id="@+id/postContentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:focusableInTouchMode="true"
+        android:gravity="top|left"
+        android:hint="¿Qué pasa contigo?"
+        android:textColorHint="@color/quick_silver"
+        android:background="@null"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view">
+
+        <requestFocus />
+    </EditText>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/previsualizacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:maxHeight="400dp"
+        android:scaleType="centerInside"
+        app:layout_constraintHeight_max="300dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postContentEditText"
+        app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador" />
 
     <LinearLayout
         android:id="@+id/botonesMedia"
@@ -76,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
