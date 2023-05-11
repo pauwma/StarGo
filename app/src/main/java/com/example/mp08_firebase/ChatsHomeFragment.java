@@ -1,5 +1,7 @@
 package com.example.mp08_firebase;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,13 +27,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserClickListener, ChatsAdapter.OnChatClickListener {
@@ -171,11 +179,41 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 });
     }
 
-    @Override
-    public void onUserClick(User user) {
-        // TODO Hacer comprobación de si el usuario ya tienen chat con el seleccionado
-        createNewChat(user);
+    public void onUserClick(User otherUser) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String otherUserId = otherUser.getUid();
+
+        // Combinar los ID de usuario en orden alfabético
+        String userPair;
+        if (currentUserId.compareTo(otherUserId) < 0) {
+            userPair = currentUserId + "_" + otherUserId;
+        } else {
+            userPair = otherUserId + "_" + currentUserId;
+        }
+
+        // Consulta la colección de chats
+        FirebaseFirestore.getInstance().collection("chats")
+                .whereEqualTo("userPair", userPair)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        if (documents.size() > 0) {
+                            // Si la lista de documentos no está vacía, significa que ya existe un chat
+                            // Obtiene el primer chat de la lista
+                            Chat existingChat = documents.get(0).toObject(Chat.class);
+                            // Navega al chat existente
+                            navigateToChatMessages(existingChat);
+                        } else {
+                            createNewChat(otherUser);
+                        }
+                    } else {
+                        // Maneja el error
+                    }
+                });
     }
+
+
 
     @Override
     public void onChatClick(Chat chat) {
@@ -211,6 +249,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     chatsRecyclerView.setVisibility(View.VISIBLE); // Muestra el RecyclerView de los chats
                 });
     }
+
     private void createNewChat(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -227,20 +266,44 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                         List<String> participants = Arrays.asList(currentUserId, selectedUserId);
                         Chat newChat = new Chat(null, participants);
 
+                        // Buscar un chat existente con los mismos participantes
                         db.collection("chats")
-                                .add(newChat)
-                                .addOnSuccessListener(documentReference -> {
-                                    String chatId = documentReference.getId();
-                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
-                                    // Navegar a la conversación
-                                    navigateToChatMessages(newChat);
-                                })
-                                .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
+                                .whereArrayContains("users", currentUserId)
+                                .get()
+                                .addOnCompleteListener(task1 -> {
+                                    boolean chatExists = false;
+                                    if (task1.isSuccessful() && task1.getResult() != null && !task1.getResult().isEmpty()) {
+                                        for (QueryDocumentSnapshot documentSnapshot : task1.getResult()) {
+                                            Chat chat = documentSnapshot.toObject(Chat.class);
+                                            if (chat != null && chat.getUsers().contains(selectedUserId)) {
+                                                chat.setChatId(documentSnapshot.getId());
+                                                navigateToChatMessages(chat);
+                                                chatExists = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!chatExists) {
+                                        // Si no existe un chat, crea uno nuevo
+                                        db.collection("chats")
+                                                .add(newChat)
+                                                .addOnSuccessListener(documentReference -> {
+                                                    String chatId = documentReference.getId();
+                                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
+                                                    // Navegar a la conversación
+                                                    navigateToChatMessages(newChat);
+                                                })
+                                                .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
+                                    }
+                                });
                     } else {
                         Log.e("ChatsHomeFragment", "Error finding selected user");
                     }
                 });
     }
+
+
 
     private void navigateToChatMessages(Chat chat) {
         Bundle bundle = new Bundle();
