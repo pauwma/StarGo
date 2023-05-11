@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -54,7 +55,7 @@ public class usersProfileFragment extends Fragment {
     private TextView postsNumber, followersNumber, followingNumber, usernameTitleTextView, displayNameTextView, bioTextView;
     private String userUID, profileUID;
     private Query queryPosts;
-    private RecyclerView profilePostRecyclerView;
+    private RecyclerView postsRecyclerView;
     public AppViewModel appViewModel;
     private FirebaseDatabase fDatabase;
     private FirebaseFirestore fStore;
@@ -170,7 +171,7 @@ public class usersProfileFragment extends Fragment {
                 .whereEqualTo("uid", profileUID).limit(50).orderBy("date", Query.Direction.DESCENDING);
 
         // ? Lista de posts
-        profilePostRecyclerView = view.findViewById(R.id.profilePostsRecyclerView);
+        postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
 
         // Obtener referencia a la base de datos de Firebase
         fDatabase = FirebaseDatabase.getInstance();
@@ -202,6 +203,9 @@ public class usersProfileFragment extends Fragment {
                 }
             }
         });
+
+        postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
+        setupRecyclerView(view);
 
         // ? User Stats
         postsNumber = view.findViewById(R.id.postNumber);
@@ -333,6 +337,38 @@ public class usersProfileFragment extends Fragment {
         return taskCompletionSource.getTask();
     }
 
+    private void setupRecyclerView(View view) {
+        // Asegúrate de tener una referencia al RecyclerView en el layout de tu fragmento
+        RecyclerView recyclerView = view.findViewById(R.id.postsRecyclerView);
+
+        // Establecer el LinearLayoutManager para el RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Crear una referencia a la colección de Firestore donde se almacenan los posts
+        CollectionReference postsRef = FirebaseFirestore.getInstance().collection("posts");
+
+        // Crear una consulta para obtener los posts que deseas mostrar
+        // Crear una consulta para obtener los posts que deseas mostrar
+        Query query = postsRef.whereEqualTo("uid", profileUID).orderBy("timestamp", Query.Direction.DESCENDING);
+
+        // Crear opciones para el FirestoreRecyclerAdapter usando la consulta
+        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
+                .setQuery(query, Post.class)
+                .build();
+
+        // Asegúrate de tener una referencia al ProgressBar en el layout de tu fragmento
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+
+        // Crear y configurar el adaptador
+        PostsAdapter adapter = new PostsAdapter(getContext(), options, progressBar);
+
+        // Establecer el adaptador para el RecyclerView
+        recyclerView.setAdapter(adapter);
+
+        // Iniciar la escucha de cambios en los datos
+        adapter.startListening();
+        hideProgressBar();
+    }
 
     private void hideProgressBar() {
         progressBar.setVisibility(View.GONE);

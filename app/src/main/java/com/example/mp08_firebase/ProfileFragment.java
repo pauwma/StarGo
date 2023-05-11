@@ -166,15 +166,6 @@ public class ProfileFragment extends Fragment {
 
         postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
         setupRecyclerView(view);
-        /*Query query = FirebaseFirestore.getInstance().collection("posts").whereEqualTo("uid", uid).limit(50).orderBy("date", Query.Direction.DESCENDING);
-
-        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
-                .setQuery(query, Post.class)
-                .build();
-
-        adapter = new PostsAdapter(getContext(), options, progressBar);
-        postsRecyclerView.setAdapter(adapter);
-        postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));*/
 
         view.findViewById(R.id.settingsButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,8 +230,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupRecyclerView(View view) {
-        // Configurar el RecyclerView y el adaptador
-
         // Asegúrate de tener una referencia al RecyclerView en el layout de tu fragmento
         RecyclerView recyclerView = view.findViewById(R.id.postsRecyclerView);
 
