@@ -225,6 +225,7 @@
 
     <!-- Sin seguir -->
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/followLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -233,7 +234,7 @@
         app:layout_constraintTop_toBottomOf="@+id/descTextView">
 
         <Button
-            android:visibility="gone"
+
             android:id="@+id/followButton"
             android:layout_width="0dp"
             android:layout_height="30dp"
