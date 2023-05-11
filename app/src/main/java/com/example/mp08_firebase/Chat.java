@@ -6,16 +6,14 @@ import java.util.List;
 public class Chat implements Serializable {
 
     private String chatId;
-    private String otherUserProfileImageUrl;
-    private String title;
+    private String lastMessage;
     private List<String> users;
 
     public Chat() {
     }
 
-    public Chat(String chatId, String title, List<String> users) {
+    public Chat(String chatId, List<String> users) {
         this.chatId = chatId;
-        this.title = title;
         this.users = users;
     }
 
@@ -27,14 +25,6 @@ public class Chat implements Serializable {
         this.chatId = chatId;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public List<String> getUsers() {
         return users;
     }
@@ -43,11 +33,4 @@ public class Chat implements Serializable {
         this.users = users;
     }
 
-    public String getOtherUserProfileImageUrl() {
-        return otherUserProfileImageUrl;
-    }
-
-    public void setOtherUserProfileImageUrl(String otherUserProfileImageUrl) {
-        this.otherUserProfileImageUrl = otherUserProfileImageUrl;
-    }
 }

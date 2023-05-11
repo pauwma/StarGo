@@ -1,5 +1,6 @@
 package com.example.mp08_firebase;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,12 +42,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = chats.get(position);
-        holder.bind(chat);
+        holder.bind(chat, holder.itemView.getContext());
 
+        // TODO Poner imagen del usuario
+        /*
+         // Coger "avatar" del user con el chat.getUid
         Glide.with(holder.itemView.getContext())
                 .load(chat.getOtherUserProfileImageUrl())
                 .circleCrop()
                 .into(holder.profile_image);
+        */
     }
 
     @Override
@@ -59,7 +64,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        CircleImageView profile_image;
+        private CircleImageView profile_image;
         private TextView chatTitleTextView;
         private OnChatClickListener onChatClickListener;
 
@@ -71,7 +76,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Chat chat) {
+        public void bind(Chat chat, Context context) {
             String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             List<String> participants = chat.getUsers();
             String otherUserId = null;
@@ -92,6 +97,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                                 User otherUser = documentSnapshot.toObject(User.class);
                                 if (otherUser != null) {
                                     chatTitleTextView.setText(otherUser.getUsername());
+
+                                    if (otherUser.getAvatar() != null && !otherUser.getAvatar().isEmpty()) {
+                                        //AQUÍ
+                                        Glide.with(context)
+                                                .load(otherUser.getAvatar())
+                                                .into(profile_image);
+                                    }
                                 }
                             } else {
                                 Log.e("ChatsAdapter", "User not found");
@@ -99,7 +111,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                         })
                         .addOnFailureListener(e -> Log.e("ChatsAdapter", "Error loading user details", e));
             } else {
-                chatTitleTextView.setText(chat.getTitle());
+                chatTitleTextView.setText("usuario no encontrado");
             }
         }
 

@@ -143,6 +143,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     List<User> userList = new ArrayList<>();
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            String uid = document.getString("uid");
                             String username = document.getString("username");
                             String displayName = document.getString("displayName");
                             if (displayName == null ||displayName.isEmpty()){
@@ -151,7 +152,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                             String profileImageUrl = document.getString("avatar");
 
                             if (username != null && profileImageUrl != null) {
-                                User user = new User(username,profileImageUrl,displayName);
+                                User user = new User(uid, username,profileImageUrl,displayName);
                                 userList.add(user);
                             }
                         }
@@ -166,6 +167,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
     @Override
     public void onUserClick(User user) {
+        // TODO Hacer comprobación de si el usuario ya tienen chat con el seleccionado
         // Crear un nuevo chat con el usuario seleccionado y navegar a la conversación
         createNewChat(user);
     }
@@ -196,24 +198,6 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                         for (QueryDocumentSnapshot document : value) {
                             Chat chat = document.toObject(Chat.class);
                             chat.setChatId(document.getId());
-
-                            // Añadir la URL de la imagen de perfil del otro usuario al objeto Chat
-                            for (String userId : chat.getUsers()) {
-                                if (!userId.equals(currentUserId)) {
-                                    db.collection("users")
-                                            .document(userId)
-                                            .get()
-                                            .addOnSuccessListener(userDoc -> {
-                                                String profileImageUrl = userDoc.getString("avatar");
-                                                chat.setOtherUserProfileImageUrl(profileImageUrl);
-
-                                                // Notificar al adaptador que los datos han cambiado
-                                                chatsAdapter.notifyDataSetChanged();
-                                            });
-                                    break;
-                                }
-                            }
-
                             chats.add(chat);
                         }
                     }
@@ -238,7 +222,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
                         // Crear un nuevo documento de chat en Firestore
                         List<String> participants = Arrays.asList(currentUserId, selectedUserId);
-                        Chat newChat = new Chat(null, "Chat with " + user.getUsername(), participants);
+                        Chat newChat = new Chat(null, participants);
 
                         db.collection("chats")
                                 .add(newChat)

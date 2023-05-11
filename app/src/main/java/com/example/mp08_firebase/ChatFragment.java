@@ -44,7 +44,7 @@ public class ChatFragment extends Fragment {
     private MessagesAdapter messagesAdapter;
     private FirebaseFirestore db;
     private TextView titleUsername;
-    private CircleImageView titleProfile;
+    private CircleImageView userImage;
     private Chat chat;
 
     public void setChat(Chat chat) {
@@ -61,7 +61,7 @@ public class ChatFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         titleUsername = view.findViewById(R.id.titleUsername);
-        titleProfile = view.findViewById(R.id.titleProfile);
+        userImage = view.findViewById(R.id.userImage);
 
         setupMessagesList();
 
@@ -170,7 +170,7 @@ public class ChatFragment extends Fragment {
                         if (chatUser.getAvatar() != null && !chatUser.getAvatar().isEmpty()) {
                             Glide.with(requireContext())
                                     .load(chatUser.getAvatar())
-                                    .into(titleProfile);
+                                    .into(userImage);
                         }
                     } else {
                         Log.e(TAG, "Unable to find chat user in Firestore");
