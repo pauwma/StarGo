@@ -131,8 +131,8 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
         String lowerCaseQuery = query.toLowerCase(); // ? Convierte la consulta a minúsculas
 
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();  // Obtiene el ID del usuario actual
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection("users")
                 .orderBy("username")
                 .whereGreaterThanOrEqualTo("username", lowerCaseQuery)
@@ -144,6 +144,12 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String uid = document.getString("uid");
+
+                            // Comprueba si el uid del documento es igual al uid del usuario actual
+                            if (uid.equals(currentUserId)) {
+                                continue;  // Si es el usuario actual, salta este documento
+                            }
+
                             String username = document.getString("username");
                             String displayName = document.getString("displayName");
                             if (displayName == null ||displayName.isEmpty()){
@@ -168,13 +174,11 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
     @Override
     public void onUserClick(User user) {
         // TODO Hacer comprobación de si el usuario ya tienen chat con el seleccionado
-        // Crear un nuevo chat con el usuario seleccionado y navegar a la conversación
         createNewChat(user);
     }
 
     @Override
     public void onChatClick(Chat chat) {
-        // Navegar al fragmento o actividad que muestra los mensajes del chat seleccionado
         navigateToChatMessages(chat);
     }
 
@@ -207,7 +211,6 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     chatsRecyclerView.setVisibility(View.VISIBLE); // Muestra el RecyclerView de los chats
                 });
     }
-
     private void createNewChat(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
