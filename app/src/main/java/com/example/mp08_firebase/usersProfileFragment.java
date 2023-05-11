@@ -40,8 +40,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -231,6 +234,14 @@ public class usersProfileFragment extends Fragment {
                 navController.navigate(R.id.homeFragment);
             }
         });
+
+        // ? Send message
+        view.findViewById(R.id.sendMessageButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChat();
+            }
+        });
     }
 
     private void followUser(){
@@ -374,4 +385,49 @@ public class usersProfileFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
+    public void goToChat(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Crear un nuevo documento de chat en Firestore
+        List<String> participants = Arrays.asList(userUID, profileUID);
+        Chat newChat = new Chat(null, participants);
+
+        // Buscar un chat existente con los mismos participantes
+        db.collection("chats")
+                .whereArrayContains("users", userUID)
+                .get()
+                .addOnCompleteListener(task1 -> {
+                    boolean chatExists = false;
+                    if (task1.isSuccessful() && task1.getResult() != null && !task1.getResult().isEmpty()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task1.getResult()) {
+                            Chat chat = documentSnapshot.toObject(Chat.class);
+                            if (chat != null && chat.getUsers().contains(profileUID)) {
+                                chat.setChatId(documentSnapshot.getId());
+                                navigateToChatMessages(chat);
+                                chatExists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!chatExists) {
+                        // Si no existe un chat, crea uno nuevo
+                        db.collection("chats")
+                                .add(newChat)
+                                .addOnSuccessListener(documentReference -> {
+                                    String chatId = documentReference.getId();
+                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
+                                    // Navegar a la conversación
+                                    navigateToChatMessages(newChat);
+                                })
+                                .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
+                    }
+                });
+    }
+
+    private void navigateToChatMessages(Chat chat) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("selected_chat", chat);
+        navController.navigate(R.id.chatFragment, bundle);
+    }
 }

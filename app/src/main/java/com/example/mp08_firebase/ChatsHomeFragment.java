@@ -254,57 +254,45 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Obtén el ID del usuario seleccionado a partir de su nombre de usuario
-        db.collection("users")
-                .whereEqualTo("username", user.getUsername())
+        // Obtenemos directamente el ID del usuario seleccionado
+        String selectedUserId = user.getUid();
+
+        // Crear un nuevo documento de chat en Firestore
+        List<String> participants = Arrays.asList(currentUserId, selectedUserId);
+        Chat newChat = new Chat(null, participants);
+
+        // Buscar un chat existente con los mismos participantes
+        db.collection("chats")
+                .whereArrayContains("users", currentUserId)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        String selectedUserId = task.getResult().getDocuments().get(0).getId();
+                .addOnCompleteListener(task1 -> {
+                    boolean chatExists = false;
+                    if (task1.isSuccessful() && task1.getResult() != null && !task1.getResult().isEmpty()) {
+                        for (QueryDocumentSnapshot documentSnapshot : task1.getResult()) {
+                            Chat chat = documentSnapshot.toObject(Chat.class);
+                            if (chat != null && chat.getUsers().contains(selectedUserId)) {
+                                chat.setChatId(documentSnapshot.getId());
+                                navigateToChatMessages(chat);
+                                chatExists = true;
+                                break;
+                            }
+                        }
+                    }
 
-                        // Crear un nuevo documento de chat en Firestore
-                        List<String> participants = Arrays.asList(currentUserId, selectedUserId);
-                        Chat newChat = new Chat(null, participants);
-
-                        // Buscar un chat existente con los mismos participantes
+                    if (!chatExists) {
+                        // Si no existe un chat, crea uno nuevo
                         db.collection("chats")
-                                .whereArrayContains("users", currentUserId)
-                                .get()
-                                .addOnCompleteListener(task1 -> {
-                                    boolean chatExists = false;
-                                    if (task1.isSuccessful() && task1.getResult() != null && !task1.getResult().isEmpty()) {
-                                        for (QueryDocumentSnapshot documentSnapshot : task1.getResult()) {
-                                            Chat chat = documentSnapshot.toObject(Chat.class);
-                                            if (chat != null && chat.getUsers().contains(selectedUserId)) {
-                                                chat.setChatId(documentSnapshot.getId());
-                                                navigateToChatMessages(chat);
-                                                chatExists = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (!chatExists) {
-                                        // Si no existe un chat, crea uno nuevo
-                                        db.collection("chats")
-                                                .add(newChat)
-                                                .addOnSuccessListener(documentReference -> {
-                                                    String chatId = documentReference.getId();
-                                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
-                                                    // Navegar a la conversación
-                                                    navigateToChatMessages(newChat);
-                                                })
-                                                .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
-                                    }
-                                });
-                    } else {
-                        Log.e("ChatsHomeFragment", "Error finding selected user");
+                                .add(newChat)
+                                .addOnSuccessListener(documentReference -> {
+                                    String chatId = documentReference.getId();
+                                    newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
+                                    // Navegar a la conversación
+                                    navigateToChatMessages(newChat);
+                                })
+                                .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
                     }
                 });
     }
-
-
-
     private void navigateToChatMessages(Chat chat) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("selected_chat", chat);
