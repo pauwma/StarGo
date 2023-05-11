@@ -239,7 +239,6 @@ public class EditarPerfilFragment extends Fragment {
                 seleccionarImagen();
             }
         });
-
         view.findViewById(R.id.tickAceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
