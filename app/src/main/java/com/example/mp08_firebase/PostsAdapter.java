@@ -99,13 +99,21 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                             holder.avatarImageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (post.getUid().equals(FirebaseAuth.getInstance().getUid())){
-                                        Navigation.findNavController(v).navigate(R.id.profileFragment);
-                                    } else {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("userUID", post.getUid()); // Pasar el UID del usuario al fragmento de perfil del usuario
-                                        Navigation.findNavController(v).navigate(R.id.usersProfileFragment, bundle);
-                                    }
+                                    goToProfile(v, post);
+                                }
+                            });
+
+                            holder.displayNameTextView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    goToProfile(v, post);
+                                }
+                            });
+
+                            holder.usernameTextView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    goToProfile(v, post);
                                 }
                             });
                         }
@@ -291,5 +299,15 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
         }
 
         return currentLikes;
+    }
+
+    public void goToProfile(View v, Post post){
+        if (post.getUid().equals(FirebaseAuth.getInstance().getUid())){
+            Navigation.findNavController(v).navigate(R.id.profileFragment);
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString("userUID", post.getUid()); // Pasar el UID del usuario al fragmento de perfil del usuario
+            Navigation.findNavController(v).navigate(R.id.usersProfileFragment, bundle);
+        }
     }
 }
