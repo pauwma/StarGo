@@ -161,8 +161,19 @@ public class usersProfileFragment extends Fragment {
                             followingLayout.setVisibility(View.VISIBLE);
                             followLayout.setVisibility(View.GONE);
                         } else {
-                            followingLayout.setVisibility(View.GONE);
-                            followLayout.setVisibility(View.VISIBLE);
+                            isProfileFollowing().addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()){
+                                    boolean isProfileFollowing = task1.getResult();
+                                    if (isProfileFollowing){
+                                        followingLayout.setVisibility(View.GONE);
+                                        followButton.setText("Seguir también");
+                                        followLayout.setVisibility(View.VISIBLE);
+                                    } else {
+                                        followingLayout.setVisibility(View.GONE);
+                                        followLayout.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            });
                         }
                     } else {
                         // Manejar el error
@@ -298,6 +309,30 @@ public class usersProfileFragment extends Fragment {
         }
 
         db.collection("users").document(userUID).collection("following").document(profileUID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean isFollowing = task.getResult().exists(); // Si el documento existe, el usuario actual sigue al usuario objetivo
+                        taskCompletionSource.setResult(isFollowing);
+                    } else {
+                        // Manejar el error, si es necesario
+                        taskCompletionSource.setException(task.getException());
+                    }
+                });
+
+        return taskCompletionSource.getTask();
+    }
+    private Task<Boolean> isProfileFollowing() {
+        TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Verificar si los UIDs no son nulos
+        if (userUID == null || profileUID == null) {
+            taskCompletionSource.setException(new IllegalArgumentException("UIDs must not be null."));
+            return taskCompletionSource.getTask();
+        }
+
+        db.collection("users").document(profileUID).collection("following").document(userUID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
