@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -146,7 +147,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 .orderBy("username")
                 .whereGreaterThanOrEqualTo("username", lowerCaseQuery)
                 .whereLessThanOrEqualTo("username", lowerCaseQuery + "\uf8ff")
-                .limit(10)
+                .limit(3)
                 .get()
                 .addOnCompleteListener(task -> {
                     List<User> userList = new ArrayList<>();
@@ -173,10 +174,21 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                         }
                     }
 
-                    usersAdapter.setUsers(userList);
-                    searchUsersRecyclerView.setVisibility(View.VISIBLE);
-                    searchResultsLabel.setVisibility(View.VISIBLE);
-                    separacionSearchUsers.setVisibility(View.VISIBLE);
+                    // Verifica si se encontraron usuarios
+                    if (userList.isEmpty()) {
+                        // No se encontraron usuarios
+                        searchResultsLabel.setText("No se han encontrado usuarios");
+                        searchResultsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.quick_silver));
+                        searchResultsLabel.setVisibility(View.VISIBLE);
+                    } else {
+                        // Se encontraron usuarios
+                        usersAdapter.setUsers(userList);
+                        searchUsersRecyclerView.setVisibility(View.VISIBLE);
+                        searchResultsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white));
+                        searchResultsLabel.setText("Resultados de la búsqueda");
+                        searchResultsLabel.setVisibility(View.VISIBLE);
+                        separacionSearchUsers.setVisibility(View.VISIBLE);
+                    }
                 });
     }
 
@@ -214,14 +226,10 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                 });
         searchUsersEditText.setText(null);
     }
-
-
-
     @Override
     public void onChatClick(Chat chat) {
         navigateToChatMessages(chat);
     }
-
     private void loadChats() {
         loadingChatsProgressBar.setVisibility(View.VISIBLE); // Muestra el ProgressBar
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -251,7 +259,6 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                     chatsRecyclerView.setVisibility(View.VISIBLE); // Muestra el RecyclerView de los chats
                 });
     }
-
     private void createNewChat(User user) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();

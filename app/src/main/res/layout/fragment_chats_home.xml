@@ -93,14 +93,13 @@
             android:id="@+id/search_results_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resultados de la búsqueda"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:visibility="gone"
+            android:text="Resultados de la búsqueda"
             android:textColor="@color/white"
             android:textSize="14dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/search_users"
             app:layout_constraintTop_toBottomOf="@+id/search_users" />
 
         <androidx.recyclerview.widget.RecyclerView
