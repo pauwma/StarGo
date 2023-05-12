@@ -390,7 +390,7 @@ public class usersProfileFragment extends Fragment {
 
         // Crear un nuevo documento de chat en Firestore
         List<String> participants = Arrays.asList(userUID, profileUID);
-        Chat newChat = new Chat(null, participants);
+        Chat newChat = new Chat(null, participants, null);
 
         // Buscar un chat existente con los mismos participantes
         db.collection("chats")
@@ -417,6 +417,8 @@ public class usersProfileFragment extends Fragment {
                                 .addOnSuccessListener(documentReference -> {
                                     String chatId = documentReference.getId();
                                     newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
+                                    long timestamp = System.currentTimeMillis();
+                                    newChat.setLastMessageTimestamp(timestamp);
                                     // Navegar a la conversación
                                     navigateToChatMessages(newChat);
                                 })

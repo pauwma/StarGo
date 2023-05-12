@@ -191,6 +191,13 @@ public class ChatFragment extends Fragment {
 
         // Aquí puedes guardar el mensaje en tu base de datos o servicio de backend
         saveMessageToFirestore(messageId, newMessage);
+
+        // Actualiza el timestamp del último mensaje en el documento de chat
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("chats").document(chat.getChatId())
+                .update("lastMessageTimestamp", timestamp)
+                .addOnFailureListener(e -> Log.e("ChatActivity", "Error updating lastMessageTimestamp", e));
+
     }
     private String generateMessageId() {
         return UUID.randomUUID().toString();

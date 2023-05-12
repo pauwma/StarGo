@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -211,6 +212,7 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                         // Maneja el error
                     }
                 });
+        searchUsersEditText.setText(null);
     }
 
 
@@ -224,11 +226,11 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
         loadingChatsProgressBar.setVisibility(View.VISIBLE); // Muestra el ProgressBar
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Asume que el UID del usuario actual está almacenado en una variable llamada currentUserId
         String currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         db.collection("chats")
                 .whereArrayContains("users", currentUserId)
+                .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING) // Ordenar los chats por el timestamp del último mensaje
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         Log.e("ChatsHomeFragment", "Error loading chats", error);
@@ -259,7 +261,8 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
 
         // Crear un nuevo documento de chat en Firestore
         List<String> participants = Arrays.asList(currentUserId, selectedUserId);
-        Chat newChat = new Chat(null, participants);
+        long timestamp = System.currentTimeMillis();
+        Chat newChat = new Chat(null, participants, timestamp);
 
         // Buscar un chat existente con los mismos participantes
         db.collection("chats")
@@ -286,8 +289,15 @@ public class ChatsHomeFragment extends Fragment implements UsersAdapter.OnUserCl
                                 .addOnSuccessListener(documentReference -> {
                                     String chatId = documentReference.getId();
                                     newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
-                                    // Navegar a la conversación
-                                    navigateToChatMessages(newChat);
+
+                                    // Actualizar el documento de chat con el nuevo chatId
+                                    db.collection("chats").document(chatId)
+                                            .update("chatId", chatId)
+                                            .addOnSuccessListener(aVoid -> {
+                                                // Navegar a la conversación
+                                                navigateToChatMessages(newChat);
+                                            })
+                                            .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error updating chatId", e));
                                 })
                                 .addOnFailureListener(e -> Log.e("ChatsHomeFragment", "Error creating chat", e));
                     }

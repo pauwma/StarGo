@@ -6,15 +6,15 @@ import java.util.List;
 public class Chat implements Serializable {
 
     private String chatId;
-    private String lastMessage;
+    private long lastMessageTimestamp;
     private List<String> users;
 
-    public Chat() {
-    }
+    public Chat(){}
 
-    public Chat(String chatId, List<String> users) {
+    public Chat(String chatId, List<String> users, Long lastMessageTimestamp) {
         this.chatId = chatId;
         this.users = users;
+        this.lastMessageTimestamp = lastMessageTimestamp;
     }
 
     public String getChatId() {
@@ -33,4 +33,11 @@ public class Chat implements Serializable {
         this.users = users;
     }
 
+    public long getLastMessageTimestamp() {
+        return lastMessageTimestamp;
+    }
+
+    public void setLastMessageTimestamp(long lastMessageTimestamp) {
+        this.lastMessageTimestamp = lastMessageTimestamp;
+    }
 }

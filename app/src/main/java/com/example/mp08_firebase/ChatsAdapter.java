@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +44,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = chats.get(position);
         holder.bind(chat, holder.itemView.getContext());
-
-        // TODO Poner imagen del usuario
-        /*
-         // Coger "avatar" del user con el chat.getUid
-        Glide.with(holder.itemView.getContext())
-                .load(chat.getOtherUserProfileImageUrl())
-                .circleCrop()
-                .into(holder.profile_image);
-        */
     }
 
     @Override
@@ -65,13 +57,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private CircleImageView profile_image;
-        private TextView chatTitleTextView;
+        private TextView displayNameTextView, lastMessageTextView;
         private OnChatClickListener onChatClickListener;
 
         public ViewHolder(@NonNull View itemView, OnChatClickListener onChatClickListener) {
             super(itemView);
-            chatTitleTextView = itemView.findViewById(R.id.chat_title);
             profile_image = itemView.findViewById(R.id.profile_image);
+            displayNameTextView = itemView.findViewById(R.id.displayNameTextView);
+            lastMessageTextView = itemView.findViewById(R.id.lastMessageTextView);
             this.onChatClickListener = onChatClickListener;
             itemView.setOnClickListener(this);
         }
@@ -89,21 +82,40 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
             }
 
             if (otherUserId != null) {
-                FirebaseFirestore.getInstance().collection("users")
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("users")
                         .document(otherUserId)
                         .get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
                                 User otherUser = documentSnapshot.toObject(User.class);
                                 if (otherUser != null) {
-                                    chatTitleTextView.setText(otherUser.getUsername());
+                                    if (otherUser.getDisplayName() == null || otherUser.getDisplayName().isEmpty()){
+                                        displayNameTextView.setText(otherUser.getUsername());
+                                    } else {
+                                        displayNameTextView.setText(otherUser.getDisplayName());
+                                    }
 
                                     if (otherUser.getAvatar() != null && !otherUser.getAvatar().isEmpty()) {
-                                        //AQUÍ
                                         Glide.with(context)
                                                 .load(otherUser.getAvatar())
                                                 .into(profile_image);
                                     }
+
+                                    // Obtener el último mensaje
+                                    db.collection("chats").document(chat.getChatId()).collection("messages")
+                                            .orderBy("timestamp", Query.Direction.DESCENDING)
+                                            .limit(1)
+                                            .get()
+                                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                if (!queryDocumentSnapshots.isEmpty()) {
+                                                    Message lastMessage = queryDocumentSnapshots.getDocuments().get(0).toObject(Message.class);
+                                                    if (lastMessage != null) {
+                                                        lastMessageTextView.setText(lastMessage.getContent());
+                                                    } else {lastMessageTextView.setText("No hay mensajes");}
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> Log.e("ChatsAdapter", "Error loading last message", e));
                                 }
                             } else {
                                 Log.e("ChatsAdapter", "User not found");
@@ -111,10 +123,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder> 
                         })
                         .addOnFailureListener(e -> Log.e("ChatsAdapter", "Error loading user details", e));
             } else {
-                chatTitleTextView.setText("usuario no encontrado");
+                displayNameTextView.setText("usuario no encontrado");
             }
         }
-
 
         @Override
         public void onClick(View v) {
