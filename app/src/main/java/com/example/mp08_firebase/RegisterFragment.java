@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,6 +59,8 @@ public class RegisterFragment extends Fragment {
     private Button nextButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore;
+    private ProgressBar progressBar;
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class RegisterFragment extends Fragment {
         navController = Navigation.findNavController(view);
 
         usernameEditText = view.findViewById(R.id.usernameEditText);
+        progressBar = view.findViewById(R.id.progressBar);
 
         // ? Focus al iniciar el fragment
         usernameEditText.requestFocus();
@@ -107,6 +111,7 @@ public class RegisterFragment extends Fragment {
 
     private void crearCuenta() {
         nextButton.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);  // Mostrar ProgressBar
 
         mAuth.createUserWithEmailAndPassword(mailEditText.getText().toString(), passwordEditText.getText().toString())
                 .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
@@ -169,12 +174,11 @@ public class RegisterFragment extends Fragment {
                             Snackbar.make(requireView(), "Error: " + task.getException(), Snackbar.LENGTH_LONG).show();
                         }
                         nextButton.setEnabled(true);
+                        progressBar.setVisibility(View.GONE);  // Ocultar ProgressBar
                     }
                 });
 
     }
-
-
 
     private void actualizarUI(FirebaseUser currentUser) {
         if(currentUser != null){

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android">
+    <layer-list>
+        <item>
+            <shape
+                android:innerRadiusRatio="3"
+                android:shape="ring"
+                android:thicknessRatio="8.0" >
+                <solid android:color="@color/white" /> <!-- Color secundario -->
+            </shape>
+        </item>
+        <item>
+            <shape
+                android:innerRadiusRatio="3"
+                android:shape="ring"
+                android:thicknessRatio="7.0" >
+                <solid android:color="@color/morado" /> <!-- Color principal -->
+            </shape>
+        </item>
+    </layer-list>
+</rotate>
