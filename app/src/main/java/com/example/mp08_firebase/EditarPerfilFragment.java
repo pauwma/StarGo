@@ -54,6 +54,7 @@ public class EditarPerfilFragment extends Fragment {
     private boolean hasDisplayNameChanged = false;
     private boolean hasUsernameChanged = false;
     private boolean hasBioChanged = false;
+    private boolean valid = true;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private String uid;
@@ -263,39 +264,80 @@ public class EditarPerfilFragment extends Fragment {
 
     }
 
+    /**
+     * Método para actualizar el perfil del usuario.
+     * Comprueba si los campos han cambiado antes de proceder con la validación y actualización.
+     * Si no hay cambios en los campos de texto, pero se seleccionó una imagen, se procede a actualizar la imagen de perfil.
+     */
     private void updateProfile() {
         checkIfFieldsChanged();
         if (hasDisplayNameChanged || hasUsernameChanged || hasBioChanged) {
-            if (hasUsernameChanged) {
-                validateAndCheckUsernameAvailability();
-            } else if (validateChanges()){
-                updateProfileFields();
-            }
+            validateChanges(new ValidationCallback() {
+                @Override
+                public void onValidationFinished(boolean isValid) {
+                    if (isValid) {
+                        updateProfileFields();
+                    }
+                }
+            });
         } else if (selectedImage != null) {
             updateProfilePicture();
         } else {
             Toast.makeText(getContext(), "No se realizaron cambios.", Toast.LENGTH_SHORT).show();
         }
     }
-    private boolean validateChanges() {
-        boolean valid = true;
 
+    /**
+     * Interfaz para definir un callback que se llamará cuando la validación haya terminado.
+     */
+    public interface ValidationCallback {
+        void onValidationFinished(boolean isValid);
+    }
+
+    /**
+     * Valida los cambios en el perfil del usuario.
+     * Si los campos son válidos, se verifica si el nombre de usuario está disponible.
+     * En caso de que no esté disponible, se muestra un error.
+     * Si los campos no son válidos, se muestra un error correspondiente.
+     */
+    private void validateChanges(ValidationCallback callback) {
         String tmpDisplayName = displayNameEditText.getText().toString().trim();
         String tmpUsername = usernameEditText.getText().toString().trim();
         String tmpBio = bioEditText.getText().toString().trim();
 
+        boolean validInitial = true;
+
         if (TextUtils.isEmpty(tmpUsername)) {
             usernameEditText.setError("Debes introducir un nombre de usuario.");
-            valid = false;
+            validInitial = false;
         } else if (tmpUsername.contains(" ")) {
             usernameEditText.setError("El nombre de usuario no puede contener espacios.");
-            valid = false;
+            validInitial = false;
         } else if (!tmpUsername.toLowerCase().equals(tmpUsername)) {
             usernameEditText.setError("El nombre de usuario no puede contener mayúsculas.");
-            valid = false;
+            validInitial = false;
         } else {
             usernameEditText.setError(null);
         }
+
+        if (validInitial) {
+            boolean finalValidInitial = validInitial;
+            validateUsername(new UsernameAvailabilityCallback() {
+                @Override
+                public void onUsernameChecked(boolean isAvailable) {
+                    if (!isAvailable) {
+                        usernameEditText.setError("El nombre de usuario no está disponible.");
+                        callback.onValidationFinished(false);
+                    } else {
+                        callback.onValidationFinished(finalValidInitial);
+                    }
+                }
+            });
+        } else {
+            callback.onValidationFinished(validInitial);
+        }
+
+
 
         if (tmpDisplayName.length() > 32) {
             displayNameEditText.setError("La biografía no puede tener más de 136 caracteres.");
@@ -313,9 +355,14 @@ public class EditarPerfilFragment extends Fragment {
         } else {
             bioEditText.setError(null);
         }
-
-        return valid;
     }
+
+
+    /**
+     * Actualiza los campos de perfil del usuario en la base de datos.
+     * Si los campos displayName, username o bio han cambiado, se actualizan en la base de datos.
+     * Una vez que la actualización se ha completado con éxito, se muestra un mensaje de confirmación.
+     */
     private void updateProfileFields() {
         DocumentReference userRef = firestore.collection("users").document(uid);
 
@@ -341,6 +388,12 @@ public class EditarPerfilFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * Actualiza la imagen de perfil del usuario en la base de datos.
+     * Se sube la imagen seleccionada al almacenamiento y se actualiza la URL de la imagen de perfil del usuario en la base de datos.
+     * Una vez que la actualización se ha completado con éxito, se muestra un mensaje de confirmación.
+     */
     private void updateProfilePicture() {
         if (selectedImage != null) {
             // Crear una referencia al archivo de imagen en el Storage de Firebase
@@ -385,6 +438,11 @@ public class EditarPerfilFragment extends Fragment {
             });
         }
     }
+
+    /**
+     * Comprueba si los campos del perfil han cambiado.
+     * Si el displayName, username o bio actuales difieren de los iniciales, se marcan como cambiados.
+     */
     private void checkIfFieldsChanged() {
         String currentDisplayName = displayNameEditText.getText().toString().trim();
         String currentUsername = usernameEditText.getText().toString().trim();
@@ -394,17 +452,21 @@ public class EditarPerfilFragment extends Fragment {
         hasUsernameChanged = !initialUsername.equals(currentUsername);
         hasBioChanged = (initialBio == null && currentBio.length() > 0) || (initialBio != null && !initialBio.equals(currentBio));
     }
-    private void validateAndCheckUsernameAvailability() {
+
+    /**
+     * Interfaz para definir un callback que se llamará cuando se haya comprobado la disponibilidad del nombre de usuario.
+     */
+    public interface UsernameAvailabilityCallback {
+        void onUsernameChecked(boolean isAvailable);
+    }
+
+    /**
+     * Comprueba la disponibilidad del nombre de usuario en la base de datos.
+     * Si el nombre de usuario ya está en uso, se muestra un error.
+     * Si el nombre de usuario está disponible, se llama al callback con true.
+     */
+    private void validateUsername(UsernameAvailabilityCallback callback) {
         String currentUsername = usernameEditText.getText().toString().trim();
-
-        if (currentUsername.contains(" ")) {
-            usernameEditText.setError("El nombre de usuario no puede contener espacios.");
-            return;
-        } else if (!currentUsername.toLowerCase().equals(currentUsername)) {
-            usernameEditText.setError("El nombre de usuario no puede contener mayúsculas.");
-            return;
-        }
-
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .whereEqualTo("username", currentUsername.toLowerCase())
@@ -415,9 +477,10 @@ public class EditarPerfilFragment extends Fragment {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null && !task.getResult().isEmpty()) {
                                 usernameEditText.setError("El nombre de usuario ya está en uso.");
+                                callback.onUsernameChecked(false); // Usuario no está disponible
                             } else {
                                 // Nombre de usuario válido y disponible
-                                updateProfile();
+                                callback.onUsernameChecked(true); // Usuario está disponible
                             }
                         } else {
                             Log.e("EditarPerfilFragment", "Error checking for existing username", task.getException());
@@ -425,6 +488,11 @@ public class EditarPerfilFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * Permite al usuario seleccionar una imagen de su dispositivo.
+     * Inicia una actividad que permite al usuario seleccionar una imagen de su galería o de otros medios.
+     */
     private void seleccionarImagen() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -444,7 +512,6 @@ public class EditarPerfilFragment extends Fragment {
             // Aquí debe implementar la lógica para guardar la imagen en su aplicación
         }
     }
-
     private void mostrarDialogoConfirmacion() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("¿Seguro que quieres hacer los cambios?");
@@ -464,5 +531,9 @@ public class EditarPerfilFragment extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void setValid(boolean valid){
+        this.valid = valid;
     }
 }
