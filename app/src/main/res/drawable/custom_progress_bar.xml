@@ -5,7 +5,7 @@
             <shape
                 android:innerRadiusRatio="3"
                 android:shape="ring"
-                android:thicknessRatio="8.0" >
+                android:thicknessRatio="6.0" >
                 <solid android:color="@color/white" /> <!-- Color secundario -->
             </shape>
         </item>
@@ -13,7 +13,7 @@
             <shape
                 android:innerRadiusRatio="3"
                 android:shape="ring"
-                android:thicknessRatio="7.0" >
+                android:thicknessRatio="6.0" >
                 <solid android:color="@color/morado" /> <!-- Color principal -->
             </shape>
         </item>
