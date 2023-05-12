@@ -123,7 +123,7 @@ public class EditarPerfilFragment extends Fragment {
         TextView bioCounterTextView = view.findViewById(R.id.bioCounterTextView);
         // Establece los límites de caracteres para displayNameEditText y bioEditText
         displayNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
-        usernameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
+        usernameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         bioEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(136)});
         bioEditText.setFilters(new InputFilter[] {
                 new InputFilter.LengthFilter(136),
@@ -170,7 +170,7 @@ public class EditarPerfilFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                usernameCounterTextView.setText(s.length() + "/32");
+                usernameCounterTextView.setText(s.length() + "/20");
             }
         });
         bioEditText.addTextChangedListener(new TextWatcher() {

@@ -202,7 +202,7 @@ public class usersProfileFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         String avatarUrl = document.getString("avatar");
-                        usernameTitleTextView.setText(document.getString("username"));
+                        usernameTitleTextView.setText("@" + document.getString("username"));
                         displayNameTextView.setText(document.getString("displayName"));
                         String description = document.getString("description");
                         if (description != null) {
