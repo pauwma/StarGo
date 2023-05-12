@@ -125,16 +125,20 @@ public class EditarPerfilFragment extends Fragment {
         displayNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
         usernameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(32)});
         bioEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(136)});
-        bioEditText.setFilters(new InputFilter[]{new InputFilter() {
-            public CharSequence filter(CharSequence src, int start, int end, Spanned dst, int dstart, int dend) {
-                if (src.equals("\n")) { // si se trata de un salto de línea
-                    if (dst.toString().split("\n").length >= 5) { // si ya hay 5 líneas
-                        return ""; // ignora el salto de línea
+        bioEditText.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(136),
+                new InputFilter() {
+                    public CharSequence filter(CharSequence src, int start, int end, Spanned dst, int dstart, int dend) {
+                        if (src.equals("\n")) { // si se trata de un salto de línea
+                            if (dst.toString().split("\n").length >= 5) { // si ya hay 5 líneas
+                                return ""; // ignora el salto de línea
+                            }
+                        }
+                        return src; // de lo contrario, continúa con la entrada original
                     }
                 }
-                return src; // de lo contrario, continúa con la entrada original
-            }
-        }});
+        });
+
 
         // Añade addTextChangedListener para actualizar el contador de caracteres dinámicamente
         displayNameEditText.addTextChangedListener(new TextWatcher() {
