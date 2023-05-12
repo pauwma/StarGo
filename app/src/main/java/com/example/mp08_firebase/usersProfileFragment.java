@@ -387,10 +387,12 @@ public class usersProfileFragment extends Fragment {
 
     public void goToChat(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Crear un nuevo documento de chat en Firestore
         List<String> participants = Arrays.asList(userUID, profileUID);
-        Chat newChat = new Chat(null, participants, null);
+        long timestamp = System.currentTimeMillis();
+        Chat newChat = new Chat(null, participants, timestamp);
 
         // Buscar un chat existente con los mismos participantes
         db.collection("chats")
@@ -417,8 +419,6 @@ public class usersProfileFragment extends Fragment {
                                 .addOnSuccessListener(documentReference -> {
                                     String chatId = documentReference.getId();
                                     newChat.setChatId(chatId); // Establece el ID del chat en el objeto Chat
-                                    long timestamp = System.currentTimeMillis();
-                                    newChat.setLastMessageTimestamp(timestamp);
                                     // Navegar a la conversación
                                     navigateToChatMessages(newChat);
                                 })
@@ -426,6 +426,7 @@ public class usersProfileFragment extends Fragment {
                     }
                 });
     }
+
 
     private void navigateToChatMessages(Chat chat) {
         Bundle bundle = new Bundle();
