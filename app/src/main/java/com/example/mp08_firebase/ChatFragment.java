@@ -46,6 +46,7 @@ public class ChatFragment extends Fragment {
     private TextView titleUsername;
     private CircleImageView userImage;
     private Chat chat;
+    private String chatUserId, currentUserId;
 
     public void setChat(Chat chat) {
         this.chat = chat;
@@ -69,6 +70,8 @@ public class ChatFragment extends Fragment {
             chat = (Chat) getArguments().getSerializable("selected_chat");
         }
 
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        chatUserId = chat.getUsers().stream().filter(id -> !id.equals(currentUserId)).findFirst().orElse(null);
         loadChatUserDetails();
 
         sendMessageButton.setOnClickListener(v -> {
@@ -116,6 +119,22 @@ public class ChatFragment extends Fragment {
                 navController.navigateUp();
             }
         });
+
+        // ? Ir al perfil
+        view.findViewById(R.id.userImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfile(v, chatUserId);
+            }
+        });
+
+        view.findViewById(R.id.titleUsername).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToProfile(v, chatUserId);
+            }
+        });
+
     }
 
     private void setupMessagesList() {
@@ -151,8 +170,6 @@ public class ChatFragment extends Fragment {
 
     private void loadChatUserDetails() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String chatUserId = chat.getUsers().stream().filter(id -> !id.equals(currentUserId)).findFirst().orElse(null);
-
         if (chatUserId == null) {
             Log.e(TAG, "Unable to find chat user ID");
             return;
@@ -179,7 +196,6 @@ public class ChatFragment extends Fragment {
                 .addOnFailureListener(e -> Log.e(TAG, "Error fetching chat user details", e));
     }
     private void sendMessage(String messageContent) {
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         long timestamp = System.currentTimeMillis();
         String messageId = generateMessageId();
 
@@ -219,4 +235,9 @@ public class ChatFragment extends Fragment {
                 });
     }
 
+    public void goToProfile(View v, String uid){
+        Bundle bundle = new Bundle();
+        bundle.putString("userUID", uid); // Pasar el UID del usuario al fragmento de perfil del usuario
+        Navigation.findNavController(v).navigate(R.id.usersProfileFragment, bundle);
+    }
 }
