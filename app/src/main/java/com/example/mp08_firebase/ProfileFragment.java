@@ -40,7 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements PostsAdapter.OnPostClickListener {
 
     private NavController navController;
     private String uid;
@@ -256,7 +256,7 @@ public class ProfileFragment extends Fragment {
         ProgressBar progressBar = view.findViewById(R.id.progressBar);
 
         // Crear y configurar el adaptador
-        PostsAdapter adapter = new PostsAdapter(getContext(), options, progressBar);
+        PostsAdapter adapter = new PostsAdapter(getContext(), options, progressBar, this);
 
         // Establecer el adaptador para el RecyclerView
         recyclerView.setAdapter(adapter);
@@ -279,5 +279,12 @@ public class ProfileFragment extends Fragment {
         if (adapter != null) {
             adapter.stopListening();
         }
+    }
+
+    @Override
+    public void onPostClick(Post post) {
+        Bundle bundle = new Bundle();
+        bundle.putString("postId", post.getPostId());
+        navController.navigate(R.id.mediaFragment, bundle);
     }
 }

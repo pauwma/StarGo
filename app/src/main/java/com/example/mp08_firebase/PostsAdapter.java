@@ -44,10 +44,17 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
     private String userUID;
     private int currentLikes;
 
-    public PostsAdapter(Context context, FirestoreRecyclerOptions<Post> options, ProgressBar progressBar) {
+    public interface OnPostClickListener {
+        void onPostClick(Post post);
+    }
+
+    private OnPostClickListener listener;
+
+    public PostsAdapter(Context context, FirestoreRecyclerOptions<Post> options, ProgressBar progressBar, OnPostClickListener listener) {
         super(options);
         this.context = context;
         this.progressBar = progressBar;
+        this.listener = listener;
     }
 
     @NonNull
@@ -78,7 +85,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
         holder.displayNameTextView.setMaxWidth(screenWidth / 3);
         holder.usernameTextView.setMaxWidth(screenWidth / 3);
         holder.usernameTextView.setEllipsize(TextUtils.TruncateAt.END);
-
+        holder.contentTextView.setOnClickListener(v -> listener.onPostClick(post));
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("users").document(post.getUid()).get()

@@ -1,6 +1,10 @@
 package com.example.mp08_firebase;
 
+import static android.content.ContentValues.TAG;
+
+import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,7 +24,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,19 +37,17 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MediaFragment extends Fragment {
-    VideoView videoView;
-    ImageView imageView, photoImageView;
-    ImageButton crossButton, likebutton;
-    TextView authorTextView, timeTextView, numLikes;
-    public AppViewModel appViewModel;
-    NavController navController;
-    String userUID;
-    Post post;
-    private GestureDetector gestureDetector;
 
-    FirebaseFirestore fStore;
+    private NavController navController;
+    private ImageButton crossImageButton;
 
+    // ? Post & User info
+    private String postID, postUID, content, media, mediaType, timestamp;
+    private TextView displayNameTextView, usernameTextView;
+    private CircleImageView profile_image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,89 +57,63 @@ public class MediaFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
-        fStore = FirebaseFirestore.getInstance();
-        navController = Navigation.findNavController(view);
 
-        imageView = view.findViewById(R.id.imageView);
-        videoView = view.findViewById(R.id.videoView);
-        photoImageView = view.findViewById(R.id.photoImageView);
-        authorTextView = view.findViewById(R.id.authorTextView);
-        timeTextView = view.findViewById(R.id.timeTextView);
-        crossButton = view.findViewById(R.id.crossImageButton);
-        numLikes = view.findViewById(R.id.numLikesTextView);
-        likebutton = view.findViewById(R.id.likeImageButton);
-        userUID = Objects.requireNonNull(appViewModel.postSeleccionado.getValue()).getUid();
+        navController = Navigation.findNavController(view);
+        displayNameTextView = view.findViewById(R.id.displayNameTextView);
+        usernameTextView = view.findViewById(R.id.usernameTextView);
+        profile_image = view.findViewById(R.id.profile_image);
+
+        if (getArguments() != null) {
+            postID = getArguments().getString("postId");
+            postUID = getArguments().getString("uid");
+            content = getArguments().getString("content");
+            media = getArguments().getString("media");
+            mediaType = getArguments().getString("mediaType");
+            timestamp = getArguments().getString("timestamp");
+        }
+
+        userInfo();
 
         // ? Flecha Back
-        crossButton.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.crossImageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigateUp();
             }
         });
 
+    }
 
+    public void postInfo(){
 
-        appViewModel.postSeleccionado.observe(getViewLifecycleOwner(), post ->
-        {
-            this.post = post;
-            userUID = post.getUid();
-            if ("video".equals(post.getMediaType()) ||
-                    "audio".equals(post.getMediaType())) {
-                MediaController mc = new MediaController(requireContext());
-                mc.setAnchorView(videoView);
-                videoView.setMediaController(mc);
-                videoView.setVideoPath(post.getMedia());
-                videoView.start();
-            } else if ("image".equals(post.getMediaType())) {
-                Glide.with(requireView()).load(post.getMedia()).into(imageView);
-            }
-            Calendar now = Calendar.getInstance();
-            Calendar postDate = Calendar.getInstance();
-            long diff = now.getTimeInMillis() - postDate.getTimeInMillis();
-            long diffHours = diff / (60 * 60 * 1000);
-            if (diffHours < 24) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-                String formattedDate = dateFormat.format(post.getTimestamp());
-                timeTextView.setText(formattedDate + " h");
-            } else {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
-                String formattedDate = dateFormat.format(post.getTimestamp());
-                timeTextView.setText(formattedDate);
-            }
+    }
 
+    public void userInfo() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(postUID);
 
-        });
-
-
-        gestureDetector = new GestureDetector(requireContext(), new GestureDetector.SimpleOnGestureListener() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                Toast.makeText(requireContext(), "Like!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        String username = document.getString("username");
+                        String displayName = document.getString("displayName");
+                        String avatarURL = document.getString("avatar");
 
-        view.findViewById(R.id.imageView).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
-
-        // ? Perfil del usuario
-        view.findViewById(R.id.userInfoLayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (post.getUid().equals(FirebaseAuth.getInstance().getUid())){
-                    navController.navigate(R.id.profileFragment);
+                        usernameTextView.setText("@" + username);
+                        displayNameTextView.setText(displayName);
+                        Glide.with(requireView()).load(avatarURL).into(profile_image);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
                 } else {
-                    appViewModel.postSeleccionado.setValue(post);
-                    navController.navigate(R.id.usersProfileFragment);
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
     }
+
 
 }

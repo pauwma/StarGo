@@ -19,7 +19,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickListener {
 
     private NavController navController;
     private ProgressBar progressBar;
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
                 .setQuery(query, Post.class)
                 .build();
 
-        adapter = new PostsAdapter(getContext(), options, progressBar);
+        adapter = new PostsAdapter(getContext(), options, progressBar, this);
         postsRecyclerView.setAdapter(adapter);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -98,5 +98,17 @@ public class HomeFragment extends Fragment {
         if (adapter != null) {
             adapter.stopListening();
         }
+    }
+
+    @Override
+    public void onPostClick(Post post) {
+        Bundle bundle = new Bundle();
+        bundle.putString("postId", post.getPostId());
+        bundle.putString("uid", post.getUid());
+        bundle.putString("content", post.getContent());
+        bundle.putString("media", post.getMedia());
+        bundle.putString("mediaType", post.getMediaType());
+        bundle.putString("timestamp", String.valueOf(post.getTimestamp()));
+        navController.navigate(R.id.mediaFragment, bundle);
     }
 }
