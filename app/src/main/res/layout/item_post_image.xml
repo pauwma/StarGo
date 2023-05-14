@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatarImageView"
@@ -51,10 +50,9 @@
 
     <TextView
         android:id="@+id/timestampTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.7"
-        android:ellipsize="end"
         android:fontFamily="@font/montserrat_regular"
         android:maxLines="1"
         android:textColor="@color/white"
@@ -67,7 +65,7 @@
         android:id="@+id/contentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:ellipsize="end"
@@ -79,77 +77,137 @@
         app:layout_constraintTop_toBottomOf="@+id/avatarImageView"
         tools:text="" />
 
-    <ImageView
-        android:id="@+id/mediaImageView"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imageCardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contentTextView"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintStart_toStartOf="@+id/avatarImageView"
+        app:layout_constraintTop_toBottomOf="@+id/contentTextView">
+
+        <ImageView
+            android:id="@+id/mediaImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="460dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    </com.google.android.material.card.MaterialCardView>
 
 
-    <ImageButton
-        android:id="@+id/commentButton"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/likeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="8dp"
-        android:background="@null"
-        android:src="@drawable/comment_icon"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mediaImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageCardView">
 
-    <TextView
-        android:id="@+id/commentsNumTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/montserrat_regular"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-        app:layout_constraintStart_toEndOf="@+id/likeButton"
-        app:layout_constraintTop_toTopOf="@+id/likeButton"
-        tools:text="" />
+        <ImageButton
+            android:id="@+id/likeButton"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/heart_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/likeButton"
+        <TextView
+            android:id="@+id/likesNumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/likeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/likeButton"
+            app:layout_constraintTop_toTopOf="@+id/likeButton"
+            tools:text="" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/commentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:background="@null"
-        android:src="@drawable/like_icon"
-        app:layout_constraintStart_toEndOf="@+id/commentButton"
-        app:layout_constraintTop_toTopOf="@+id/commentButton" />
+        android:layout_marginStart="16dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/likeLayout"
+        app:layout_constraintStart_toEndOf="@+id/likeLayout"
+        app:layout_constraintTop_toTopOf="@+id/likeLayout">
 
-    <TextView
-        android:id="@+id/likesNumTextView"
-        android:layout_width="0dp"
+        <ImageButton
+            android:id="@+id/commentButton"
+            android:layout_width="18dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="1dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/comment_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/commentsNumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/quick_silver"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/commentButton"
+            app:layout_constraintTop_toTopOf="@+id/commentButton"
+            tools:text="" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shareLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/montserrat_regular"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/likeButton"
-        app:layout_constraintStart_toEndOf="@+id/likeButton"
-        app:layout_constraintTop_toTopOf="@+id/likeButton"
-        tools:text="" />
+        android:layout_marginEnd="8dp"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/commentLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/commentLayout">
+
+        <ImageButton
+            android:id="@+id/shareButton"
+            android:layout_width="18dp"
+            android:layout_height="17dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/share_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="@color/eerie_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/likeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/likeLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

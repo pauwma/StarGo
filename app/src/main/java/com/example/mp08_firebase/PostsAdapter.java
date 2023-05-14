@@ -17,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Continuation;
@@ -40,7 +41,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
 
     private Context context;
     private ProgressBar progressBar;
-
     private String userUID;
     private int currentLikes;
 
@@ -127,17 +127,29 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                     }
                 });
 
-        holder.contentTextView.setText(post.getContent());
+        if (post.getContent() == null || post.getContent().isEmpty()){
+            holder.contentTextView.setVisibility(View.GONE);
+        } else {
+            holder.contentTextView.setText(post.getContent());
+        }
         holder.timestampTextView.setText(" · " + getTimeAgo(post.getTimestamp()));
 
+        // ? Comprobación de media
         if (post.getMediaType() != null) {
             switch (post.getMediaType()) {
                 case "image":
+                    holder.mediaImageView.setOnClickListener(v -> listener.onPostClick(post));
                     if (post.getMedia() != null) {
-                        Glide.with(context).load(post.getMedia()).into(holder.mediaImageView);
+                        int dpValue = 20;
+                        float density = context.getResources().getDisplayMetrics().density;
+                        int radius = (int) (dpValue * density);
+                        Glide.with(context).load(post.getMedia())
+                                .transform(new RoundedCorners(radius))
+                                .into(holder.mediaImageView);
                     }
                     break;
                 case "video":
+                    holder.mediaVideoView.setOnClickListener(v -> listener.onPostClick(post));
                     // Carga el video en el reproductor de video, aquí se asume que se utiliza un VideoView
                     VideoView videoView = holder.itemView.findViewById(R.id.mediaVideoView);
                     videoView.setVideoPath(post.getMedia());
@@ -148,18 +160,18 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
         }
 
 
-        // Verificar si el usuario actual ha dado "like" a la publicación
+        // ? Verificar si el usuario actual ha dado "like" a la publicación
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("likes").document(userUID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     // Si el usuario ha dado "like", cambiar el ícono a "like_solid_icon"
-                    holder.likeButton.setImageResource(R.drawable.like_solid_icon);
+                    holder.likeButton.setImageResource(R.drawable.heart_solid);
                     holder.likeButton.setAlpha(1f);
                     holder.likesNumTextView.setTextColor(ContextCompat.getColor(context,R.color.morado));
                 } else {
                     // Si el usuario no ha dado "like", cambiar el ícono a "like_icon"
-                    holder.likeButton.setImageResource(R.drawable.like_icon);
+                    holder.likeButton.setImageResource(R.drawable.heart_regular);
                     holder.likesNumTextView.setTextColor(ContextCompat.getColor(context,R.color.white));
                     holder.likesNumTextView.setAlpha(0.7f);
                 }
@@ -196,7 +208,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         });
 
-        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+        holder.likeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Agregar o eliminar "like" en Firestore
@@ -217,7 +229,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // Actualizar el botón y el contador de "likes"
-                                    holder.likeButton.setImageResource(R.drawable.like_icon);
+                                    holder.likeButton.setImageResource(R.drawable.heart_regular);
                                     holder.likeButton.setAlpha(0.7f);
                                     holder.likesNumTextView.setTextColor(ContextCompat.getColor(context,R.color.white));
                                     holder.likesNumTextView.setAlpha(0.7f);
@@ -232,7 +244,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // Actualizar el botón y el contador de "likes"
-                                    holder.likeButton.setImageResource(R.drawable.like_solid_icon);
+                                    holder.likeButton.setImageResource(R.drawable.heart_solid);
                                     holder.likeButton.setAlpha(1f);
                                     holder.likesNumTextView.setText(String.valueOf(getCurrentLikes(holder) + 1));
                                     holder.likesNumTextView.setAlpha(1f);

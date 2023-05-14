@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
@@ -15,6 +16,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     ImageView avatarImageView;
     ImageView mediaImageView;
     VideoView mediaVideoView;
+    ConstraintLayout likeLayout, commentLayout, shareLayout;
 
     // ? Likes & Comments
     ImageButton likeButton, commentButton;
@@ -32,6 +34,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         commentButton = itemView.findViewById(R.id.commentButton);
         likesNumTextView = itemView.findViewById(R.id.likesNumTextView);
         commentsNumTextView = itemView.findViewById(R.id.commentsNumTextView);
+        likeLayout = itemView.findViewById(R.id.likeLayout);
+        commentLayout = itemView.findViewById(R.id.commentLayout);
+        shareLayout = itemView.findViewById(R.id.shareLayout);
 
         if (viewType == 1) {
             mediaImageView = itemView.findViewById(R.id.mediaImageView);
