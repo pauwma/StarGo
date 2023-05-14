@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/avatarImageView"
         app:layout_constraintStart_toEndOf="@+id/avatarImageView"
         app:layout_constraintTop_toTopOf="@+id/avatarImageView"
-        tools:text="DisplayName" />
+        tools:text="" />
 
     <TextView
         android:id="@+id/usernameTextView"
@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/displayNameTextView"
         app:layout_constraintStart_toEndOf="@+id/displayNameTextView"
         app:layout_constraintTop_toTopOf="@+id/displayNameTextView"
-        tools:text="\@username" />
+        tools:text="" />
 
     <TextView
         android:id="@+id/timestampTextView"
@@ -58,7 +58,7 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/displayNameTextView"
         app:layout_constraintStart_toEndOf="@+id/usernameTextView"
-        tools:text="timestamp" />
+        tools:text="" />
 
     <TextView
         android:id="@+id/contentTextView"

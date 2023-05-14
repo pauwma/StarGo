@@ -21,7 +21,7 @@
             android:id="@+id/flechaBack"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_left_icon"

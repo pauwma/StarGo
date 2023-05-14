@@ -74,4 +74,8 @@ dependencies {
 
     // ? Dependencia de imagen redonda
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // ? Visor de imagenes
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
 }

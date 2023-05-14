@@ -139,6 +139,14 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             switch (post.getMediaType()) {
                 case "image":
                     holder.mediaImageView.setOnClickListener(v -> listener.onPostClick(post));
+
+                    holder.mediaImageView.setOnLongClickListener(v -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("imageUrl", post.getMedia());
+                        Navigation.findNavController(v).navigate(R.id.detailedImageFragment, bundle);
+                        return true;
+                    });
+
                     if (post.getMedia() != null) {
                         int dpValue = 20;
                         float density = context.getResources().getDisplayMetrics().density;
@@ -198,7 +206,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                 if (task.isSuccessful()) {
                     int likesCount = task.getResult().size();
                     if (likesCount <= 0){
-                        holder.commentsNumTextView.setText("0"); // Esta línea
+                        holder.commentsNumTextView.setText("0");
                     } else {
                         holder.commentsNumTextView.setText(String.valueOf(likesCount));
                     }

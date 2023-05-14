@@ -55,7 +55,11 @@
         android:id="@+id/mediaFragment"
         android:name="com.example.mp08_firebase.MediaFragment"
         android:label="fragment_media"
-        tools:layout="@layout/fragment_media" />
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_mediaFragment_to_detailedImageFragment"
+            app:destination="@id/detailedImageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.mp08_firebase.SettingsFragment"
@@ -176,4 +180,9 @@
         android:name="com.example.mp08_firebase.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" />
+    <fragment
+        android:id="@+id/detailedImageFragment"
+        android:name="com.example.mp08_firebase.DetailedImageFragment"
+        android:label="fragment_detailed_image"
+        tools:layout="@layout/fragment_detailed_image" />
 </navigation>
