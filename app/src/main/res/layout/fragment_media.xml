@@ -255,4 +255,44 @@
 
     </ScrollView>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/newCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/topCommentLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="8dp"
+            android:background="@color/border2"
+            app:layout_constraintBottom_toTopOf="@id/newCommentEditText" />
+
+        <EditText
+            android:id="@+id/newCommentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="top|left"
+            android:hint="Escribe un comentario"
+            android:textColor="@color/white"
+            android:textColorHint="@color/quick_silver"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <requestFocus />
+        </EditText>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
