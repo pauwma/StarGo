@@ -59,14 +59,15 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
+        android:background="@null"
         android:focusableInTouchMode="true"
+        android:fontFamily="@font/montserrat_regular"
         android:gravity="top|left"
         android:hint="¿Qué pasa contigo?"
-        android:textColorHint="@color/quick_silver"
-        android:background="@null"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat_regular"
+        android:paddingVertical="10dp"
         android:textColor="@color/white"
+        android:textColorHint="@color/quick_silver"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view">
@@ -74,100 +75,135 @@
         <requestFocus />
     </EditText>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/previsualizacion"
+    <com.google.android.material.card.MaterialCardView
+        android:visibility="gone"
+        android:id="@+id/mediaCardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:maxHeight="400dp"
-        android:scaleType="centerInside"
-        app:layout_constraintHeight_max="300dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postContentEditText"
-        app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador" />
-
-    <LinearLayout
-        android:id="@+id/botonesMedia"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postContentEditText">
+
+        <ImageView
+            android:id="@+id/mediaImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="460dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/clearMediaButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/cruz_icon"
+            android:layout_gravity="end|top" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/lineDownBar"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        app:layout_constraintBottom_toTopOf="@+id/downBar" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/downBar"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
+            android:id="@+id/botonesMedia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/imagen_galeria"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_menu_gallery" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/video_galeria"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_baseline_video_library_24" />
+                <ImageButton
+                    android:id="@+id/imagen_galeria"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:background="@null"
+                    app:srcCompat="@drawable/image_regular" />
 
-            <ImageButton
-                android:id="@+id/audio_galeria"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_baseline_music_video_24" />
+                <ImageButton
+                    android:id="@+id/video_galeria"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:background="@null"
+                    app:srcCompat="@drawable/film_solid" />
 
-            <ImageButton
-                android:id="@+id/grabar_audio"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_baseline_mic_24" />
+                <View
+                    android:layout_width="1dp"
+                    android:paddingVertical="2dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_height="36dp"
+                    android:background="@color/border2"
+                    app:layout_constraintBottom_toTopOf="@+id/downBar" />
 
-            <ImageButton
-                android:id="@+id/camara_video"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_baseline_video_call_24" />
+                <ImageButton
+                    android:id="@+id/camera_fotos"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:background="@null"
+                    app:srcCompat="@drawable/camera_solid" />
 
-            <ImageButton
-                android:id="@+id/camara_fotos"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginHorizontal="4dp"
-                android:background="@drawable/custom_button_1e"
-                android:paddingVertical="10dp"
-                app:srcCompat="@drawable/ic_menu_camera" />
+                <ImageButton
+                    android:id="@+id/camera_videos"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@null"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/video_solid" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <com.example.mp08_firebase.CharacterCountCircleView
+            android:id="@+id/characterCountCircleView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

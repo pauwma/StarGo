@@ -18,7 +18,10 @@ import androidx.navigation.Navigation;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +29,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -56,6 +62,9 @@ public class NewPostFragment extends Fragment {
     Uri mediaUri;
     String mediaTipo;
     private EditText editText;
+    private ImageView mediaImageView;
+    private ImageButton clearMediaButton;
+    private MaterialCardView mediaCardView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,12 +85,29 @@ public class NewPostFragment extends Fragment {
         navController = Navigation.findNavController(view);
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        mediaImageView = view.findViewById(R.id.mediaImageView);
+        mediaCardView = view.findViewById(R.id.mediaCardView);
 
         publishButton = view.findViewById(R.id.publishButton);
         postConentEditText = view.findViewById(R.id.postContentEditText);
         postConentEditText.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(postConentEditText, InputMethodManager.SHOW_IMPLICIT);
+
+        postConentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
+        postConentEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                CharacterCountCircleView characterCountCircleView = view.findViewById(R.id.characterCountCircleView);
+                characterCountCircleView.setCharacterCount(s.length());
+                checkPublishButtonStatus();
+            }
+        });
+
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,24 +119,35 @@ public class NewPostFragment extends Fragment {
         view.findViewById(R.id.cruzBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearImageAndMediaSeleccionado();
                 navController.navigateUp();
             }
         });
 
-        view.findViewById(R.id.camara_fotos).setOnClickListener(v -> tomarFoto());
-        view.findViewById(R.id.camara_video).setOnClickListener(v -> tomarVideo());
-        view.findViewById(R.id.grabar_audio).setOnClickListener(v -> grabarAudio());
+        clearMediaButton = view.findViewById(R.id.clearMediaButton);
+        clearMediaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearImageAndMediaSeleccionado();
+            }
+        });
+
+        view.findViewById(R.id.camera_fotos).setOnClickListener(v -> tomarFoto());
+        view.findViewById(R.id.camera_videos).setOnClickListener(v -> tomarVideo());
         view.findViewById(R.id.imagen_galeria).setOnClickListener(v -> seleccionarImagen());
         view.findViewById(R.id.video_galeria).setOnClickListener(v -> seleccionarVideo());
-        view.findViewById(R.id.audio_galeria).setOnClickListener(v -> seleccionarAudio());
         appViewModel.mediaSeleccionado.observe(getViewLifecycleOwner(), media -> {
             this.mediaUri = media.uri;
             this.mediaTipo = media.tipo;
-            Glide.with(this).load(media.uri).into((ImageView) view.findViewById(R.  id.previsualizacion));
+            Glide.with(this).load(media.uri).into(mediaImageView);
+            mediaImageView.setVisibility(View.VISIBLE);
+            clearMediaButton.setVisibility(View.VISIBLE);
+            mediaCardView.setVisibility(View.VISIBLE);
+            checkPublishButtonStatus();
         });
     }
 
-    List<String> extractHashtags(String content) {
+    private List<String> extractHashtags(String content) {
         List<String> hashtags = new ArrayList<>();
         Pattern pattern = Pattern.compile("(?:^|\\s)#(\\w+)");
         Matcher matcher = pattern.matcher(content);
@@ -119,23 +156,20 @@ public class NewPostFragment extends Fragment {
         }
         return hashtags;
     }
-
     private void publish() {
         hideKeyboard();
-        if (validPost()) {
-            postUpload();
+        if (!validPost()) {
+            return;
         }
+        postUpload();
     }
-
     private boolean validPost() {
         String postContent = postConentEditText.getText().toString().trim();
         if (postContent.isEmpty() && mediaUri == null) {
-            Toast.makeText(requireContext(), "Debe agregar contenido o media al post", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
-
     private void postUpload() {
         String postContent = postConentEditText.getText().toString().trim();
         if (mediaUri != null) {
@@ -144,12 +178,8 @@ public class NewPostFragment extends Fragment {
             postToFirestore(postContent, null, null);
         }
     }
-
-
     private void postToFirestore(String postContent, String mediaUrl, String mediaType) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
 
         // (String uid, long timestamp, String media, String mediaType, String content, List<String> hashtags)
         Post post = new Post(user.getUid(), System.currentTimeMillis(), mediaUrl, mediaType, postContent, extractHashtags(postContent));
@@ -167,14 +197,12 @@ public class NewPostFragment extends Fragment {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         navController.popBackStack();
-                                        appViewModel.setMediaSeleccionado(null, null);
+                                        clearImageAndMediaSeleccionado();
                                     }
                                 });
                     }
                 });
     }
-
-
     private void mediaToFirestore(String postContent) {
         FirebaseStorage.getInstance().getReference(mediaTipo + "/" + UUID.randomUUID())
                 .putFile(mediaUri)
@@ -182,23 +210,22 @@ public class NewPostFragment extends Fragment {
                 .addOnSuccessListener(url -> postToFirestore(postContent, url.toString(), mediaTipo));
     }
     private final ActivityResultLauncher<String> galeria = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                appViewModel.setMediaSeleccionado(uri, mediaTipo);
-            });
+        if (uri != null) {
+            appViewModel.setMediaSeleccionado(uri, mediaTipo);
+        }
+    });
     private final ActivityResultLauncher<Uri> camaraFotos = registerForActivityResult(new ActivityResultContracts.TakePicture(), isSuccess -> {
-                        appViewModel.setMediaSeleccionado(mediaUri, "image");
-                    });
+        if (isSuccess) {
+            appViewModel.setMediaSeleccionado(mediaUri, "image");
+        }
+    });
     private final ActivityResultLauncher<Uri> camaraVideos; {
-        camaraVideos = registerForActivityResult(new ActivityResultContracts.TakeVideo(), isSuccess
-                -> {
-            appViewModel.setMediaSeleccionado(mediaUri, "video");
+        camaraVideos = registerForActivityResult(new ActivityResultContracts.TakeVideo(), uri -> {
+            if (uri != null) {
+                appViewModel.setMediaSeleccionado(mediaUri, "video");
+            }
         });
     }
-    private final ActivityResultLauncher<Intent> grabadoraAudio = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    appViewModel.setMediaSeleccionado(result.getData().getData(),
-                            "audio");
-                }
-            });
     private void seleccionarImagen() {
         mediaTipo = "image";
         galeria.launch("image/*");
@@ -206,10 +233,6 @@ public class NewPostFragment extends Fragment {
     private void seleccionarVideo() {
         mediaTipo = "video";
         galeria.launch("video/*");
-    }
-    private void seleccionarAudio() {
-        mediaTipo = "audio";
-        galeria.launch("audio/*");
     }
     private void tomarFoto() {
         try {
@@ -229,16 +252,30 @@ public class NewPostFragment extends Fragment {
             camaraVideos.launch(mediaUri);
         } catch (IOException e) {}
     }
-    private void grabarAudio() {
-        grabadoraAudio.launch(new
-                Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION));
-    }
-
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+    private void clearImageAndMediaSeleccionado() {
+        // Cambia el valor de mediaSeleccionado
+        appViewModel.setMediaSeleccionado(null, null);
+        // Limpia la imagen en ImageView
+        mediaCardView.setVisibility(View.GONE);
+        mediaImageView.setVisibility(View.GONE);
+        clearMediaButton.setVisibility(View.GONE);
+        // Limpiar la imagen usando Glide
+        Glide.with(this).clear(mediaImageView);
+
+    }
+    private void checkPublishButtonStatus() {
+        String postContent = postConentEditText.getText().toString().trim();
+        if (!postContent.isEmpty() || mediaUri != null) {
+            publishButton.setBackgroundResource(R.drawable.button_purple);
+        } else {
+            publishButton.setBackgroundResource(R.drawable.button_border_purple);
         }
     }
 
