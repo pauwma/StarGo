@@ -2,14 +2,23 @@ package com.example.mp08_firebase;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -30,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,12 +73,16 @@ public class MediaFragment extends Fragment {
     private String postID, postUID, content, media, mediaType, timestamp, userUID;
     private int currentLikes;
     private TextView displayNameTextView, usernameTextView, contentTextView, timestampTextView, likesNumTextView, commentsNumTextView;
+    private EditText commentEditText;
     private CircleImageView profile_image;
     private ImageView mediaImageView;
-    private ImageButton likeButton, commentButton;
-    private ConstraintLayout userLayout, likeLayout, commentLayout;
+    private ImageButton likeButton, commentButton, eraseButton;
+    private Button newCommentButton;
+    private ConstraintLayout userLayout, likeLayout, commentLayout, commentUtilsLayout;
     private RecyclerView commentsRecyclerView;
     private FirebaseFirestore db;
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +108,11 @@ public class MediaFragment extends Fragment {
         likeButton = view.findViewById(R.id.likeButton);
         commentButton = view.findViewById(R.id.commentButton);
         commentsRecyclerView = view.findViewById(R.id.commentsRecyclerView);
+        commentEditText = view.findViewById(R.id.newCommentEditText);
+        commentEditText.clearComposingText();
+        newCommentButton = view.findViewById(R.id.newCommentButton);
+        commentUtilsLayout = view.findViewById(R.id.commentUtilsLayout);
+        eraseButton = view.findViewById(R.id.eraseButton);
         db = FirebaseFirestore.getInstance();
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -151,6 +171,20 @@ public class MediaFragment extends Fragment {
             }
         });
 
+        eraseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commentEditText.setText("");
+                eraseButton.setAlpha(1f);
+            }
+        });
+        newCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addCommentToPost();
+            }
+        });
+
         // ? Imagen
         mediaImageView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -188,41 +222,6 @@ public class MediaFragment extends Fragment {
                 }
             }
         });
-
-        // ? Establecer el número de "comments"
-        FirebaseFirestore.getInstance().collection("posts").document(postID).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@android.support.annotation.NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    int likesCount = task.getResult().size();
-                    if (likesCount <= 0){
-                        commentsNumTextView.setText("0");
-                    } else {
-                        commentsNumTextView.setText(String.valueOf(likesCount));
-                    }
-                } else {
-                    commentsNumTextView.setText("0");
-                }
-            }
-        });
-        commentsRecyclerView.setNestedScrollingEnabled(false);
-        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        if (commentsRecyclerView != null) {
-            getCommentsFromFirebase(postID, new OnCommentsReceivedListener() {
-                @Override
-                public void onCommentsReceived(List<Comment> comments) {
-                    Log.d("getCommentsFromFirebase", "Received " + comments.size() + " comments");
-                    CommentAdapter adapter = new CommentAdapter(getContext(), comments);
-                    commentsRecyclerView.setAdapter(adapter);
-                }
-            });
-        } else {
-            Log.d("getCommentsFromFirebase", "commentsRecyclerView is null");
-        }
-
-
-
         likeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,6 +270,90 @@ public class MediaFragment extends Fragment {
                 });
             }
         });
+
+        // ? Establecer el número de "comments"
+        FirebaseFirestore.getInstance().collection("posts").document(postID).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@android.support.annotation.NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int likesCount = task.getResult().size();
+                    if (likesCount <= 0){
+                        commentsNumTextView.setText("0");
+                    } else {
+                        commentsNumTextView.setText(String.valueOf(likesCount));
+                    }
+                } else {
+                    commentsNumTextView.setText("0");
+                }
+            }
+        });
+        commentsRecyclerView.setNestedScrollingEnabled(false);
+        commentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if (commentsRecyclerView != null) {
+            getCommentsFromFirebase(postID, new OnCommentsReceivedListener() {
+                @Override
+                public void onCommentsReceived(List<Comment> comments) {
+                    Log.d("getCommentsFromFirebase", "Received " + comments.size() + " comments");
+                    CommentAdapter adapter = new CommentAdapter(getContext(), comments);
+                    commentsRecyclerView.setAdapter(adapter);
+                }
+            });
+        } else {
+            Log.d("getCommentsFromFirebase", "commentsRecyclerView is null");
+        }
+
+        commentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
+        commentEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                CharacterCountCircleView characterCountCircleView = view.findViewById(R.id.characterCountCircleView);
+                characterCountCircleView.setCharacterCount(s.length());
+                checkCommentButtonStatus();
+            }
+        });
+        commentEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    commentUtilsLayout.setVisibility(View.VISIBLE);
+                } else {
+                    commentUtilsLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        final View activityRootView = view.getRootView();
+        final boolean[] wasKeyboardOpen = new boolean[1]; // Nuevo estado para rastrear si el teclado estaba abierto
+
+        keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Comprobar si el Fragment todavía está adjunto a su Activity
+                if (!isAdded()) {
+                    return;
+                }
+
+                int heightDiff = activityRootView.getHeight() - view.getHeight();
+                if (heightDiff > dpToPx(getActivity(), 200)) { // Aquí se usa el contexto de la actividad
+                    wasKeyboardOpen[0] = true; // Actualizar el estado a que el teclado está abierto
+                } else {
+                    if (wasKeyboardOpen[0] && commentEditText.hasFocus()) { // Solo si el teclado estaba abierto antes
+                        commentEditText.clearFocus();
+                    }
+                    wasKeyboardOpen[0] = false; // Actualizar el estado a que el teclado está cerrado
+                }
+            }
+        };
+
+
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+
 
     }
 
@@ -341,7 +424,7 @@ public class MediaFragment extends Fragment {
         db.collection("posts")
                 .document(postId)
                 .collection("comments")
-                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -361,5 +444,99 @@ public class MediaFragment extends Fragment {
                 });
     }
 
+    // ? Creación de comentario
+    private void checkCommentButtonStatus() {
+        String postContent = commentEditText.getText().toString().trim();
+        if (!postContent.isEmpty()) {
+            newCommentButton.setBackgroundResource(R.drawable.button_purple);
+            eraseButton.setAlpha(1f);
+        } else {
+            newCommentButton.setBackgroundResource(R.drawable.button_border_purple);
+            eraseButton.setAlpha(0.7f);
+        }
+    }
+    public void addCommentToPost() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Crear un Map para el comentario
+        Map<String, Object> commentData = new HashMap<>();
+        commentData.put("content", commentEditText.getText().toString());
+        commentData.put("uid", userUID);
+        commentData.put("postID", postID);
+        // Obtener el timestamp actual como un long
+        long timestamp = System.currentTimeMillis();
+        commentData.put("timestamp", String.valueOf(timestamp));
+
+        // Añadir el comentario a la subcolección "comments" del post correspondiente
+        // Usa add() en lugar de set() para generar un ID de documento único automáticamente
+        db.collection("posts").document(postID).collection("comments").add(commentData)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Comment successfully written!");
+
+                        // Aquí tienes el ID del comentario
+                        String commentID = documentReference.getId();
+
+                        // Actualiza el documento con el commentID
+                        documentReference.update("commentID", commentID)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully updated with commentID!");
+                                        commentEditText.setText(null);
+                                        hideKeyboard();
+                                        commentEditText.clearFocus();
+                                        String tmpCommentNum = String.valueOf(Integer.valueOf(commentsNumTextView.getText().toString()) + 1);
+                                        commentsNumTextView.setText(tmpCommentNum);
+                                        getCommentsFromFirebase(postID, new OnCommentsReceivedListener() {
+                                            @Override
+                                            public void onCommentsReceived(List<Comment> comments) {
+                                                CommentAdapter adapter = new CommentAdapter(getContext(), comments);
+                                                commentsRecyclerView.setAdapter(adapter);
+                                            }
+                                        });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error updating document", e);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing comment", e);
+                    }
+                });
+    }
+
+
+
+
+
+    // Convertir dp a pixels
+    public static int dpToPx(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Cuando la vista se destruye, se elimina el OnGlobalLayoutListener para evitar fugas de memoria
+        if (getView() != null) {
+            getView().getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }

@@ -266,32 +266,87 @@
             android:id="@+id/topCommentLine"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:background="@color/border2"
             app:layout_constraintBottom_toTopOf="@id/newCommentEditText" />
+
+        <View
+            android:id="@+id/botCommentLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="12dp"
+            android:background="@color/border2"
+            app:layout_constraintTop_toBottomOf="@id/newCommentEditText" />
 
         <EditText
             android:id="@+id/newCommentEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:background="@null"
             android:focusableInTouchMode="true"
             android:fontFamily="@font/montserrat_regular"
             android:gravity="top|left"
             android:hint="Escribe un comentario"
+            android:maxLines="4"
+            android:minHeight="20dp"
             android:textColor="@color/white"
             android:textColorHint="@color/quick_silver"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/commentUtilsLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+        </EditText>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/commentUtilsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <requestFocus />
-        </EditText>
+            <ImageButton
+                android:id="@+id/eraseButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@null"
+                android:alpha="0.7"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/eraser_solid" />
+
+            <com.example.mp08_firebase.CharacterCountCircleView
+                android:id="@+id/characterCountCircleView"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/newCommentButton"
+                app:layout_constraintEnd_toStartOf="@+id/newCommentButton"
+                app:layout_constraintTop_toTopOf="@+id/newCommentButton" />
+
+            <Button
+                android:id="@+id/newCommentButton"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/button_border_purple"
+                android:fontFamily="@font/montserrat_semibold"
+                android:paddingHorizontal="24dp"
+                android:text="Comentar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
