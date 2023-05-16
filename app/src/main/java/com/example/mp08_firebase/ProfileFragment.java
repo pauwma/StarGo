@@ -285,6 +285,11 @@ public class ProfileFragment extends Fragment implements PostsAdapter.OnPostClic
     public void onPostClick(Post post) {
         Bundle bundle = new Bundle();
         bundle.putString("postId", post.getPostId());
+        bundle.putString("uid", post.getUid());
+        bundle.putString("content", post.getContent());
+        bundle.putString("media", post.getMedia());
+        bundle.putString("mediaType", post.getMediaType());
+        bundle.putString("timestamp", String.valueOf(post.getTimestamp()));
         navController.navigate(R.id.mediaFragment, bundle);
     }
 }

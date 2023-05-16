@@ -14,6 +14,7 @@
         android:layout_height="65dp"
         android:outlineAmbientShadowColor="@color/white"
         android:outlineSpotShadowColor="@color/morado"
+        android:background="@drawable/custom_progress_bar"
         android:layout_gravity="center"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,180 +79,185 @@
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profileLayout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/upBar">
-        <!-- USER INFO  -->
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/photoImageView"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/upBar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/userStatsLayout"
-            android:layout_width="0dp"
+            android:id="@+id/profileLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/photoImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/photoImageView"
-            app:layout_constraintTop_toTopOf="@+id/photoImageView">
+            android:visibility="visible">
 
-            <TextView
-                android:id="@+id/postNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="16dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/photoImageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/postNumberText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_regular"
-                android:maxLines="1"
-                android:text="Posts"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/postNumber"
-                app:layout_constraintStart_toStartOf="@+id/postNumber"
-                app:layout_constraintTop_toBottomOf="@+id/postNumber" />
 
-            <TextView
-                android:id="@+id/followersNumber"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/userStatsLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/followingNumber"
-                app:layout_constraintStart_toEndOf="@+id/postNumber"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/followersNumberText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_regular"
-                android:maxLines="1"
-                android:text="Seguidores"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/followersNumber"
-                app:layout_constraintStart_toStartOf="@+id/followersNumber"
-                app:layout_constraintTop_toBottomOf="@+id/followersNumber" />
-
-            <TextView
-                android:id="@+id/followingNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="64dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/photoImageView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/photoImageView"
+                app:layout_constraintTop_toTopOf="@+id/photoImageView">
+
+                <TextView
+                    android:id="@+id/postNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/postNumberText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:maxLines="1"
+                    android:text="Posts"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/postNumber"
+                    app:layout_constraintStart_toStartOf="@+id/postNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/postNumber" />
+
+                <TextView
+                    android:id="@+id/followersNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toStartOf="@+id/followingNumber"
+                    app:layout_constraintStart_toEndOf="@+id/postNumber"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/followersNumberText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:maxLines="1"
+                    android:text="Seguidores"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/followersNumber"
+                    app:layout_constraintStart_toStartOf="@+id/followersNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/followersNumber" />
+
+                <TextView
+                    android:id="@+id/followingNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="64dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/followingNumberText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:maxLines="1"
+                    android:text="Siguiendo"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="@+id/followingNumber"
+                    app:layout_constraintStart_toStartOf="@+id/followingNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/followingNumber" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/followingNumberText"
-                android:layout_width="wrap_content"
+                android:id="@+id/displayNameTextView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_regular"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:maxWidth="240dp"
                 android:maxLines="1"
-                android:text="Siguiendo"
+                android:text=""
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/followingNumber"
-                app:layout_constraintStart_toStartOf="@+id/followingNumber"
-                app:layout_constraintTop_toBottomOf="@+id/followingNumber" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/photoImageView"
+                app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+
+            <TextView
+                android:id="@+id/descTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:maxLines="5"
+                android:text=""
+                android:textColor="@color/quick_silver"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/displayNameTextView"
+                app:layout_constraintTop_toBottomOf="@+id/displayNameTextView" />
+
+
+            <!-- BOTONES -->
+            <LinearLayout
+                android:id="@+id/buttonProfileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/descTextView">
+
+                <Button
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_square_grey"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:paddingHorizontal="24dp"
+                    android:text="Editar perfil"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonProfileLayout" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/displayNameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:maxWidth="240dp"
-            android:maxLines="1"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/photoImageView"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
-
-        <TextView
-            android:id="@+id/descTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:maxLines="5"
-            android:text=""
-            android:textColor="@color/quick_silver"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/displayNameTextView"
-            app:layout_constraintTop_toBottomOf="@+id/displayNameTextView" />
-
-
-        <!-- BOTONES -->
-        <LinearLayout
-            android:id="@+id/buttonProfileLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/descTextView">
-
-            <Button
-                android:id="@+id/editProfileButton"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_square_grey"
-                android:fontFamily="@font/montserrat_semibold"
-                android:paddingHorizontal="24dp"
-                android:text="Editar perfil"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileLayout" />
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
