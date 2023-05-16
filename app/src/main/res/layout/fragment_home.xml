@@ -26,6 +26,7 @@
         android:layout_height="65dp"
         android:outlineAmbientShadowColor="@color/white"
         android:outlineSpotShadowColor="@color/morado"
+        android:background="@drawable/custom_progress_bar"
         android:layout_gravity="center"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
