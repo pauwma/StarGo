@@ -2,166 +2,89 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".BuscadorFragment">
+    android:background="@color/background">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:background="@drawable/custom_progress_bar"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="0dp"
         android:layout_height="38dp"
-        android:layout_marginStart="24dp"
-
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/custom_edit_text"
         android:drawableStart="@drawable/search_icon"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:hint="Buscar"
+        android:fontFamily="@font/montserrat_regular"
+        android:hint="Buscar usuarios..."
         android:paddingStart="15dp"
+        android:textColorHint="#8FFFFFFF"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+    <TextView
+        android:id="@+id/searchResultsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="Resultados de la búsqueda"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/searchEditText"
+        app:layout_constraintTop_toBottomOf="@+id/searchEditText" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchUsersRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchResultsLabel"
+        tools:listitem="@layout/item_user" />
+
+    <View
+        android:id="@+id/viewSearchUsers"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/searchUsersRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/postsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/viewSearchUsers"
+        android:layout_marginTop="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchEditText"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador1"
-                    android:scaleType="fitCenter"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador2"
-                    android:scaleType="fitCenter"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador3"
-                    android:scaleType="fitCenter"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador4"
-                    android:scaleType="fitCenter"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador5"
-                    android:scaleType="fitCenter"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador6"
-                    android:scaleType="fitCenter"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador7"
-                    android:scaleType="fitCenter"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador8"
-                    android:scaleType="fitCenter"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador5"
-                    android:scaleType="fitCenter"/>
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:layout_marginHorizontal="5dp"
-                    app:shapeAppearanceOverlay="@style/roundCornersImagesBuscador"
-                    android:src="@drawable/img_buscador1"
-                    android:scaleType="fitCenter"/>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/viewSearchUsers" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
