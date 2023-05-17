@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         super.onStart();
         if (adapter != null) {
             adapter.startListening();
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -99,6 +100,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
             adapter.stopListening();
         }
     }
+
 
     @Override
     public void onPostClick(Post post) {
