@@ -185,4 +185,9 @@
         android:name="com.example.mp08_firebase.DetailedImageFragment"
         android:label="fragment_detailed_image"
         tools:layout="@layout/fragment_detailed_image" />
+    <fragment
+        android:id="@+id/chatAstraFragment"
+        android:name="com.example.mp08_firebase.ChatAstraFragment"
+        android:label="fragment_chat_astra"
+        tools:layout="@layout/fragment_chat_astra" />
 </navigation>

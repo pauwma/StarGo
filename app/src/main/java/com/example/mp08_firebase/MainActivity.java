@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     // Lista con los ID de los fragmentos que no deben mostrar el BottomNavigationView
-    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.mediaFragment ,R.id.detailedImageFragment ,R.id.editarPerfilFragment, R.id.startFragment, R.id.chatFragment, R.id.chatsHomeFragment, R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment, R.id.seleccionViajeFragment, R.id.reservaViajeFragment);
+    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.chatAstraFragment ,R.id.mediaFragment ,R.id.detailedImageFragment ,R.id.editarPerfilFragment, R.id.startFragment, R.id.chatFragment, R.id.chatsHomeFragment, R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment, R.id.seleccionViajeFragment, R.id.reservaViajeFragment);
 
     private FirebaseAuth mAuth;
 

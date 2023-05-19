@@ -33,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +64,7 @@ public class NewPostFragment extends Fragment {
     String mediaTipo;
     private EditText editText;
     private ImageView mediaImageView;
+    private VideoView mediaVideoView;
     private ImageButton clearMediaButton;
     private MaterialCardView mediaCardView;
 
@@ -86,6 +88,7 @@ public class NewPostFragment extends Fragment {
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         mediaImageView = view.findViewById(R.id.mediaImageView);
+        mediaVideoView = view.findViewById(R.id.mediaVideoView);
         mediaCardView = view.findViewById(R.id.mediaCardView);
 
         publishButton = view.findViewById(R.id.publishButton);
@@ -139,12 +142,37 @@ public class NewPostFragment extends Fragment {
         appViewModel.mediaSeleccionado.observe(getViewLifecycleOwner(), media -> {
             this.mediaUri = media.uri;
             this.mediaTipo = media.tipo;
-            Glide.with(this).load(media.uri).into(mediaImageView);
-            mediaImageView.setVisibility(View.VISIBLE);
+
+            if (mediaTipo == null || mediaUri == null){
+                return;
+            }
+
+            if (mediaTipo.equals("image")) {
+                // Cargar la imagen usando Glide
+                Glide.with(this).load(media.uri).into(mediaImageView);
+
+                // Mostrar la ImageView y esconder la VideoView
+                mediaImageView.setVisibility(View.VISIBLE);
+                mediaVideoView.setVisibility(View.GONE);
+            } else if (mediaTipo.equals("video")) {
+                // Cargar y reproducir el video
+                mediaVideoView.setVideoURI(media.uri);
+                mediaVideoView.start();
+
+                // Mostrar la VideoView y esconder la ImageView
+                mediaVideoView.setVisibility(View.VISIBLE);
+                mediaImageView.setVisibility(View.GONE);
+            } else {
+                // En caso de que el tipo de medio no sea ni imagen ni video
+                mediaImageView.setVisibility(View.GONE);
+                mediaVideoView.setVisibility(View.GONE);
+            }
+
             clearMediaButton.setVisibility(View.VISIBLE);
             mediaCardView.setVisibility(View.VISIBLE);
             checkPublishButtonStatus();
         });
+
     }
 
     private List<String> extractHashtags(String content) {
@@ -171,6 +199,7 @@ public class NewPostFragment extends Fragment {
         return true;
     }
     private void postUpload() {
+        publishButton.setEnabled(false);
         String postContent = postConentEditText.getText().toString().trim();
         if (mediaUri != null) {
             mediaToFirestore(postContent);
@@ -196,6 +225,7 @@ public class NewPostFragment extends Fragment {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        publishButton.setEnabled(true);
                                         navController.popBackStack();
                                         clearImageAndMediaSeleccionado();
                                     }
@@ -265,6 +295,9 @@ public class NewPostFragment extends Fragment {
         // Limpia la imagen en ImageView
         mediaCardView.setVisibility(View.GONE);
         mediaImageView.setVisibility(View.GONE);
+        mediaImageView.setImageDrawable(null);
+        mediaVideoView.setVisibility(View.GONE);
+        mediaVideoView.stopPlayback();
         clearMediaButton.setVisibility(View.GONE);
         // Limpiar la imagen usando Glide
         Glide.with(this).clear(mediaImageView);

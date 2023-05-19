@@ -78,4 +78,7 @@ dependencies {
     // ? Visor de imagenes
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
+    // ? OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
 }

@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         addButtonB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.newPostFragment);
+                navController.navigate(R.id.chatAstraFragment);
                 fabMenu.collapse();
             }
         });

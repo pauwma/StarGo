@@ -19,6 +19,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     private static final int MESSAGE_TYPE_SENT = 0;
     private static final int MESSAGE_TYPE_RECEIVED = 1;
+    private static final int MESSAGE_TYPE_ASTRA = 2;
 
     public MessagesAdapter() {
         this.messages = new ArrayList<>();
@@ -39,8 +40,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         View view;
         if (viewType == MESSAGE_TYPE_SENT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_sended, parent, false);
-        } else {
+        } else if (viewType == MESSAGE_TYPE_RECEIVED) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_received, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_astra, parent, false);
         }
         return new ViewHolder(view);
     }
@@ -65,6 +68,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         if (message.getSenderId().equals(currentUserId)) {
             return MESSAGE_TYPE_SENT;
         } else {
+            if (message.getSenderId().equals("astra")){
+                return MESSAGE_TYPE_ASTRA;
+            }
             return MESSAGE_TYPE_RECEIVED;
         }
     }
