@@ -72,9 +72,9 @@ public class ChatAstraFragment extends Fragment {
             String messageContent = messageInput.getText().toString().trim();
             if (!messageContent.isEmpty()) {
                 sendMessage(messageContent);
-                callAPI(messageContent); // Llama a la API con el contenido del mensaje del usuario
+                callAPI(messageContent);
                 messageInput.setText("");
-                sendMessageButton.setEnabled(false); // Desactiva el botón de enviar
+                sendMessageButton.setEnabled(false);
             }
         });
 
@@ -131,10 +131,9 @@ public class ChatAstraFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Elimina el mensaje de "está escribiendo..."
                 messagesAdapter.getMessages().remove(messagesAdapter.getMessages().size() - 1);
 
-                String startingMessage = "Hola, soy Astra, tu asistente personal de viajes. Estoy aquí para proporcionarte recomendaciones y ayudarte a planificar tu próximo viaje. ¿Cómo puedo asistirte hoy?";
+                String startingMessage = "Hola, soy Astra, tu asistente personal de viajes. Estoy aquí para proporcionarte recomendaciones y ayudarte a planificar tu próximo viaje. ¿Cómo puedo ayudarte?";
                 messagesAdapter.getMessages().add(new Message(generateMessageId(), startingMessage, "astra", System.currentTimeMillis()));
                 messagesAdapter.notifyDataSetChanged();
             }
@@ -160,9 +159,9 @@ public class ChatAstraFragment extends Fragment {
 
         conversationHistory.add(newMessage);
     }
-    private void callAPI(String question){
+    private void callAPI(String question) {
         long timestamp = System.currentTimeMillis();
-        messagesAdapter.getMessages().add(new Message(generateMessageId(),"Escribiendo... ", "astra", timestamp));
+        messagesAdapter.getMessages().add(new Message(generateMessageId(), "Escribiendo...", "astra", timestamp));
 
         JSONArray jsonArray = new JSONArray();
         for (Message message : conversationHistory) {
@@ -178,7 +177,7 @@ public class ChatAstraFragment extends Fragment {
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("model","gpt-3.5-turbo");
+            jsonBody.put("model", "gpt-3.5-turbo");
             jsonBody.put("messages", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -187,20 +186,20 @@ public class ChatAstraFragment extends Fragment {
         RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/chat/completions")
-                .header("Authorization","Bearer " + apiKey)
+                .header("Authorization", "Bearer " + apiKey)
                 .post(body)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                addResponse("Failed to load response due to "+e.getMessage(), "astra");
+                addResponse("Failed to load response due to " + e.getMessage(), "astra");
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    JSONObject  jsonObject = null;
+                if (response.isSuccessful()) {
+                    JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(response.body().string());
                         JSONArray jsonArray = jsonObject.getJSONArray("choices");
@@ -209,13 +208,14 @@ public class ChatAstraFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     String errorString = response.body() != null ? response.body().string() : "No details provided";
                     addResponse("Failed to load response due to " + errorString, "astra");
                 }
             }
         });
     }
+
     private void addResponse(String response, String senderId) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
