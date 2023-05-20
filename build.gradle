@@ -13,10 +13,20 @@ buildscript {
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-
 plugins {
     id 'com.android.application' version '8.0.1' apply false
     id 'com.android.library' version '8.0.1' apply false
+}
+
+def properties = new Properties()
+def propertiesFile = rootProject.file('apikey.properties')
+if (propertiesFile.exists()) {
+    properties.load(new FileInputStream(propertiesFile))
+}
+
+// luego pasa las propiedades al archivo build.gradle del módulo app:
+ext {
+    OPEN_AI_API_KEY = properties.getProperty('OPEN_AI_API_KEY', '')
 }
 
 task clean(type: Delete) {

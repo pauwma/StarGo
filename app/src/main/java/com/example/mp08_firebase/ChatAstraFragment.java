@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
@@ -33,6 +35,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import com.example.mp08_firebase.BuildConfig;
@@ -49,6 +52,7 @@ public class ChatAstraFragment extends Fragment {
     private OkHttpClient client;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private String apiKey = BuildConfig.OPEN_AI_API_KEY;
+    private List<Message> conversationHistory = new ArrayList<>();
 
 
     @Override
@@ -138,6 +142,11 @@ public class ChatAstraFragment extends Fragment {
         return UUID.randomUUID().toString();
     }
     private void sendMessage(String messageContent) {
+        if (conversationHistory.size() >= 10) {
+            Toast.makeText(getContext(), "Límite de 5 mensajes enviados.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         long timestamp = System.currentTimeMillis();
         String messageId = generateMessageId();
 
@@ -146,19 +155,23 @@ public class ChatAstraFragment extends Fragment {
         messages.add(newMessage);
         messagesAdapter.setMessages(messages);
         messagesRecyclerView.scrollToPosition(messages.size() - 1);
+
+        conversationHistory.add(newMessage);
     }
     private void callAPI(String question){
         long timestamp = System.currentTimeMillis();
         messagesAdapter.getMessages().add(new Message(generateMessageId(),"Escribiendo... ", "astra", timestamp));
 
         JSONArray jsonArray = new JSONArray();
-        JSONObject message = new JSONObject();
-        try {
-            message.put("role", "user");
-            message.put("content", question);
-            jsonArray.put(message);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (Message message : conversationHistory) {
+            JSONObject jsonMessage = new JSONObject();
+            try {
+                jsonMessage.put("role", message.getSenderId().equals(currentUserId) ? "user" : "assistant");
+                jsonMessage.put("content", message.getContent());
+                jsonArray.put(jsonMessage);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         JSONObject jsonBody = new JSONObject();
