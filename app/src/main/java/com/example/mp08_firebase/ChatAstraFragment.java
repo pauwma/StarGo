@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import com.example.mp08_firebase.BuildConfig;
 
 
@@ -58,7 +60,7 @@ public class ChatAstraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_astra, container, false);
-        client = new OkHttpClient();
+        client = new OkHttpClient().newBuilder().callTimeout(30, TimeUnit.SECONDS).build();
         messagesRecyclerView = view.findViewById(R.id.messages_recyclerview);
         messageInput = view.findViewById(R.id.message_input);
         sendMessageButton = view.findViewById(R.id.send_message_button);
