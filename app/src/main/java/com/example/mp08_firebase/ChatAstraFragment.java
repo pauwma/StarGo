@@ -72,7 +72,6 @@ public class ChatAstraFragment extends Fragment {
             String messageContent = messageInput.getText().toString().trim();
             if (!messageContent.isEmpty()) {
                 sendMessage(messageContent);
-                callAPI(messageContent);
                 messageInput.setText("");
                 sendMessageButton.setEnabled(false);
             }
@@ -143,7 +142,7 @@ public class ChatAstraFragment extends Fragment {
         return UUID.randomUUID().toString();
     }
     private void sendMessage(String messageContent) {
-        if (conversationHistory.size() >= 10) {
+        if (conversationHistory.size() >= 5) {
             Toast.makeText(getContext(), "Límite de 5 mensajes enviados.", Toast.LENGTH_LONG).show();
             return;
         }
@@ -158,6 +157,8 @@ public class ChatAstraFragment extends Fragment {
         messagesRecyclerView.scrollToPosition(messages.size() - 1);
 
         conversationHistory.add(newMessage);
+
+        callAPI(messageContent);
     }
     private void callAPI(String question) {
         long timestamp = System.currentTimeMillis();
