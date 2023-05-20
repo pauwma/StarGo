@@ -8,6 +8,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -33,9 +35,8 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import com.example.mp08_firebase.BuildConfig;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.OkHttpClient;
 
 public class ChatAstraFragment extends Fragment {
 
@@ -44,22 +45,19 @@ public class ChatAstraFragment extends Fragment {
     private EditText messageInput;
     private ImageButton sendMessageButton;
     private MessagesAdapter messagesAdapter;
-    private TextView titleUsername;
-    private CircleImageView userImage;
     private String currentUserId;
     private OkHttpClient client;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private String apiKey = BuildConfig.OPEN_AI_API_KEY;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_chat_astra, container, false);
         client = new OkHttpClient();
         messagesRecyclerView = view.findViewById(R.id.messages_recyclerview);
         messageInput = view.findViewById(R.id.message_input);
         sendMessageButton = view.findViewById(R.id.send_message_button);
-        titleUsername = view.findViewById(R.id.titleUsername);
-        userImage = view.findViewById(R.id.userImage);
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         setupMessagesList();
@@ -73,6 +71,7 @@ public class ChatAstraFragment extends Fragment {
                 sendMessageButton.setEnabled(false); // Desactiva el botón de enviar
             }
         });
+
 
         // ? Flecha según contenido
         messageInput.addTextChangedListener(new TextWatcher() {
@@ -118,9 +117,26 @@ public class ChatAstraFragment extends Fragment {
         layoutManager.setStackFromEnd(true);
         messagesRecyclerView.setLayoutManager(layoutManager);
         messagesRecyclerView.setAdapter(messagesAdapter);
+
+        String typingMessage = "Escribiendo... ";
+        messagesAdapter.getMessages().add(new Message(generateMessageId(), typingMessage, "astra", System.currentTimeMillis()));
+        messagesAdapter.notifyDataSetChanged();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Elimina el mensaje de "está escribiendo..."
+                messagesAdapter.getMessages().remove(messagesAdapter.getMessages().size() - 1);
+
+                String startingMessage = "Hola, soy Astra, tu asistente personal de viajes. Estoy aquí para proporcionarte recomendaciones y ayudarte a planificar tu próximo viaje. ¿Cómo puedo asistirte hoy?";
+                messagesAdapter.getMessages().add(new Message(generateMessageId(), startingMessage, "astra", System.currentTimeMillis()));
+                messagesAdapter.notifyDataSetChanged();
+            }
+        }, 500);
     }
-
-
+    private String generateMessageId() {
+        return UUID.randomUUID().toString();
+    }
     private void sendMessage(String messageContent) {
         long timestamp = System.currentTimeMillis();
         String messageId = generateMessageId();
@@ -131,13 +147,9 @@ public class ChatAstraFragment extends Fragment {
         messagesAdapter.setMessages(messages);
         messagesRecyclerView.scrollToPosition(messages.size() - 1);
     }
-    private String generateMessageId() {
-        return UUID.randomUUID().toString();
-    }
-
     private void callAPI(String question){
         long timestamp = System.currentTimeMillis();
-        messagesAdapter.getMessages().add(new Message(generateMessageId(),"Typing... ", "astra", timestamp));
+        messagesAdapter.getMessages().add(new Message(generateMessageId(),"Escribiendo... ", "astra", timestamp));
 
         JSONArray jsonArray = new JSONArray();
         JSONObject message = new JSONObject();
@@ -151,7 +163,7 @@ public class ChatAstraFragment extends Fragment {
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("model","gpt-4");
+            jsonBody.put("model","gpt-3.5-turbo");
             jsonBody.put("messages", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -160,7 +172,7 @@ public class ChatAstraFragment extends Fragment {
         RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/chat/completions")
-                .header("Authorization","Bearer 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")
+                .header("Authorization","Bearer " + apiKey)
                 .post(body)
                 .build();
 
@@ -189,7 +201,6 @@ public class ChatAstraFragment extends Fragment {
             }
         });
     }
-
     private void addResponse(String response, String senderId) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -200,6 +211,7 @@ public class ChatAstraFragment extends Fragment {
                 messages.add(newMessage);
                 messagesAdapter.setMessages(messages);
                 messagesRecyclerView.scrollToPosition(messages.size() - 1);
+                sendMessageButton.setEnabled(true);
             }
         });
     }
