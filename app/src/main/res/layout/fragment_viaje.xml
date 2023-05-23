@@ -9,30 +9,32 @@
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/upBar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="parent">
 
 
         <EditText
-            android:id="@+id/searchSettings"
+            android:id="@+id/searchEditText"
             android:layout_width="0dp"
             android:layout_height="38dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/rounded_borders"
-            android:textColor="@color/white"
-            android:textColorHint="#8FFFFFFF"
-            android:drawableStart="@drawable/search_outline_icon"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/custom_edit_text"
+            android:drawableStart="@drawable/search_icon"
             android:drawablePadding="10dp"
             android:ems="10"
+            android:fontFamily="@font/montserrat_regular"
             android:hint="Buscar en el infinito..."
             android:paddingStart="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColorHint="#8FFFFFFF"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -41,14 +43,14 @@
         style="@style/title1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Categorías"
         android:textColor="@color/white"
-        android:textSize="24dp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/upBar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/planetRecyclerView"
@@ -58,6 +60,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categoriasTextView" />
+
+    <TextView
+        android:id="@+id/recomendadoTextView"
+        style="@style/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Recomendado"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/categoriasTextView"
+        app:layout_constraintTop_toBottomOf="@+id/planetRecyclerView" />
 
     <!--
     <HorizontalScrollView

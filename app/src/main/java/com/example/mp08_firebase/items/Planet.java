@@ -55,15 +55,15 @@ public class Planet {
         return image;
     }
 
-    public void setImage(String imageUrl) {
-        this.image = imageUrl;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getBanner() {
         return banner;
     }
 
-    public void setBanner(String bannerUrl) {
-        this.banner = bannerUrl;
+    public void setBanner(String banner) {
+        this.banner = banner;
     }
 }

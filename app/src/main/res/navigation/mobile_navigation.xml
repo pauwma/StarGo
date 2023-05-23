@@ -90,6 +90,9 @@
         <action
             android:id="@+id/action_viajeFragment_to_seleccionViajeFragment"
             app:destination="@id/seleccionViajeFragment" />
+        <action
+            android:id="@+id/action_viajeFragment_to_planetFragment"
+            app:destination="@id/planetFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -190,4 +193,28 @@
         android:name="com.example.mp08_firebase.ChatAstraFragment"
         android:label="fragment_chat_astra"
         tools:layout="@layout/fragment_chat_astra" />
+    <fragment
+        android:id="@+id/planetFragment"
+        android:name="com.example.mp08_firebase.PlanetFragment"
+        android:label="fragment_planet"
+        tools:layout="@layout/fragment_planet">
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+        <argument
+            android:name="temperature"
+            app:argType="string" />
+        <argument
+            android:name="gravity"
+            app:argType="string" />
+        <argument
+            android:name="image"
+            app:argType="string" />
+        <argument
+            android:name="banner"
+            app:argType="string" />
+    </fragment>
 </navigation>
