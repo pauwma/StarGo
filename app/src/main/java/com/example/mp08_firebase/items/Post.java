@@ -1,4 +1,4 @@
-package com.example.mp08_firebase;
+package com.example.mp08_firebase.items;
 
 import java.util.Date;
 import java.util.List;

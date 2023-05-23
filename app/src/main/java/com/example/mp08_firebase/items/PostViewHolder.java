@@ -1,4 +1,4 @@
-package com.example.mp08_firebase;
+package com.example.mp08_firebase.items;
 
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.VideoView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mp08_firebase.R;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
 

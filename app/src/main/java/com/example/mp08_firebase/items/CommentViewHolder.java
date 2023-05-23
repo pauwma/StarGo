@@ -1,9 +1,12 @@
-package com.example.mp08_firebase;
+package com.example.mp08_firebase.items;
 
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mp08_firebase.R;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {

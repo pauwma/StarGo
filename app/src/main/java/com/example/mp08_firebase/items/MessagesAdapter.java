@@ -1,4 +1,4 @@
-package com.example.mp08_firebase;
+package com.example.mp08_firebase.items;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mp08_firebase.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

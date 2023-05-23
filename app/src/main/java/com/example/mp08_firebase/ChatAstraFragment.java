@@ -17,9 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mp08_firebase.items.Message;
+import com.example.mp08_firebase.items.MessagesAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
@@ -39,8 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import com.example.mp08_firebase.BuildConfig;
 
 
 public class ChatAstraFragment extends Fragment {
@@ -132,7 +131,7 @@ public class ChatAstraFragment extends Fragment {
             public void run() {
                 messagesAdapter.getMessages().remove(messagesAdapter.getMessages().size() - 1);
 
-                String startingMessage = "Hola, soy Astra, tu asistente personal de viajes. Estoy aquí para proporcionarte recomendaciones y ayudarte a planificar tu próximo viaje. ¿Cómo puedo ayudarte?";
+                String startingMessage = "Astra, tu asistente personal de viajes, está listo para recomendarte y asistirte en la planificación de tu viaje. ¿Cómo puedo ayudarte? ✨😊";
                 messagesAdapter.getMessages().add(new Message(generateMessageId(), startingMessage, "astra", System.currentTimeMillis()));
                 messagesAdapter.notifyDataSetChanged();
             }

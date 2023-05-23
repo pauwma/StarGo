@@ -1,4 +1,4 @@
-package com.example.mp08_firebase;
+package com.example.mp08_firebase.items;
 
 public class Comment {
     private String content, postID, commentID, uid;

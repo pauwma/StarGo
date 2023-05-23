@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.mp08_firebase.items.Post;
+
 public class AppViewModel extends AndroidViewModel {
     public static class Media {
         public Uri uri;
