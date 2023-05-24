@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.example.mp08_firebase.items.Planet;
 import com.example.mp08_firebase.items.PlanetAdapter;
+import com.example.mp08_firebase.items.Trip;
+import com.example.mp08_firebase.items.TripAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,8 +44,10 @@ public class ViajeFragment extends Fragment {
 
     private NavController navController;
     private List<Planet> planetList = new ArrayList<>();
-    private RecyclerView planetRecyclerView;
+    private List<Trip> tripList = new ArrayList<>();
+    private RecyclerView planetRecyclerView, tripsRecyclerView;
     private PlanetAdapter planetAdapter;
+    private TripAdapter tripAdapter;
 
 
     @Override
@@ -77,7 +81,6 @@ public class ViajeFragment extends Fragment {
                             planetList.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Planet planet = document.toObject(Planet.class);
-                                System.out.println(planet.getImage());
                                 planetList.add(planet);
                             }
                             planetAdapter.notifyDataSetChanged();
@@ -87,7 +90,42 @@ public class ViajeFragment extends Fragment {
                         }
                     }
                 });
+
+
+        tripsRecyclerView = view.findViewById(R.id.tripsRecyclerView);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        tripsRecyclerView.setLayoutManager(layoutManager2);
+
+        tripAdapter = new TripAdapter(getContext(), tripList);
+        tripsRecyclerView.setAdapter(tripAdapter);
+
+        db.collection("trips")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            tripList.clear();
+                            int counter = 0;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if(counter < 5) {
+                                    Trip trip = document.toObject(Trip.class);
+                                    tripList.add(trip);
+                                    counter++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            tripAdapter.notifyDataSetChanged();
+                        } else {
+                            // Algo salió mal, muestra un mensaje al usuario
+                            Toast.makeText(getContext(), "No se han cargado los viajes", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
+
 }
 
 class StartSpaceItemDecoration extends RecyclerView.ItemDecoration {

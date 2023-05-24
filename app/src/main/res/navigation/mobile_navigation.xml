@@ -85,14 +85,11 @@
         android:label="fragment_viaje"
         tools:layout="@layout/fragment_viaje" >
         <action
-            android:id="@+id/action_viajeFragment_to_planetaViajesFragment"
-            app:destination="@id/planetaViajesFragment" />
-        <action
-            android:id="@+id/action_viajeFragment_to_seleccionViajeFragment"
-            app:destination="@id/seleccionViajeFragment" />
-        <action
             android:id="@+id/action_viajeFragment_to_planetFragment"
             app:destination="@id/planetFragment" />
+        <action
+            android:id="@+id/action_viajeFragment_to_tripFragment"
+            app:destination="@id/tripFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -127,38 +124,6 @@
         android:name="userUID"
         app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/seleccionViajeFragment"
-        android:name="com.example.mp08_firebase.SeleccionViajeFragment"
-        android:label="fragment_seleccion_viaje"
-        tools:layout="@layout/fragment_seleccion_viaje" >
-        <action
-            android:id="@+id/action_seleccionViajeFragment_to_reservaViajeFragment"
-            app:destination="@id/reservaViajeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/planetaViajesFragment"
-        android:name="com.example.mp08_firebase.PlanetaViajesFragment"
-        android:label="fragment_planeta_viajes"
-        tools:layout="@layout/fragment_planeta_viajes" >
-        <action
-            android:id="@+id/action_planetaViajesFragment_to_seleccionViajeFragment"
-            app:destination="@id/seleccionViajeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/reservaViajeFragment"
-        android:name="com.example.mp08_firebase.ReservaViajeFragment"
-        android:label="fragment_reserva_viaje"
-        tools:layout="@layout/fragment_reserva_viaje" >
-        <action
-            android:id="@+id/action_reservaViajeFragment_to_ticketViajeFragment"
-            app:destination="@id/ticketViajeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/ticketViajeFragment"
-        android:name="com.example.mp08_firebase.TicketViajeFragment"
-        android:label="fragment_ticket_viaje"
-        tools:layout="@layout/fragment_ticket_viaje" />
     <fragment
         android:id="@+id/editarPerfilFragment"
         android:name="com.example.mp08_firebase.EditarPerfilFragment"
@@ -217,4 +182,9 @@
             android:name="banner"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/tripFragment"
+        android:name="com.example.mp08_firebase.TripFragment"
+        android:label="fragment_trip"
+        tools:layout="@layout/fragment_trip" />
 </navigation>
