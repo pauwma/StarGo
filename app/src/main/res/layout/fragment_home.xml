@@ -44,38 +44,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/multiple_actions"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        app:fab_addButtonColorNormal="@color/morado"
-        app:fab_addButtonColorPressed="@color/rosa"
-        app:fab_addButtonPlusIconColor="@color/white"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/morado"
+        android:src="@drawable/plus_solid"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/morado"
-            app:fab_colorPressed="@color/rosa"
-            app:fab_icon="@drawable/share_icon"
-            app:fab_size="mini"
-            app:fab_title="Action A" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/morado"
-            app:fab_colorPressed="@color/rosa"
-            app:fab_icon="@drawable/share_icon"
-            app:fab_size="mini"
-            app:fab_title="Action with a very long name that won\'t fit on the screen" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

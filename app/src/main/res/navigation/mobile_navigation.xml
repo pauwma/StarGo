@@ -186,5 +186,27 @@
         android:id="@+id/tripFragment"
         android:name="com.example.mp08_firebase.TripFragment"
         android:label="fragment_trip"
-        tools:layout="@layout/fragment_trip" />
+        tools:layout="@layout/fragment_trip" >
+        <action
+            android:id="@+id/action_tripFragment_to_cabineFragment"
+            app:destination="@id/cabineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reserveFragment"
+        android:name="com.example.mp08_firebase.ReserveFragment"
+        android:label="fragment_reserve"
+        tools:layout="@layout/fragment_reserve">
+        <argument
+            android:name="planetName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/cabineFragment"
+        android:name="com.example.mp08_firebase.CabineFragment"
+        android:label="fragment_cabine"
+        tools:layout="@layout/fragment_cabine" >
+        <action
+            android:id="@+id/action_cabineFragment_to_reserveFragment"
+            app:destination="@id/reserveFragment" />
+    </fragment>
 </navigation>

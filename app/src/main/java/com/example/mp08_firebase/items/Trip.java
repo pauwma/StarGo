@@ -6,36 +6,39 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class Trip implements Parcelable {
+    private String id;
     private String name;
     private String departurePlanet;
     private String arrivalPlanet;
     private String company;
     private String spacecraft;
     private String spacecraftDescription;
-    private String duration;
     private String description;
-    private String departureDate;
-    private String returnDate;
-    private int capacity;
+    private String duration;
     private float price;
     private ArrayList<String> images;
 
     public Trip(){}
 
-    public Trip(String name,String departurePlanet, String arrivalPlanet, String company, String spacecraft, String spacecraftDescription, String duration, String description, String departureDate, String returnDate, int capacity, float price, ArrayList<String> images) {
+    public Trip(String name,String departurePlanet, String arrivalPlanet, String company, String spacecraft, String spacecraftDescription, String description, String duration, float price, ArrayList<String> images) {
         this.name = name;
         this.departurePlanet = departurePlanet;
         this.arrivalPlanet = arrivalPlanet;
         this.company = company;
         this.spacecraft = spacecraft;
         this.spacecraftDescription = spacecraftDescription;
-        this.duration = duration;
         this.description = description;
-        this.departureDate = departureDate;
-        this.returnDate = returnDate;
-        this.capacity = capacity;
+        this.duration = duration;
         this.price = price;
         this.images = images;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -86,14 +89,6 @@ public class Trip implements Parcelable {
         this.spacecraftDescription = spacecraftDescription;
     }
 
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -102,28 +97,12 @@ public class Trip implements Parcelable {
         this.description = description;
     }
 
-    public String getDepartureDate() {
-        return departureDate;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setDepartureDate(String departureDate) {
-        this.departureDate = departureDate;
-    }
-
-    public String getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(String returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public float getPrice() {
@@ -150,11 +129,8 @@ public class Trip implements Parcelable {
         company = in.readString();
         spacecraft = in.readString();
         spacecraftDescription = in.readString();
-        duration = in.readString();
         description = in.readString();
-        departureDate = in.readString();
-        returnDate = in.readString();
-        capacity = in.readInt();
+        duration = in.readString();
         price = in.readFloat();
         images = in.createStringArrayList();
     }
@@ -184,11 +160,8 @@ public class Trip implements Parcelable {
         parcel.writeString(company);
         parcel.writeString(spacecraft);
         parcel.writeString(spacecraftDescription);
-        parcel.writeString(duration);
         parcel.writeString(description);
-        parcel.writeString(departureDate);
-        parcel.writeString(returnDate);
-        parcel.writeInt(capacity);
+        parcel.writeString(duration);
         parcel.writeFloat(price);
         parcel.writeStringList(images);
     }

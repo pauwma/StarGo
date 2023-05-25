@@ -102,6 +102,7 @@ public class PlanetFragment extends Fragment {
                                                     tripList.clear();
                                                     for (QueryDocumentSnapshot tripDocument : task.getResult()) {
                                                         Trip trip = tripDocument.toObject(Trip.class);
+                                                        trip.setId(document.getId());
                                                         tripList.add(trip);
                                                     }
                                                     tripAdapter.notifyDataSetChanged();

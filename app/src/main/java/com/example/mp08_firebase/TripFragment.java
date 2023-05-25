@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,9 @@ import com.example.mp08_firebase.items.Planet;
 import com.example.mp08_firebase.items.Trip;
 import com.example.mp08_firebase.items.TripAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,7 +39,10 @@ import java.util.List;
 public class TripFragment extends Fragment {
 
     private NavController navController;
-    private TextView tituloTextView, descriptionTextView, priceTextView, lowPriceTextView;
+    private Trip trip;
+    private Planet arrivalPlanet;
+    private TextView tituloTextView, planetTextView, descriptionTextView,tituloSpacecraftTextView, descriptionSpacecraftTextView, priceTextView, lowPriceTextView;
+    private ImageView mediaImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,32 +55,16 @@ public class TripFragment extends Fragment {
         navController = Navigation.findNavController(view);
 
         tituloTextView = view.findViewById(R.id.tituloTextView);
+        planetTextView = view.findViewById(R.id.planetTextView);
         descriptionTextView = view.findViewById(R.id.descriptionTextView);
+        mediaImageView = view.findViewById(R.id.mediaImageView);
+        tituloSpacecraftTextView = view.findViewById(R.id.tituloSpacecraftTextView);
+        descriptionSpacecraftTextView = view.findViewById(R.id.descriptionSpacecraftTextView);
         priceTextView = view.findViewById(R.id.priceTextView);
         lowPriceTextView = view.findViewById(R.id.lowPriceTextView);
 
         if (getArguments() != null) {
-            Trip trip = getArguments().getParcelable("trip");
-
-            tituloTextView.setText(trip.getName());
-            descriptionTextView.setText(trip.getDescription());
-
-            String priceStr = String.valueOf(trip.getPrice());
-            try {
-                String[] priceParts = priceStr.split("\\.");
-                if (priceParts.length == 2) {
-                    priceTextView.setText(priceParts[0]); // ? Parte entera del precio
-                    lowPriceTextView.setText("." + priceParts[1]+"€"); // ? Parte decimal del precio
-                } else {
-                    // ? Manejo de casos en los que el precio no tiene una parte decimal
-                    priceTextView.setText(priceParts[0]);
-                    lowPriceTextView.setText(".00€");
-                }
-            } catch (NumberFormatException e) {
-                // ? Manejo de errores en caso de que la cadena de precio no pueda ser dividida correctamente
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Error al mostrar el precio", Toast.LENGTH_SHORT).show();
-            }
+            trip = getArguments().getParcelable("trip");
 
             // ? Carousel
             ImageCarousel carousel = view.findViewById(R.id.sliderImages);
@@ -87,6 +77,46 @@ public class TripFragment extends Fragment {
                 list.add(new CarouselItem(imageUrl));
             }
             carousel.setData(list);
+
+            tituloTextView.setText(trip.getName());
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            db.collection("planets").document(trip.getArrivalPlanet())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            arrivalPlanet = documentSnapshot.toObject(Planet.class);
+                            planetTextView.setText(arrivalPlanet.getName());
+                        }
+                    });
+
+            descriptionTextView.setText(trip.getDescription());
+
+            Glide.with(getContext()).load(trip.getImages().get(1)).into(mediaImageView);
+
+            tituloSpacecraftTextView.setText(trip.getSpacecraft());
+            descriptionSpacecraftTextView.setText(trip.getSpacecraftDescription());
+
+            String priceStr = String.valueOf(trip.getPrice());
+            try {
+                String[] priceParts = priceStr.split("\\.");
+                if (priceParts.length == 2) {
+                    String decimalPart = String.format("%-2s", priceParts[1]).replace(' ', '0');
+                    priceTextView.setText(priceParts[0]); // ? Parte entera del precio
+                    lowPriceTextView.setText("." + decimalPart + "€"); // ? Parte decimal del precio
+                } else {
+                    // ? Manejo de casos en los que el precio no tiene una parte decimal
+                    priceTextView.setText(priceParts[0]);
+                    lowPriceTextView.setText(".00€");
+                }
+            } catch (NumberFormatException e) {
+                // ? Manejo de errores en caso de que la cadena de precio no pueda ser dividida correctamente
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Error al mostrar el precio", Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         // ? Flecha Back
@@ -97,5 +127,18 @@ public class TripFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.reservarButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCabineSelection(v,trip,arrivalPlanet.getName());
+            }
+        });
+    }
+
+    public void goToCabineSelection(View v, Trip trip, String planetName) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("trip", trip);
+        bundle.putString("planetName", planetName);
+        Navigation.findNavController(v).navigate(R.id.cabineFragment, bundle);
     }
 }
