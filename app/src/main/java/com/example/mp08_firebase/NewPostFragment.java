@@ -89,6 +89,12 @@ public class NewPostFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(postConentEditText, InputMethodManager.SHOW_IMPLICIT);
 
+        // Asegurarse de que todos los controles de la imagen estén ocultos inicialmente
+        mediaImageView.setVisibility(View.GONE);
+        mediaVideoView.setVisibility(View.GONE);
+        mediaCardView.setVisibility(View.GONE);
+
+
         postConentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
         postConentEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,6 +142,9 @@ public class NewPostFragment extends Fragment {
             this.mediaTipo = media.tipo;
 
             if (mediaTipo == null || mediaUri == null){
+                mediaImageView.setVisibility(View.GONE);
+                mediaVideoView.setVisibility(View.GONE);
+                mediaCardView.setVisibility(View.GONE);
                 return;
             }
 
@@ -293,6 +302,7 @@ public class NewPostFragment extends Fragment {
         clearMediaButton.setVisibility(View.GONE);
         // Limpiar la imagen usando Glide
         Glide.with(this).clear(mediaImageView);
+        checkPublishButtonStatus();
 
     }
     private void checkPublishButtonStatus() {
