@@ -1,6 +1,8 @@
 package com.example.mp08_firebase;
 
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,12 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import com.example.mp08_firebase.items.Post;
 import com.example.mp08_firebase.items.PostsAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -25,8 +25,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
 
     private NavController navController;
     private ProgressBar progressBar;
-    private FloatingActionButton addButtonA, addButtonB;
-    private FloatingActionsMenu fabMenu;
+    private FloatingActionButton floatingButton;
     private PostsAdapter adapter;
 
     public HomeFragment() {
@@ -41,9 +40,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         RecyclerView postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
 
         // ? Botones
-        addButtonA = view.findViewById(R.id.action_a);
-        addButtonB = view.findViewById(R.id.action_b);
-        fabMenu = view.findViewById(R.id.multiple_actions);
+        floatingButton = view.findViewById(R.id.floatingButton);
         progressBar = view.findViewById(R.id.progressBar);
 
         view.findViewById(R.id.chatsImageButton).setOnClickListener(new View.OnClickListener() {
@@ -53,19 +50,10 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
             }
         });
 
-        addButtonA.setOnClickListener(new View.OnClickListener() {
+        floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.newPostFragment);
-                fabMenu.collapse();
-            }
-        });
-
-        addButtonB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.chatAstraFragment);
-                fabMenu.collapse();
             }
         });
 
@@ -78,6 +66,15 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         adapter = new PostsAdapter(getContext(), options, progressBar, this);
         postsRecyclerView.setAdapter(adapter);
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        // ? Evitar retroceder en la navegación.
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // ! Nada
+            }
+        });
     }
 
     @Override
