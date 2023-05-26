@@ -199,6 +199,9 @@
         <argument
             android:name="planetName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_reserveFragment_to_finalReservationFragment"
+            app:destination="@id/finalReservationFragment" />
     </fragment>
     <fragment
         android:id="@+id/cabineFragment"
@@ -208,5 +211,20 @@
         <action
             android:id="@+id/action_cabineFragment_to_reserveFragment"
             app:destination="@id/reserveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/finalReservationFragment"
+        android:name="com.example.mp08_firebase.FinalReservationFragment"
+        android:label="fragment_final_reservation"
+        tools:layout="@layout/fragment_final_reservation">
+        <argument
+            android:name="planetName"
+            app:argType="string" />
+        <argument
+            android:name="endDate"
+            app:argType="string" />
+        <argument
+            android:name="startDate"
+            app:argType="string" />
     </fragment>
 </navigation>

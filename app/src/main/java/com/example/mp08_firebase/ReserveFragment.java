@@ -30,7 +30,7 @@ public class ReserveFragment extends Fragment {
     private NavController navController;
     private Trip trip;
     private Cabin cabin;
-    private String planetName;
+    private String planetName, endDate, startDate;
     private boolean dateSelected;
     private Button reservarButton;
     private TextView tituloTextView, durationTextView, planetTextView, priceTextView, lowPriceTextView, salidaTextView, llegadaTextView, spacecraftTextView, cabinTextView;
@@ -61,7 +61,6 @@ public class ReserveFragment extends Fragment {
             planetName = getArguments().getString("planetName");
 
             tituloTextView.setText(trip.getName());
-
             cabinTextView.setText(cabin.getName());
             spacecraftTextView.setText(trip.getSpacecraft());
 
@@ -129,7 +128,7 @@ public class ReserveFragment extends Fragment {
                 if (!dateSelected){
                     selectDate(false);
                 } else {
-                    // ! navController.navigate(R.id.fragment);
+                    goToReservation(v, trip, cabin, planetName, startDate, endDate);
                 }
             }
         });
@@ -167,21 +166,21 @@ public class ReserveFragment extends Fragment {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
                         if(isArrivalDate) {
-                            String formattedEndDate = sdf.format(selectedDate.getTime());
-                            llegadaTextView.setText(formattedEndDate);
+                            endDate = sdf.format(selectedDate.getTime());
+                            llegadaTextView.setText(endDate);
 
                             // Resta X días a la fecha seleccionada para obtener la fecha de salida
                             selectedDate.add(Calendar.DAY_OF_MONTH, -daysApart);
-                            String formattedStartDate = sdf.format(selectedDate.getTime());
-                            salidaTextView.setText(formattedStartDate);
+                            startDate = sdf.format(selectedDate.getTime());
+                            salidaTextView.setText(startDate);
                         } else {
-                            String formattedSelectedDate = sdf.format(selectedDate.getTime());
-                            salidaTextView.setText(formattedSelectedDate);
+                            startDate = sdf.format(selectedDate.getTime());
+                            salidaTextView.setText(startDate);
 
                             // Añade X días a la fecha seleccionada para obtener la fecha de llegada
                             selectedDate.add(Calendar.DAY_OF_MONTH, daysApart);
-                            String formattedEndDate = sdf.format(selectedDate.getTime());
-                            llegadaTextView.setText(formattedEndDate);
+                            endDate = sdf.format(selectedDate.getTime());
+                            llegadaTextView.setText(endDate);
                         }
                         dateSelected = true;
                         checkDateButton();
@@ -216,7 +215,7 @@ public class ReserveFragment extends Fragment {
         bundle.putString("planetName", planetName);
         bundle.putString("startDate", startDate);
         bundle.putString("endDate", endDate);
-        Navigation.findNavController(v).navigate(R.id.reserveFragment, bundle);
+        Navigation.findNavController(v).navigate(R.id.finalReservationFragment, bundle);
     }
 
 }
