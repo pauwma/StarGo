@@ -109,11 +109,25 @@ public class ReserveFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.salidaLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate(false);
+            }
+        });
+
+        view.findViewById(R.id.llegadaLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDate(true);
+            }
+        });
+
         view.findViewById(R.id.reservarButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!dateSelected){
-                    selectDate();
+                    selectDate(false);
                 } else {
                     // ! navController.navigate(R.id.fragment);
                 }
@@ -121,7 +135,7 @@ public class ReserveFragment extends Fragment {
         });
     }
 
-    public void selectDate(){
+    public void selectDate(boolean isArrivalDate){
         // Extrae el número de días de la cadena de duración
         String duration = trip.getDuration();
         String daysString = duration.split("-")[0].trim();
@@ -129,7 +143,13 @@ public class ReserveFragment extends Fragment {
 
         // Obtén la fecha actual
         final Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_YEAR, 1); // Añade un día a la fecha actual
+
+        if(isArrivalDate) {
+            c.add(Calendar.DAY_OF_YEAR, daysApart + 1); // Añade la duración del viaje + 1 a la fecha actual
+        } else {
+            c.add(Calendar.DAY_OF_YEAR, 1); // Añade un día a la fecha actual
+        }
+
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
@@ -145,19 +165,35 @@ public class ReserveFragment extends Fragment {
 
                         // Guarda la fecha seleccionada
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        String formattedSelectedDate = sdf.format(selectedDate.getTime());
 
-                        // Añade X días a la fecha seleccionada para obtener la segunda fecha
-                        selectedDate.add(Calendar.DAY_OF_MONTH, daysApart);
-                        String formattedEndDate = sdf.format(selectedDate.getTime());
+                        if(isArrivalDate) {
+                            String formattedEndDate = sdf.format(selectedDate.getTime());
+                            llegadaTextView.setText(formattedEndDate);
 
-                        salidaTextView.setText(formattedSelectedDate);
-                        llegadaTextView.setText(formattedEndDate);
+                            // Resta X días a la fecha seleccionada para obtener la fecha de salida
+                            selectedDate.add(Calendar.DAY_OF_MONTH, -daysApart);
+                            String formattedStartDate = sdf.format(selectedDate.getTime());
+                            salidaTextView.setText(formattedStartDate);
+                        } else {
+                            String formattedSelectedDate = sdf.format(selectedDate.getTime());
+                            salidaTextView.setText(formattedSelectedDate);
+
+                            // Añade X días a la fecha seleccionada para obtener la fecha de llegada
+                            selectedDate.add(Calendar.DAY_OF_MONTH, daysApart);
+                            String formattedEndDate = sdf.format(selectedDate.getTime());
+                            llegadaTextView.setText(formattedEndDate);
+                        }
                         dateSelected = true;
                         checkDateButton();
-
                     }
                 }, year, month, day);
+
+        // Establece el título dependiendo de si se seleccionará la fecha de llegada o de salida
+        if (isArrivalDate) {
+            datePickerDialog.setMessage("Selecciona el día de llegada");
+        } else {
+            datePickerDialog.setMessage("Selecciona el día de salida");
+        }
 
         datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis()); // Establece la fecha mínima del DatePickerDialog
 
@@ -173,6 +209,14 @@ public class ReserveFragment extends Fragment {
         }
     }
 
-
+    public void goToReservation(View v, Trip trip, Cabin cabin, String planetName, String startDate, String endDate) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("trip", trip);
+        bundle.putParcelable("cabin", cabin);
+        bundle.putString("planetName", planetName);
+        bundle.putString("startDate", startDate);
+        bundle.putString("endDate", endDate);
+        Navigation.findNavController(v).navigate(R.id.reserveFragment, bundle);
+    }
 
 }
