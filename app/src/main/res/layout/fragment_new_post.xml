@@ -9,6 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/upBar"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/black"
@@ -78,7 +79,7 @@
     <com.google.android.material.card.MaterialCardView
         android:visibility="visible"
         android:id="@+id/mediaCardView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxHeight="460dp"
         android:layout_marginStart="8dp"
@@ -105,15 +106,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <VideoView
-                android:id="@+id/mediaVideoView"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxHeight="460dp"
-                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <VideoView
+                    android:id="@+id/mediaVideoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+            </FrameLayout>
 
             <ImageButton
                 android:id="@+id/clearMediaButton"
@@ -142,6 +150,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/downBar"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="@color/black"
