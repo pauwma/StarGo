@@ -12,6 +12,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
+        android:src="@color/border2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,8 +94,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:maxHeight="460dp"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            android:scaleType="centerCrop"/>
 
     </com.google.android.material.card.MaterialCardView>
 
