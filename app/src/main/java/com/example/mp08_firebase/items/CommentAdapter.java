@@ -85,7 +85,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                 });
 
         holder.contentTextView.setText(comment.getContent());
-        holder.timestampTextView.setText(getTimeAgo(comment.getTimestamp()));
+        holder.timestampTextView.setText("· " + getTimeAgo(comment.getTimestamp()));
     }
 
     @Override
