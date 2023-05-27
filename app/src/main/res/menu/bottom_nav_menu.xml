@@ -13,6 +13,10 @@
         android:icon="@drawable/launch_selector"
         android:title="" />
     <item
+        android:id="@+id/chats"
+        android:icon="@drawable/message_selector"
+        android:title="" />
+    <item
         android:id="@+id/profile"
         android:icon="@drawable/profile_selector"
         android:title="" />

@@ -43,13 +43,6 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         floatingButton = view.findViewById(R.id.floatingButton);
         progressBar = view.findViewById(R.id.progressBar);
 
-        view.findViewById(R.id.chatsImageButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.chatsHomeFragment);
-            }
-        });
-
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
