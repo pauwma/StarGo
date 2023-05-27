@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AvatarGenerationFragment"
+    android:background="@color/background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/cruzBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:padding="1dp"
+            android:src="@drawable/ic_arrow_left_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="1dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Generar imagen"
+            android:textColor="@color/white"
+            android:textSize="19dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cruzBack"
+            app:layout_constraintStart_toEndOf="@+id/cruzBack"
+            app:layout_constraintTop_toTopOf="@+id/cruzBack" />
+
+        <ImageButton
+            android:id="@+id/acceptButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/tick_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#1f1f1f"
+        app:layout_constraintBottom_toBottomOf="@+id/upBar" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mediaCardView"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_marginTop="16dp"
+        android:maxHeight="460dp"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/upBar"
+        app:strokeColor="@color/border2"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/mediaImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:maxHeight="460dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:elevation="2dp"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_progress_bar"
+        android:outlineAmbientShadowColor="@color/white"
+        android:outlineSpotShadowColor="@color/morado"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/mediaCardView"
+        app:layout_constraintEnd_toEndOf="@+id/mediaCardView"
+        app:layout_constraintStart_toStartOf="@+id/mediaCardView"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+    <TextView
+        android:id="@+id/promptTextView"
+        style="@style/title1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:alpha="0.7"
+        android:fontFamily="@font/montserrat_medium"
+        android:text=""
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="@+id/mediaCardView"
+        app:layout_constraintStart_toStartOf="@+id/mediaCardView"
+        app:layout_constraintTop_toBottomOf="@+id/mediaCardView" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/newCommentLayout"
+        android:layout_width="match_parent"
+        android:elevation="2dp"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/topCommentLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="12dp"
+            android:background="@color/border2"
+            app:layout_constraintBottom_toTopOf="@id/promptEditText" />
+
+        <View
+            android:id="@+id/botCommentLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="12dp"
+            android:background="@color/border2"
+            app:layout_constraintTop_toBottomOf="@id/promptEditText" />
+
+        <EditText
+            android:id="@+id/promptEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="12dp"
+            android:background="@null"
+            android:focusableInTouchMode="true"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="top|left"
+            android:hint="Escribe una idea de imagen..."
+            android:maxLines="4"
+            android:minHeight="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/quick_silver"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/commentUtilsLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+        </EditText>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/commentUtilsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/eraseButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@null"
+                android:alpha="0.7"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/eraser_solid" />
+
+            <com.example.mp08_firebase.CharacterCountCircleView
+                android:id="@+id/characterCountCircleView"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/generateButton"
+                app:layout_constraintEnd_toStartOf="@+id/generateButton"
+                app:layout_constraintTop_toTopOf="@+id/generateButton" />
+
+            <Button
+                android:id="@+id/generateButton"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/button_border_purple"
+                android:fontFamily="@font/montserrat_semibold"
+                android:paddingHorizontal="24dp"
+                android:text="Generar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

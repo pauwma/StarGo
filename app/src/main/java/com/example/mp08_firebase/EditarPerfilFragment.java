@@ -6,31 +6,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,7 +43,7 @@ public class EditarPerfilFragment extends Fragment {
     private NavController navController;
     private ImageView photoEditProfile;
     private EditText displayNameEditText, usernameEditText, bioEditText;
-    private String initialDisplayName, initialUsername, initialBio;
+    private String avatarUrl, initialDisplayName, initialUsername, initialBio;
     private boolean hasDisplayNameChanged = false;
     private boolean hasUsernameChanged = false;
     private boolean hasBioChanged = false;
@@ -83,7 +76,6 @@ public class EditarPerfilFragment extends Fragment {
         usernameEditText = view.findViewById(R.id.usernameEditText);
         bioEditText = view.findViewById(R.id.bioEditText);
 
-
         // ? Cruz Back
         view.findViewById(R.id.cruzBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +84,17 @@ public class EditarPerfilFragment extends Fragment {
             }
         });
 
+        // ? Generate button
+        view.findViewById(R.id.generateButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("avatarUrl", avatarUrl);
+                navController.navigate(R.id.avatarGenerationFragment, bundle);
+            }
+        });
+
+
         DocumentReference userRef = firestore.collection("users").document(uid);
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -99,7 +102,12 @@ public class EditarPerfilFragment extends Fragment {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        String avatarUrl = document.getString("avatar");
+                        if (getArguments() != null){
+                            avatarUrl = getArguments().getString("avatarUrl");
+                        } else {
+                            avatarUrl = document.getString("avatar");
+                        }
+
                         initialDisplayName = document.getString("displayName");
                         initialUsername = document.getString("username");
                         initialBio = document.getString("description");
@@ -112,7 +120,6 @@ public class EditarPerfilFragment extends Fragment {
                         if (initialBio != null) {
                             bioEditText.setText(initialBio);
                         }
-
                     }
                 }
             }
@@ -280,7 +287,7 @@ public class EditarPerfilFragment extends Fragment {
                     }
                 }
             });
-        } else if (selectedImage != null) {
+        } else if (selectedImage != null || getArguments() != null) {
             updateProfilePicture();
         } else {
             Toast.makeText(getContext(), "No se realizaron cambios.", Toast.LENGTH_SHORT).show();
@@ -381,7 +388,7 @@ public class EditarPerfilFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show();
-                            navController.navigateUp();
+                            navController.navigate(R.id.profileFragment);
                         } else {
                             Toast.makeText(getContext(), "Error al actualizar el perfil", Toast.LENGTH_SHORT).show();
                         }
@@ -395,7 +402,23 @@ public class EditarPerfilFragment extends Fragment {
      * Una vez que la actualización se ha completado con éxito, se muestra un mensaje de confirmación.
      */
     private void updateProfilePicture() {
-        if (selectedImage != null) {
+        if (getArguments() != null) {
+            String avatarUrl = getArguments().getString("avatarUrl");
+
+            // Actualizar el parámetro "avatar" del usuario en la colección "users" de Firestore
+            DocumentReference userRef = firestore.collection("users").document(uid);
+            userRef.update("avatar", avatarUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        navController.navigate(R.id.profileFragment);
+                    } else {
+                        // Ocurrió un error al actualizar el parámetro "avatar" del usuario en la colección "users" de Firestore
+                        Toast.makeText(getContext(), "Error al actualizar el parámetro", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else if (getArguments() == null && selectedImage != null) {
             // Crear una referencia al archivo de imagen en el Storage de Firebase
             StorageReference imageRef = storage.getReference().child("avatar").child(uid);
             // Subir la imagen al Storage de Firebase
@@ -423,7 +446,7 @@ public class EditarPerfilFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    navController.navigateUp();
+                                    navController.navigate(R.id.profileFragment);
                                 } else {
                                     // Ocurrió un error al actualizar el parámetro "avatar" del usuario en la colección "users" de Firestore
                                     Toast.makeText(getContext(), "Error al actualizar el parámetro", Toast.LENGTH_SHORT).show();

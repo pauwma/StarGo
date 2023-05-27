@@ -20,6 +20,7 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField 'String', 'OPEN_AI_API_KEY', "\"${properties.getProperty("OPENAI_API_KEY")}\""
+        buildConfigField 'String', 'IMAGE_API_KEY', "\"${properties.getProperty("IMAGE_API_KEY")}\""
     }
 
     buildTypes {

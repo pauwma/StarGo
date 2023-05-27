@@ -73,6 +73,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upBar" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/generateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="-14dp"
+        android:layout_marginBottom="-6dp"
+        android:backgroundTint="@color/morado"
+        android:src="@drawable/flask_solid"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/photoEditProfile"
+        app:layout_constraintEnd_toEndOf="@+id/photoEditProfile" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/displayNameInputLayout"
         android:layout_width="0dp"
@@ -110,7 +123,7 @@
         android:layout_width="0dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/edit_text_border"
         android:fontFamily="@font/montserrat_regular"
