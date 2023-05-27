@@ -165,7 +165,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         }
 
-
         // ? Verificar si el usuario actual ha dado "like" a la publicación
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("likes").document(userUID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -184,7 +183,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         });
 
-        // Establecer el número de "likes"
+        // ? Establecer el número de "likes"
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("likes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -197,7 +196,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         });
 
-        // Establecer el número de "comments"
+        // ? Establecer el número de "comments"
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -260,6 +259,20 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                         }
                     }
                 });
+            }
+        });
+        holder.commentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("commentButton", true);
+                bundle.putString("postId", post.getPostId());
+                bundle.putString("uid", post.getUid());
+                bundle.putString("content", post.getContent());
+                bundle.putString("media", post.getMedia());
+                bundle.putString("mediaType", post.getMediaType());
+                bundle.putString("timestamp", String.valueOf(post.getTimestamp()));
+                Navigation.findNavController(view).navigate(R.id.mediaFragment, bundle);
             }
         });
 

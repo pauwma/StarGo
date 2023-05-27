@@ -67,6 +67,7 @@ public class MediaFragment extends Fragment {
     // ? Post & User info
     private String postID, postUID, content, media, mediaType, timestamp, userUID;
     private int currentLikes;
+    private boolean commentButtonPressed;
     private TextView displayNameTextView, usernameTextView, contentTextView, timestampTextView, likesNumTextView, commentsNumTextView;
     private EditText commentEditText;
     private CircleImageView profile_image;
@@ -112,12 +113,14 @@ public class MediaFragment extends Fragment {
 
         userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         if (getArguments() != null) {
+
             postID = getArguments().getString("postId");
             postUID = getArguments().getString("uid");
             content = getArguments().getString("content");
             media = getArguments().getString("media");
             mediaType = getArguments().getString("mediaType");
             timestamp = getArguments().getString("timestamp");
+            commentButtonPressed = getArguments().getBoolean("commentButton");
         }
 
         // ? Content
@@ -298,6 +301,19 @@ public class MediaFragment extends Fragment {
             Log.d("getCommentsFromFirebase", "commentsRecyclerView is null");
         }
 
+        commentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                commentEditText.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(commentEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        if (commentButtonPressed){
+            commentEditText.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(commentEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
         commentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
         commentEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -344,12 +360,7 @@ public class MediaFragment extends Fragment {
                 }
             }
         };
-
-
         activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
-
-
     }
 
     public void userInfo() {
@@ -508,10 +519,6 @@ public class MediaFragment extends Fragment {
                     }
                 });
     }
-
-
-
-
 
     // Convertir dp a pixels
     public static int dpToPx(Context context, int dp) {
