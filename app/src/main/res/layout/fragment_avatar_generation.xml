@@ -37,7 +37,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="1dp"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Generar imagen"
+            android:text="Generar avatar"
             android:textColor="@color/white"
             android:textSize="19dp"
             app:layout_constraintBottom_toBottomOf="@+id/cruzBack"

@@ -91,6 +91,8 @@ public class AvatarGenerationFragment extends Fragment {
             }
         });
         promptEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(promptEditText, InputMethodManager.SHOW_IMPLICIT);
 
         generateButton = view.findViewById(R.id.generateButton);
         generateButton.setOnClickListener(new View.OnClickListener() {
