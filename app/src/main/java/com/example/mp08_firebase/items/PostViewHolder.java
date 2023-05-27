@@ -1,6 +1,8 @@
 package com.example.mp08_firebase.items;
 
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     ImageView avatarImageView;
     ImageView mediaImageView;
     VideoView mediaVideoView;
+
     ConstraintLayout likeLayout, commentLayout, shareLayout;
 
     // ? Likes & Comments

@@ -165,6 +165,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         }
 
+
         // ? Verificar si el usuario actual ha dado "like" a la publicación
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("likes").document(userUID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -183,7 +184,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         });
 
-        // ? Establecer el número de "likes"
+        // Establecer el número de "likes"
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("likes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -196,7 +197,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
             }
         });
 
-        // ? Establecer el número de "comments"
+        // Establecer el número de "comments"
         FirebaseFirestore.getInstance().collection("posts").document(post.getPostId()).collection("comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -275,7 +276,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                 Navigation.findNavController(view).navigate(R.id.mediaFragment, bundle);
             }
         });
-
         progressBar.setVisibility(View.GONE);
     }
 
