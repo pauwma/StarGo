@@ -38,13 +38,26 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class NewPostFragment extends Fragment {
 
@@ -54,11 +67,14 @@ public class NewPostFragment extends Fragment {
     public AppViewModel appViewModel;
     Uri mediaUri;
     String mediaTipo;
-    private EditText editText;
+    private EditText postContentEditText;
     private ImageView mediaImageView;
     private VideoView mediaVideoView;
-    private ImageButton clearMediaButton;
+    private ImageButton clearMediaButton, hashtagButton;
     private MaterialCardView mediaCardView;
+    private OkHttpClient client;
+    private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private String apiKey = BuildConfig.OPEN_AI_API_KEY;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +93,7 @@ public class NewPostFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(view);
+        client = new OkHttpClient().newBuilder().callTimeout(30, TimeUnit.SECONDS).build();
 
         appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         mediaImageView = view.findViewById(R.id.mediaImageView);
@@ -84,19 +101,18 @@ public class NewPostFragment extends Fragment {
         mediaCardView = view.findViewById(R.id.mediaCardView);
 
         publishButton = view.findViewById(R.id.publishButton);
-        postConentEditText = view.findViewById(R.id.postContentEditText);
-        postConentEditText.requestFocus();
+        postContentEditText = view.findViewById(R.id.postContentEditText);
+        postContentEditText.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(postConentEditText, InputMethodManager.SHOW_IMPLICIT);
+        imm.showSoftInput(postContentEditText, InputMethodManager.SHOW_IMPLICIT);
 
         // Asegurarse de que todos los controles de la imagen estén ocultos inicialmente
         mediaImageView.setVisibility(View.GONE);
         mediaVideoView.setVisibility(View.GONE);
         mediaCardView.setVisibility(View.GONE);
 
-
-        postConentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
-        postConentEditText.addTextChangedListener(new TextWatcher() {
+        postContentEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
+        postContentEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -106,6 +122,7 @@ public class NewPostFragment extends Fragment {
                 CharacterCountCircleView characterCountCircleView = view.findViewById(R.id.characterCountCircleView);
                 characterCountCircleView.setCharacterCount(s.length());
                 checkPublishButtonStatus();
+                checkHashtagButtonStatus();
             }
         });
 
@@ -124,6 +141,15 @@ public class NewPostFragment extends Fragment {
                 navController.navigateUp();
             }
         });
+
+        hashtagButton = view.findViewById(R.id.hashtagButton);
+        hashtagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateHashtags();
+            }
+        });
+
 
         clearMediaButton = view.findViewById(R.id.clearMediaButton);
         clearMediaButton.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +219,7 @@ public class NewPostFragment extends Fragment {
         postUpload();
     }
     private boolean validPost() {
-        String postContent = postConentEditText.getText().toString().trim();
+        String postContent = postContentEditText.getText().toString().trim();
         if (postContent.isEmpty() && mediaUri == null) {
             return false;
         }
@@ -201,7 +227,7 @@ public class NewPostFragment extends Fragment {
     }
     private void postUpload() {
         publishButton.setEnabled(false);
-        String postContent = postConentEditText.getText().toString().trim();
+        String postContent = postContentEditText.getText().toString().trim();
         if (mediaUri != null) {
             mediaToFirestore(postContent);
         } else {
@@ -306,12 +332,78 @@ public class NewPostFragment extends Fragment {
 
     }
     private void checkPublishButtonStatus() {
-        String postContent = postConentEditText.getText().toString().trim();
+        String postContent = postContentEditText.getText().toString().trim();
         if (!postContent.isEmpty() || mediaUri != null) {
             publishButton.setBackgroundResource(R.drawable.button_purple);
         } else {
             publishButton.setBackgroundResource(R.drawable.button_border_purple);
         }
     }
+
+    private void checkHashtagButtonStatus() {
+        String postContent = postContentEditText.getText().toString().trim();
+        if (!postContent.isEmpty()) {
+            hashtagButton.setEnabled(true);
+            hashtagButton.setAlpha(1f);
+        } else {
+            hashtagButton.setEnabled(false);
+            hashtagButton.setAlpha(0.5f);
+        }
+    }
+
+    private void generateHashtags() {
+        String postContent = postContentEditText.getText().toString();
+        hashtagButton.setAlpha(0.5f);
+        hashtagButton.setEnabled(false);
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("model", "text-davinci-003");
+            jsonBody.put("prompt", "Genera entre 1 y 3 hashtags que sean tendencia para este post: : " + postContent);
+            jsonBody.put("temperature", 0.7);
+            jsonBody.put("max_tokens", 200);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
+        Request request = new Request.Builder()
+                .url("https://api.openai.com/v1/completions")
+                .header("Authorization", "Bearer " + apiKey)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                // Handle the error
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        JSONArray choicesArray = jsonObject.getJSONArray("choices");
+                        String hashtags = choicesArray.getJSONObject(0).getString("text").trim();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                postContentEditText.append(" " + hashtags);
+                                hashtagButton.setAlpha(1f);
+                                hashtagButton.setEnabled(true);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Handle the error
+                }
+            }
+        });
+    }
+
+
 
 }
