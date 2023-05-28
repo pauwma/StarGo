@@ -1,6 +1,8 @@
 package com.example.mp08_firebase.items;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -20,6 +22,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.mp08_firebase.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -155,12 +160,18 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostViewHolder>
                     }
                     break;
                 case "video":
+                    Glide.with(context)
+                            .load(post.getMedia())
+                            .into(holder.mediaVideoView);
+
                     holder.mediaVideoView.setOnClickListener(v -> listener.onPostClick(post));
-                    // Carga el video en el reproductor de video, aquí se asume que se utiliza un VideoView
-                    VideoView videoView = holder.itemView.findViewById(R.id.mediaVideoView);
-                    videoView.setVideoPath(post.getMedia());
-                    videoView.requestFocus();
-                    videoView.start();
+
+                    holder.mediaVideoView.setOnLongClickListener(v -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("videoUrl", post.getMedia());
+                        Navigation.findNavController(v).navigate(R.id.detailedImageFragment, bundle);
+                        return true;
+                    });
                     break;
             }
         }

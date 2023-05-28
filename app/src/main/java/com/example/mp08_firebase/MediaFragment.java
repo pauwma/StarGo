@@ -2,11 +2,13 @@ package com.example.mp08_firebase;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -34,6 +36,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.mp08_firebase.items.Comment;
 import com.example.mp08_firebase.items.CommentAdapter;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -72,6 +79,8 @@ public class MediaFragment extends Fragment {
     private EditText commentEditText;
     private CircleImageView profile_image;
     private ImageView mediaImageView;
+    private PlayerView mediaVideoView;
+    private SimpleExoPlayer player;
     private ImageButton likeButton, commentButton, eraseButton;
     private Button newCommentButton;
     private ConstraintLayout userLayout, likeLayout, commentLayout, commentUtilsLayout;
@@ -96,6 +105,7 @@ public class MediaFragment extends Fragment {
         timestampTextView = view.findViewById(R.id.timestampTextView);
         profile_image = view.findViewById(R.id.profile_image);
         mediaImageView = view.findViewById(R.id.mediaImageView);
+        mediaVideoView = view.findViewById(R.id.mediaVideoView);
         userLayout = view.findViewById(R.id.userLayout);
         likesNumTextView = view.findViewById(R.id.likesNumTextView);
         commentsNumTextView = view.findViewById(R.id.commentsNumTextView);
@@ -141,11 +151,64 @@ public class MediaFragment extends Fragment {
                         .transform(new RoundedCorners(radius))
                         .into(mediaImageView);
                 mediaImageView.setVisibility(View.VISIBLE);
-            } else {
-                mediaImageView.setVisibility(View.GONE);
+                mediaImageView.setOnClickListener(v -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageUrl", media);
+                    navController.navigate(R.id.detailedImageFragment, bundle);
+                });
+                mediaImageView.setVisibility(View.VISIBLE);
+            } else if (mediaType.equals("video") && media != null) {
+                mediaVideoView.setVisibility(View.VISIBLE);
+                // Inicializar el reproductor
+                player = new SimpleExoPlayer.Builder(getContext()).build();
+                mediaVideoView.setPlayer(player);
+                player.addListener(new Player.Listener() {
+                    @Override
+                    public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
+                        // Proporción del video
+                        float videoRatio = (float) videoSize.width / videoSize.height;
+
+                        // Dimensiones de la pantalla
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+                        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+                        // Altura y ancho de la pantalla
+                        int screenHeight = displayMetrics.heightPixels;
+                        int screenWidth = displayMetrics.widthPixels;
+
+                        // Proporción de la pantalla
+                        float screenRatio = (float) screenWidth / screenHeight;
+
+                        // Ajustar la vista del video de acuerdo a la proporción del video
+                        ViewGroup.LayoutParams params = mediaVideoView.getLayoutParams();
+                        if (videoRatio > screenRatio) {
+                            // Si el video es más ancho que la pantalla (video apaisado)
+                            params.width = screenWidth;
+                            params.height = (int) (screenWidth / videoRatio);
+                        } else {
+                            // Si el video es más alto que la pantalla (video vertical)
+                            params.height = screenHeight;
+                            params.width = (int) (screenHeight * videoRatio);
+                        }
+                        mediaVideoView.setLayoutParams(params);
+                    }
+                });
+
+
+                // Preparar el MediaItem
+                MediaItem mediaItem = MediaItem.fromUri(media);
+                player.setMediaItem(mediaItem);
+
+                // Preparar el reproductor para reproducir la fuente de medios
+                player.prepare();
+
+                // Comenzar la reproducción
+                player.setPlayWhenReady(true);
+
             }
         } else {
             mediaImageView.setVisibility(View.GONE);
+            mediaVideoView.setVisibility(View.GONE);
         }
 
         // ? Timestamp
@@ -181,13 +244,6 @@ public class MediaFragment extends Fragment {
             public void onClick(View v) {
                 addCommentToPost();
             }
-        });
-
-        // ? Imagen
-        mediaImageView.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("imageUrl", media);
-            navController.navigate(R.id.detailedImageFragment, bundle);
         });
 
         // ? Verificar si el usuario actual ha dado "like" a la publicación
@@ -531,6 +587,10 @@ public class MediaFragment extends Fragment {
         // Cuando la vista se destruye, se elimina el OnGlobalLayoutListener para evitar fugas de memoria
         if (getView() != null) {
             getView().getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+            if (player != null) {
+                player.release();
+                player = null;
+            }
         }
     }
 

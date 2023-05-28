@@ -79,24 +79,36 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/imageCardView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="10dp"
-        android:minHeight="200dp"
-        android:maxHeight="460dp"
+        android:layout_marginEnd="8dp"
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/avatarImageView"
         app:layout_constraintTop_toBottomOf="@+id/contentTextView">
 
-        <VideoView
+
+        <ImageView
             android:id="@+id/mediaVideoView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="460dp"
+            android:scaleType="centerCrop"/>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:alpha="0.3"
+        android:elevation="2dp"
+        android:src="@drawable/play_solid"
+        app:layout_constraintBottom_toBottomOf="@+id/imageCardView"
+        app:layout_constraintEnd_toEndOf="@+id/imageCardView"
+        app:layout_constraintStart_toStartOf="@+id/imageCardView"
+        app:layout_constraintTop_toTopOf="@+id/imageCardView" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

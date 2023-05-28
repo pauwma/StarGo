@@ -13,13 +13,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mp08_firebase.R;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
     TextView displayNameTextView, usernameTextView, timestampTextView, contentTextView;
     ImageView avatarImageView;
-    ImageView mediaImageView;
-    VideoView mediaVideoView;
+    ImageView mediaImageView, mediaVideoView;
 
     ConstraintLayout likeLayout, commentLayout, shareLayout;
 
