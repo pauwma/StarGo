@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment implements PostsAdapter.OnPostClickLi
         // ? Botones
         floatingButton = view.findViewById(R.id.floatingButton);
         progressBar = view.findViewById(R.id.progressBar);
-
+        
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

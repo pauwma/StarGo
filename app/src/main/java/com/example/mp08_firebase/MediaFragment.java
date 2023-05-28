@@ -1,9 +1,10 @@
 package com.example.mp08_firebase;
 
 import static android.content.ContentValues.TAG;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -12,6 +13,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -20,18 +23,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.mp08_firebase.items.Comment;
@@ -67,9 +72,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MediaFragment extends Fragment {
-
     private NavController navController;
-    private ImageButton crossImageButton;
+    private ImageButton settingsButton;
 
     // ? Post & User info
     private String postID, postUID, content, media, mediaType, timestamp, userUID;
@@ -99,6 +103,7 @@ public class MediaFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(view);
+        settingsButton = view.findViewById(R.id.settingsButton);
         displayNameTextView = view.findViewById(R.id.displayNameTextView);
         usernameTextView = view.findViewById(R.id.usernameTextView);
         contentTextView = view.findViewById(R.id.contentTextView);
@@ -132,6 +137,67 @@ public class MediaFragment extends Fragment {
             timestamp = getArguments().getString("timestamp");
             commentButtonPressed = getArguments().getBoolean("commentButton");
         }
+
+        if (postUID.equals(userUID)){
+            settingsButton.setVisibility(View.VISIBLE);
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(getContext(), settingsButton);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.media_settings, popupMenu.getMenu());
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.action_delete:
+                                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                            .setTitle("¿Quieres eliminar el post?")
+                                            .setMessage("Esta acción no se puede revertir y se eliminará de tu perfil.")
+                                            .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // Llama a deletePost() cuando el usuario presione "Eliminar"
+                                                    deletePost();
+                                                }
+                                            })
+                                            .setNegativeButton("Cancelar", null)
+                                            .show();
+
+                                    // Cambia el color del botón "Eliminar"
+                                    Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                                    positiveButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                                    positiveButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+
+                                    // Cambia el color del botón "Cancelar"
+                                    Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                                    negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                                    negativeButton.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+
+                                    // Cambia el estilo del título y el mensaje
+                                    TextView titleView = alertDialog.findViewById(getContext().getResources().getIdentifier("alertTitle", "id", "android"));
+                                    if (titleView != null) {
+                                        titleView.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_semibold));
+                                    }
+
+                                    TextView messageView = alertDialog.findViewById(android.R.id.message);
+                                    if (messageView != null) {
+                                        messageView.setTypeface(ResourcesCompat.getFont(getContext(), R.font.montserrat_medium));
+                                    }
+
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+                    });
+
+                    popupMenu.show();
+                }
+            });
+
+        } else {settingsButton.setVisibility(View.GONE);}
 
         // ? Content
         if (content != null && !content.trim().equals("")){
@@ -225,7 +291,7 @@ public class MediaFragment extends Fragment {
         });
 
         // ? Flecha Back
-        view.findViewById(R.id.crossImageButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.flechaBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigateUp();
@@ -600,5 +666,25 @@ public class MediaFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void deletePost() {
+        db.collection("posts").document(postID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        Toast.makeText(getContext(), "Post eliminado", Toast.LENGTH_SHORT).show();
+                        navController.navigateUp();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                        Toast.makeText(getContext(), "Error al eliminar el post", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

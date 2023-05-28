@@ -20,24 +20,41 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/crossImageButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:id="@+id/flechaBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:padding="1dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_arrow_left_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/settingsButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="16dp"
             android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/cross_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/userLayout"
+            android:padding="1dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/settings_dots_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/userLayout"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/userLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
             app:layout_constraintBottom_toTopOf="@+id/topLine"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/flechaBack"
             app:layout_constraintTop_toTopOf="parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
