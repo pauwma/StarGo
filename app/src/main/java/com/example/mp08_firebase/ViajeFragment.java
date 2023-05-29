@@ -44,7 +44,6 @@ import java.util.List;
 public class ViajeFragment extends Fragment {
 
     private NavController navController;
-    private FloatingActionButton floatingButton;
     private List<Planet> planetList = new ArrayList<>();
     private List<Trip> tripList = new ArrayList<>();
     private RecyclerView planetRecyclerView, tripsRecyclerView;
@@ -62,7 +61,6 @@ public class ViajeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
-        floatingButton = view.findViewById(R.id.floatingButton);
         planetRecyclerView = view.findViewById(R.id.planetRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         planetRecyclerView.setLayoutManager(layoutManager);
@@ -127,13 +125,6 @@ public class ViajeFragment extends Fragment {
                         }
                     }
                 });
-
-        floatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.chatAstraFragment);
-            }
-        });
     }
 
 }

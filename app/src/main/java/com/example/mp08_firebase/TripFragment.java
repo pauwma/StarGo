@@ -25,6 +25,7 @@ import com.example.mp08_firebase.items.TripAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,6 +44,8 @@ public class TripFragment extends Fragment {
     private Planet arrivalPlanet;
     private TextView tituloTextView, planetTextView, descriptionTextView,tituloSpacecraftTextView, descriptionSpacecraftTextView, priceTextView, lowPriceTextView;
     private ImageView mediaImageView;
+    private FloatingActionButton floatingButton;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class TripFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+        floatingButton = view.findViewById(R.id.floatingButton);
 
         tituloTextView = view.findViewById(R.id.tituloTextView);
         planetTextView = view.findViewById(R.id.planetTextView);
@@ -131,6 +135,15 @@ public class TripFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goToCabineSelection(v,trip,arrivalPlanet.getName());
+            }
+        });
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("trip", trip);
+                navController.navigate(R.id.chatAstraFragment, bundle);
             }
         });
     }
