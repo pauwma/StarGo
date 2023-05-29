@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     // Lista con los ID de los fragmentos que no deben mostrar el BottomNavigationView
-    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.avatarGenerationFragment,R.id.chatAstraFragment ,R.id.mediaFragment ,R.id.detailedImageFragment ,R.id.editarPerfilFragment, R.id.startFragment, R.id.chatFragment, R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment, R.id.tripFragment, R.id.planetFragment, R.id.reserveFragment, R.id.cabineFragment);
+    private List<Integer> fragmentsWithoutBottomNav = Arrays.asList(R.id.finalReservationFragment,R.id.avatarGenerationFragment,R.id.chatAstraFragment ,R.id.mediaFragment ,R.id.detailedImageFragment ,R.id.editarPerfilFragment, R.id.startFragment, R.id.chatFragment, R.id.signInFragment, R.id.settingsFragment, R.id.recuperacionFragment, R.id.registerFragment, R.id.newPostFragment, R.id.tripFragment, R.id.planetFragment, R.id.reserveFragment, R.id.cabineFragment);
 
     private FirebaseAuth mAuth;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         mAuth = FirebaseAuth.getInstance();
 

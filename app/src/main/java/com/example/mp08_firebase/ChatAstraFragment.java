@@ -64,7 +64,10 @@ public class ChatAstraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_astra, container, false);
-        client = new OkHttpClient().newBuilder().callTimeout(60, TimeUnit.SECONDS).build();
+        client = new OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         messagesRecyclerView = view.findViewById(R.id.messages_recyclerview);
         messageInput = view.findViewById(R.id.message_input);
         sendMessageButton = view.findViewById(R.id.send_message_button);
@@ -198,13 +201,13 @@ public class ChatAstraFragment extends Fragment {
             JSONObject jsonMessage = new JSONObject();
             try {
                 jsonMessage.put("role", message.getSenderId().equals(currentUserId) ? "user" : "assistant");
-                String tripInfo = "Eres Astra, mi asistente de viajes espaciales en StarGO. Aquí está la información del viaje: "
+                String tripInfo = " Eres Astra, mi asistente de viajes espaciales en StarGO, da respuestas breves y concisas y solo relacionadas con el viaje. Aquí está la información del viaje: "
                         + "Nombre: " + trip.getName() + ", "
                         + "Descripción: " + trip.getDescription() + ", "
                         + "Nave: " + trip.getSpacecraft() + ", "
                         + "Descripción de la nave: " + trip.getSpacecraftDescription() + ". ";
                 if (firstMessage == false){
-                    jsonMessage.put("content", tripInfo + question);
+                    jsonMessage.put("content", question + tripInfo);
                     firstMessage = true;
                 } else {
                     jsonMessage.put("content", message.getContent());
@@ -219,9 +222,8 @@ public class ChatAstraFragment extends Fragment {
 
         JSONObject jsonBody = new JSONObject();
         try {
-            jsonBody.put("model", "gpt-3.5-turbo");
+            jsonBody.put("model", "gpt-4");
             jsonBody.put("messages", jsonArray);
-            jsonBody.put("max_tokens", 2000);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d("API_DEBUG", "JSONException while creating jsonBody: " + e.getMessage());
