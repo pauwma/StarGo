@@ -33,18 +33,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserClickListener, PostsAdapter.OnPostClickListener {
 
     private NavController navController;
     private EditText searchEditText;
-    private RecyclerView searchUsersRecyclerView, postsRecyclerView;
-    ;
+    private RecyclerView searchUsersRecyclerView, postsRecyclerView, postsSearchedRecyclerView;
     private UsersAdapter usersAdapter;
     private View separacionSearchUsers;
     private TextView searchResultsLabel;
     private ProgressBar progressBar;
-    private PostsAdapter adapter;
+    private PostsAdapter adapter, searchedPostsAdapter;
 
     // ? Delay de searchUsers
     private final long DEBOUNCE_DELAY = 300; // 300 milliseconds
@@ -69,9 +69,10 @@ public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserCli
         separacionSearchUsers = view.findViewById(R.id.viewSearchUsers);
         searchResultsLabel = view.findViewById(R.id.searchResultsLabel);
         postsRecyclerView = view.findViewById(R.id.postsRecyclerView);
+        postsSearchedRecyclerView = view.findViewById(R.id.postsSearchedRecyclerView);
         progressBar = view.findViewById(R.id.progressBar);
 
-        com.google.firebase.firestore.Query query = FirebaseFirestore.getInstance().collection("posts").limit(50).orderBy("postId", Query.Direction.DESCENDING);
+        com.google.firebase.firestore.Query query = FirebaseFirestore.getInstance().collection("posts").limit(30).orderBy("postId", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
                 .setQuery(query, Post.class)
@@ -79,7 +80,14 @@ public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserCli
 
         adapter = new PostsAdapter(getContext(), options, progressBar, this);
         postsRecyclerView.setAdapter(adapter);
+        adapter.startListening();
         postsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        searchedPostsAdapter = new PostsAdapter(getContext(), options, progressBar, this);
+        postsSearchedRecyclerView.setAdapter(searchedPostsAdapter);
+        searchedPostsAdapter.startListening();
+        postsSearchedRecyclerView.setVisibility(View.VISIBLE);
+        postsRecyclerView.setVisibility(View.GONE);
 
         setupSearchUsers();
 
@@ -99,13 +107,20 @@ public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserCli
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchHandler.removeCallbacksAndMessages(null);
-                searchHandler.postDelayed(() -> searchUsers(s.toString()), DEBOUNCE_DELAY);
+                if (s.length() > 0 && s.charAt(0) == '#') {
+                    searchHandler.postDelayed(() -> searchPosts(s.toString().substring(1)), DEBOUNCE_DELAY);
+                } else {
+                    searchHandler.postDelayed(() -> searchUsers(s.toString()), DEBOUNCE_DELAY);
+                    postsRecyclerView.setVisibility(View.VISIBLE);
+                    postsSearchedRecyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
+
     }
 
     private void searchUsers(String query) {
@@ -170,6 +185,51 @@ public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserCli
                     }
                 });
     }
+    private void searchPosts(String tag) {
+        // Aquí va tu lógica para buscar posts por etiqueta
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts")
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<String> postIds = new ArrayList<>();
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Aquí va tu lógica para crear un objeto Post a partir del documento
+                            Post post = document.toObject(Post.class);
+                            // Filtrar los posts en el cliente
+                            List<String> hashtags = post.getHashtags();
+                            for (String hashtag : hashtags) {
+                                if (hashtag.toLowerCase().contains(tag.toLowerCase())) {
+                                    postIds.add(post.getPostId());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (postIds.isEmpty()) {
+                        // No se encontraron posts
+                        searchResultsLabel.setText("No se han encontrado posts");
+                        searchResultsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.quick_silver));
+                        searchResultsLabel.setVisibility(View.VISIBLE);
+                        postsSearchedRecyclerView.setVisibility(View.GONE);
+                    } else {
+                        // Se encontraron posts
+                        FirestoreRecyclerOptions<Post> options = new FirestoreRecyclerOptions.Builder<Post>()
+                                .setQuery(db.collection("posts").whereIn("postId", postIds), Post.class)
+                                .build();
+
+                        searchedPostsAdapter = new PostsAdapter(getContext(), options, progressBar, this);
+                        postsSearchedRecyclerView.setAdapter(searchedPostsAdapter);
+                        searchedPostsAdapter.startListening();
+                        postsSearchedRecyclerView.setVisibility(View.VISIBLE);
+                        searchResultsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white));
+                        searchResultsLabel.setText("Resultados de la búsqueda");
+                        searchResultsLabel.setVisibility(View.VISIBLE);
+                        postsRecyclerView.setVisibility(View.GONE);
+                    }
+                });
+    }
 
     public void onUserClick(User otherUser) {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -206,7 +266,6 @@ public class BuscadorFragment extends Fragment implements UsersAdapter.OnUserCli
             adapter.stopListening();
         }
     }
-
 
     @Override
     public void onPostClick(Post post) {
