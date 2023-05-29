@@ -353,6 +353,9 @@ public class NewPostFragment extends Fragment {
 
     private void generateHashtags() {
         String postContent = postContentEditText.getText().toString();
+        if (postContent.isEmpty()){
+            return;
+        }
         hashtagButton.setAlpha(0.5f);
         hashtagButton.setEnabled(false);
         JSONObject jsonBody = new JSONObject();

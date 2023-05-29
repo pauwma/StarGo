@@ -233,6 +233,7 @@
                     android:layout_height="42dp"
                     android:padding="9dp"
                     android:alpha="0.5"
+                    android:enabled="false"
                     android:scaleType="centerInside"
                     android:background="@null"
                     app:srcCompat="@drawable/hashtag_solid" />
