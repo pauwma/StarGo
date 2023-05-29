@@ -216,6 +216,7 @@ public class NewPostFragment extends Fragment {
         if (!validPost()) {
             return;
         }
+        publishButton.setText("Subiendo...");
         postUpload();
     }
     private boolean validPost() {
@@ -252,6 +253,7 @@ public class NewPostFragment extends Fragment {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        publishButton.setText("Publicar");
                                         publishButton.setEnabled(true);
                                         navController.popBackStack();
                                         clearImageAndMediaSeleccionado();
