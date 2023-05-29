@@ -217,6 +217,7 @@ public class NewPostFragment extends Fragment {
             return;
         }
         publishButton.setText("Subiendo...");
+        publishButton.setBackgroundResource(R.drawable.button_border_purple);
         postUpload();
     }
     private boolean validPost() {
@@ -254,6 +255,7 @@ public class NewPostFragment extends Fragment {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         publishButton.setText("Publicar");
+                                        publishButton.setBackgroundResource(R.drawable.button_purple);
                                         publishButton.setEnabled(true);
                                         navController.popBackStack();
                                         clearImageAndMediaSeleccionado();
