@@ -207,9 +207,7 @@ public class AvatarGenerationFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    // Handle the error
-                }
+                } else {}
             }
         });
     }
