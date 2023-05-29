@@ -64,9 +64,9 @@ public class ChatAstraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_astra, container, false);
-        client = new OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+        client = new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .build();
         messagesRecyclerView = view.findViewById(R.id.messages_recyclerview);
         messageInput = view.findViewById(R.id.message_input);

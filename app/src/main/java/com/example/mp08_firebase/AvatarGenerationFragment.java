@@ -62,7 +62,10 @@ public class AvatarGenerationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        client = new OkHttpClient().newBuilder().callTimeout(30, TimeUnit.SECONDS).build();
+        client = new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .build();
 
         progressBar = view.findViewById(R.id.progressBar);
         mediaImageView = view.findViewById(R.id.mediaImageView);
@@ -162,7 +165,7 @@ public class AvatarGenerationFragment extends Fragment {
             jsonBody.put("text", prompt);
             jsonBody.put("num_images", 1);
             jsonBody.put("resolution", "512x512");
-            jsonBody.put("providers", "stabilityai");
+            jsonBody.put("providers", "deepai");
             jsonBody.put("response_as_dict", true);
             jsonBody.put("attributes_as_list", false);
             jsonBody.put("show_original_response", false);
@@ -190,7 +193,7 @@ public class AvatarGenerationFragment extends Fragment {
                     String responseBody = response.body().string();
                     try {
                         JSONObject jsonObject = new JSONObject(responseBody);
-                        JSONObject stabilityaiResponse = jsonObject.getJSONObject("stabilityai");
+                        JSONObject stabilityaiResponse = jsonObject.getJSONObject("deepai");
                         JSONArray items = stabilityaiResponse.getJSONArray("items");
                         imageUrl = items.getJSONObject(0).getString("image_resource_url");
                         getActivity().runOnUiThread(new Runnable() {
