@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://themer.dev">
-    <img src="![WhiteLogo](https://github.com/pauwma/StarGo/assets/114858315/a4ed48af-2b5d-4567-b131-02b47cd66b7a)
-" width="384" alt="Themer logo" />
+    <img src="https://github.com/pauwma/StarGo/assets/114858315/a4ed48af-2b5d-4567-b131-02b47cd66b7a" width="384" alt="StarGO Logo" />
   </a>
 </p>
 
