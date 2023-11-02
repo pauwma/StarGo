@@ -26,8 +26,10 @@ En esta imagen se puede ver la interfaz de creación de publicaciones, esta cont
 En la primera imagen se ve el apartado de buscador de viajes espaciales con posibilidad de buscar por categoría, por más populares y recomendados.
 
 En la segunda imagen podemos ver más información de un viaje seleccionado con información, precio y un chat de inteligencia artificial con información sobre el viaje seleccionado.
+
 ![Buscador de viajes](https://github.com/pauwma/StarGo/assets/114858315/b6aad1c6-03c4-4410-bf6c-2f0604813a7c)
 
 ### Chat con IA
 En esta imagen podemos ver el chat de IA la cual tiene información sobre el viaje que el usuario ha seleccionado y le proporciona información sobre este.
+
 ![Chat con IA](https://github.com/pauwma/StarGo/assets/114858315/cd160968-df51-4b79-9c5a-ea0b3861c9f6)
