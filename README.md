@@ -9,12 +9,12 @@ StarGO es una aplicación basada en un futuro en el cuál el turismo espacial es
 
 ### Home y Perfil
 En esta imagen se puede apreciar el home y el perfil de usuario de StarGo
-<p align="center">
-  <a href="https://themer.dev">
-    <img src="[https://github.com/pauwma/StarGo/assets/114858315/d1b8da14-3567-42fc-8842-ab2c594ccc75](https://github.com/pauwma/StarGo/assets/114858315/61ec2ab7-6a28-46b6-9a41-6508a526d337)" width="320" alt="Home y Perfil" />
-  </a>
-</p>
+
 ![1](https://github.com/pauwma/StarGo/assets/114858315/61ec2ab7-6a28-46b6-9a41-6508a526d337)
+
+### Generación de avatares con IA
+En esta imagen se puede ver la interfaz de generación de avatares con integración de inteligencia artificial.
+
 ![2](https://github.com/pauwma/StarGo/assets/114858315/1f3eb06e-91b0-4749-8bfb-929a396a8d9e)
 ![3](https://github.com/pauwma/StarGo/assets/114858315/b6aad1c6-03c4-4410-bf6c-2f0604813a7c)
 ![4](https://github.com/pauwma/StarGo/assets/114858315/cd160968-df51-4b79-9c5a-ea0b3861c9f6)
