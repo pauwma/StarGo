@@ -7,3 +7,8 @@
 # StarGo
 StarGO es una aplicación basada en un futuro en el cuál el turismo espacial es una realidad cotidiana y accesible para todos, en esta se combina un buscador de viajes espaciales y una red social donde poder compartir la experiencia de estos, además contiene implementaciones de inteligencia artificial como por ejemplo recomendación y explicación de viajes mediante un chat, generación de imágenes de perfil, generación de hashtags recomendados.
 
+<p align="center">
+  <a href="https://themer.dev">
+    <img src="https://github.com/pauwma/StarGo/assets/114858315/167b7d58-128c-437e-ae87-1d7bbc5fe05c" alt="StarGO Logo" />
+  </a>
+</p>
